@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "197729107456",
+    "project_id": "vaultbank-f0bbc",
+    "storage_bucket": "vaultbank-f0bbc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197729107456:android:93419bbba468742d8f62e5",
+        "android_client_info": {
+          "package_name": "com.example.vaultbank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOdR1bNtxs6KNthLhOrR9IOvHAS8X7vzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
