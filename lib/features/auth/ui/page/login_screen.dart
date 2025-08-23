@@ -3,28 +3,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
 import '../../service/handle_AC_flow.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
-  final pinCtrl = TextEditingController();
-  final telpCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sign Up")),
+      appBar: AppBar(title: const Text("Login")),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Signup success!")),
+              const SnackBar(content: Text("Login success!")),
             );
             AccessCodeFlow(context).handle();  
           } else if (state is AuthFailure) {
@@ -44,19 +42,15 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: "Email")),
                 TextField(controller: passwordCtrl, decoration: const InputDecoration(labelText: "Password"), obscureText: true),
-                TextField(controller: pinCtrl, decoration: const InputDecoration(labelText: "Transaction PIN"), obscureText: true),
-                TextField(controller: telpCtrl, decoration: const InputDecoration(labelText: "Telephone number"), obscureText: true),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    context.read<AuthCubit>().signUp(
+                    context.read<AuthCubit>().logIn(
                       emailCtrl.text,
-                      passwordCtrl.text,
-                      pinCtrl.text,
-                      telpCtrl.text
+                      passwordCtrl.text                
                     );
                   },
-                  child: const Text("Sign Up"),
+                  child: const Text("Login"),
                 ),
               ],
             ),
