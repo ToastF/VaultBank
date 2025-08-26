@@ -1,7 +1,5 @@
-// lib/presentation/screens/access_code_dialog.dart
 import 'package:flutter/material.dart';
 import '../../../auth/data/local/access_code_storage.dart';
-// import '../../../auth/ui/page/welcome_screen.dart';
 import '../../../home/ui/page/home_screen.dart';
 import '../../../../core/util/navi_util.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +33,6 @@ Future<void> showAccessCodeDialog(BuildContext context) async {
                 if (!context.mounted) return;
                 Navigator.pop(context); // close dialog
                 context.read<AuthCubit>().emit(AuthFinalized());
-                NavigationHelper.goToAndRemoveAll(context, const HomeScreen());
               }
             },
             child: const Text("Save"),
@@ -75,8 +72,11 @@ Future<void> showInputAccessCodeDialog(BuildContext context) async {
                 if(code == accesscode){
                   if (!context.mounted) return;
                   Navigator.pop(context); // close dialog
-                  context.read<AuthCubit>().emit(AuthFinalized());
-                  NavigationHelper.goToAndRemoveAll(context, const HomeScreen()); 
+                }
+                else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Wrong Access Code! Try again")),
+                  );
                 }
               }
             },

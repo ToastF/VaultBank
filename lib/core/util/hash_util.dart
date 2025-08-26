@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
 
+// Utility class for hashing and matching the hashes
+// mainly for verifying the transaction pin
 class HashUtil {
   // Generates random salt
   static String generateSalt([int length = 16]) {

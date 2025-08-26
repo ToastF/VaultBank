@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// Utility class for navigation
 class NavigationHelper {
   // go to, but previous screen is still present
   static void goTo(BuildContext context, Widget page) {
@@ -10,6 +11,7 @@ class NavigationHelper {
     );
   }
 
+  // go to, while retaining Cubit
   static void goToWithCubit<T extends BlocBase<dynamic>>(
       BuildContext context,
       Widget page,

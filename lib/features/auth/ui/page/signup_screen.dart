@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
-import '../../service/handle_AC_flow.dart';
+import '../../../../core/util/navi_util.dart';
+import '../../../home/ui/page/home_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -26,7 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Signup success!")),
             );
-            AccessCodeFlow(context).handle();  
+            NavigationHelper.goToAndRemoveAll(context, const HomeScreen());
           } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),

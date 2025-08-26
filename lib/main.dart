@@ -1,41 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vaultbank/features/home/ui/page/home_screen.dart';
+import './data/local_storage.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/user/data/repositories/user_repository_impl.dart';
+import './features/auth/ui/cubit/auth_cubit.dart';
+import './core/util/navi_util.dart';
 import 'features/auth/service/register_user.dart';
 import 'features/auth/ui/page/Welcome_screen.dart';
-import 'features/auth/data/local/access_code_storage.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import './features/user/ui/cubit/user_cubit.dart';
 
 void main() async {
+  // Initialize Firebase and Isar
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await AccessCodeStorage.init();
-
+  await LocalStorage.init();
+  // Instantiate repositories or services for global provider
   final authRepo = AuthRepositoryImpl(FirebaseAuth.instance);
-  final userRepo = UserRepositoryImpl(FirebaseFirestore.instance,);
-  final registerUser = RegisterUser(authRepo,userRepo);
+  final userRepo = UserRepositoryImpl(FirebaseFirestore.instance);
+  final registerUser = RegisterUser(authRepo, userRepo);
+
   runApp(
+    // Multirepositoryprovider for dependency injection, 
+    // A single instance of a repository can be used by its children widget 
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authRepo),
         RepositoryProvider.value(value: userRepo),
         RepositoryProvider.value(value: registerUser),
       ],
-      child: const MyApp(),
+      // MultiBlockProvider, to nest multiple BlocProviders
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            // Cubit responsible for authentication, calls checkAuthStatus immediately
+            // to check whether user is logged in or not
+            create: (context) => AuthCubit.create(context)..checkAuthStatus(),
+          ),
+          BlocProvider(
+            // Cubit responsible for user profile data
+            create: (context) => UserCubit(userRepo),
+          ),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
 
+// First widget created at app start
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const WelcomeScreen(),
+      // BlocListener (checks for state change)
+      home: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          // if user is authenticated, skip login/signup and go to HomeScreen
+          if (state is AuthSuccess) {
+            // uses cache first for UI, then syncs cache with cloud,
+            // then start listening for cloud changes and cache those changes
+            context.read<UserCubit>()..loadUser(state.auth.uid)..startUserListener(state.auth.uid);
+            // go to HomeScreen, destroy previous pages
+            NavigationHelper.goToAndRemoveAll(context, HomeScreen());
+            
+            // if not logged in, go to welcome screen
+          } else if (state is AuthLoggedOut) {
+            NavigationHelper.goToAndRemoveAll(context, WelcomeScreen());
+          }
+        },
+        child: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              // could be a splash/loading screen until listener redirects
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      ),
     );
   }
 }
+

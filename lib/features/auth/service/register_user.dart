@@ -1,23 +1,24 @@
 import '../data/repositories/auth_repository_impl.dart';
 import '../../../features/user/data/repositories/user_repository_impl.dart';
-import '../../../features/user/domain/entities/user_entity.dart';
+import '../domain/entities/auth_entity.dart';
 
+// Service class for signup scenario, calls auth and user repositories' implementations
 class RegisterUser {
   final AuthRepositoryImpl _authRepository;
   final UserRepositoryImpl _userRepository;
 
   RegisterUser(this._authRepository, this._userRepository);
 
-  Future<UserEntity> call(
+  Future<AuthEntity> call(
     String email,
     String password,
     String pin,
     String notelp,
   ) async {
-    // 1. Create user in FirebaseAuth
+    // Create user in FirebaseAuth
     final authEntity = await _authRepository.signUp(email, password);
 
-    // 2. Store profile + PIN in Firestore
+    // Store profile + PIN in Firestore
     await _userRepository.createUserProfile(
       authEntity.uid,
       email,
@@ -25,11 +26,9 @@ class RegisterUser {
       pin,
     );
 
-    // 3. Return domain-level UserEntity
-    return UserEntity(
+    // Return domain-level AuthEntity
+    return AuthEntity(
       uid: authEntity.uid,
-      email: email,
-      notelp: notelp,
     );
   }
 }
