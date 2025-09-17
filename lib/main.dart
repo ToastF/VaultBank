@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
 import 'package:vaultbank/features/home/ui/page/home_screen.dart';
 import './data/local_storage.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -10,7 +11,6 @@ import 'features/user/data/repositories/user_repository_impl.dart';
 import './features/auth/ui/cubit/auth_cubit.dart';
 import './core/util/navi_util.dart';
 import 'features/auth/service/register_user.dart';
-import 'features/auth/ui/page/Welcome_screen.dart';
 import './features/user/ui/cubit/user_cubit.dart';
 
 void main() async {
@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // BlocListener (checks for state change)
+      debugShowCheckedModeBanner: false,
       home: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           // if user is authenticated, skip login/signup and go to HomeScreen
