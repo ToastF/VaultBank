@@ -12,16 +12,15 @@ class LogoutUser {
 
   LogoutUser(this.context);
 
-  Future<void> call(
-  ) async {
-        // Sign out from Firebase Auth
-        await FirebaseAuth.instance.signOut();
+  Future<void> call() async {
+    debugPrint("Starting User Logout");
+    // Sign out from Firebase Auth
+    await FirebaseAuth.instance.signOut();
+    // Clear local storage data
+    await AccessCodeStorage().clearAccessCode();
+    await UserStorage().clearUser();
 
-        // Clear local storage data
-        await AccessCodeStorage().clearAccessCode();
-        await UserStorage().clearUser();
-
-        // Navigate to welcome/login screen
-        NavigationHelper.goToAndRemoveAll(context, const WelcomeScreen());
+    // Navigate to welcome/login screen
+    NavigationHelper.goToAndRemoveAll(context, const WelcomeScreen());
   }
 }
