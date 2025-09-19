@@ -5,28 +5,54 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // biar dinamis
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    final double horizontalPadding = screenWidth * 0.05; 
+    final double topPadding = screenHeight * 0.025; 
+    final double bottomPadding = screenHeight * 0.09; 
+    final double avatarRadius = screenWidth * 0.065;
+    final double iconSize = screenWidth * 0.08;
+    final double spacing = screenWidth * 0.04;
+    final double welcomeFontSize = screenWidth * 0.035;
+    final double nameFontSize = screenWidth * 0.045;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        topPadding,
+        horizontalPadding,
+        bottomPadding,
+      ),
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 25,
+          CircleAvatar(
+            radius: avatarRadius,
             backgroundColor: Colors.white,
-            child: Icon(Icons.person, size: 30, color: Color(0xFF0D63F3)),
+            child: Icon(
+              Icons.person,
+              size: iconSize, 
+              color: const Color(0xFF0D63F3),
+            ),
           ),
-          const SizedBox(width: 15),
+          SizedBox(width: spacing), 
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
                 'Welcome',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: welcomeFontSize, 
+                ),
               ),
               Text(
                 'Filbert Ferdinand',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: nameFontSize, 
                   fontWeight: FontWeight.bold,
                 ),
               ),

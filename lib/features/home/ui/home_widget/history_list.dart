@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 class HistoryList extends StatelessWidget {
   const HistoryList({super.key});
 
-  // Dummy data untuk riwayat transaksi
+  // dummy data history 
   final List<Map<String, dynamic>> _dummyHistory = const [
-    {
+     {
       "category": "Transportasi",
       "date": "26-04-2025",
       "amount": "Rp15.500",
@@ -41,31 +41,49 @@ class HistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // biar dinamis
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final double paddingValue = screenWidth * 0.05; 
+    final double headerFontSize = screenWidth * 0.045; 
+    final double spacing = screenWidth * 0.025; 
+    final double iconSize = screenWidth * 0.055;
+    final double avatarRadius = screenWidth * 0.05;
+    final double titleFontSize = screenWidth * 0.04;
+    final double subtitleFontSize = screenWidth * 0.032;
+    final double amountFontSize = screenWidth * 0.038;
+
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(paddingValue), 
       child: Column(
         children: [
-          // Header "History"
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'History',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: headerFontSize, 
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               TextButton(
-                onPressed: () {}, // Navigasi kosong
-                child: const Text(
+                onPressed: () {},
+                child: Text(
                   'Lihat Semua >',
-                  style: TextStyle(color: Color(0xFF0D63F3)),
+                  style: TextStyle(
+                    color: const Color(0xFF0D63F3),
+                    fontSize: subtitleFontSize, 
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: spacing), 
           // Daftar item riwayat
           ListView.builder(
-            padding: EdgeInsets.zero, 
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _dummyHistory.length,
@@ -76,19 +94,30 @@ class HistoryList extends StatelessWidget {
                 color: Colors.transparent,
                 child: ListTile(
                   leading: CircleAvatar(
+                    radius: avatarRadius, 
                     backgroundColor: Colors.lightBlue[50],
-                    child: Icon(item['icon'], color: const Color(0xFF0D63F3)),
+                    child: Icon(
+                      item['icon'],
+                      color: const Color(0xFF0D63F3),
+                      size: iconSize, 
+                    ),
                   ),
                   title: Text(
                     item['category'],
-                    style: const TextStyle(fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: titleFontSize,
+                    ),
                   ),
-                  subtitle: Text(item['date']),
+                  subtitle: Text(
+                    item['date'],
+                    style: TextStyle(fontSize: subtitleFontSize),
+                  ),
                   trailing: Text(
                     item['amount'],
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: amountFontSize, 
                     ),
                   ),
                 ),

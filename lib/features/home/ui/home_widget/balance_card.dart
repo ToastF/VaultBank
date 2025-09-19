@@ -18,14 +18,29 @@ class _BalanceCardState extends State<BalanceCard> {
 
   @override
   Widget build(BuildContext context) {
+
+        // biar dinamis
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    final horizontalMargin = screenWidth * 0.05; 
+    final verticalOffset = screenHeight * -0.06; 
+    final cardPadding = screenWidth * 0.05;
+    final borderRadius = screenWidth * 0.04;
+    final iconSize = screenWidth * 0.06;
+    final fontSizeBalance = screenWidth * 0.085; 
+    final fontSizeSubtitle = screenWidth * 0.037; 
+    final fontSizeCoin = screenWidth * 0.032;
+    final smallSpacing = screenHeight * 0.006;
+    final mediumSpacing = screenHeight * 0.012;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      // buat geser kartu ke atas
-      transform: Matrix4.translationValues(0.0, -50.0, 0.0),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
+      transform: Matrix4.translationValues(0.0, verticalOffset, 0.0), 
+      padding: EdgeInsets.all(cardPadding), 
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(borderRadius), 
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -39,41 +54,58 @@ class _BalanceCardState extends State<BalanceCard> {
         children: [
           Row(
             children: [
-              const Icon(Icons.account_balance_wallet_outlined, color: Colors.grey),
-              const SizedBox(width: 8),
+              Icon(
+                Icons.account_balance_wallet_outlined,
+                color: Colors.grey,
+                size: iconSize, 
+              ),
+              SizedBox(width: smallSpacing * 2),
               Text(
                 'Total saldo',
-                style: TextStyle(color: Colors.grey[700], fontSize: 14),
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: fontSizeSubtitle,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: smallSpacing),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                _isBalanceVisible ? 'Rp400.247' : 'Rp ••••••••',
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
+              Expanded(
+                child: Text(
+                  _isBalanceVisible ? 'Rp400.247' : 'Rp ••••••••',
+                  style: TextStyle(
+                    fontSize: fontSizeBalance, 
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.1,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               IconButton(
                 icon: Icon(
-                  _isBalanceVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                  _isBalanceVisible
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
                   color: Colors.grey,
+                  size: iconSize, 
                 ),
                 onPressed: _toggleBalanceVisibility,
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: mediumSpacing),
           const Divider(),
-          const SizedBox(height: 5),
+          SizedBox(height: smallSpacing),
           Text(
             'Total coin 250',
-            style: TextStyle(color: Colors.grey[800], fontSize: 12),
+            style: TextStyle(
+              color: Colors.grey[800],
+              fontSize: fontSizeCoin, 
+            ),
           ),
         ],
       ),

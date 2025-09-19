@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/main.dart';
 import '../cubit/auth_cubit.dart';
 import '../../../../core/util/navi_util.dart';
-import '../../../home/ui/page/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -7,6 +7,15 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+        // biar dinamis
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final double iconSize = screenWidth * 0.075;
+    final double circlePadding = screenWidth * 0.035;
+    final double fontSize = screenWidth * 0.032;
+    final double spacing = screenWidth * 0.02;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Container(
@@ -23,28 +32,43 @@ class ActionButtons extends StatelessWidget {
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildActionButton(
-              icon: Icons.add,
-              label: 'Top up',
-              onTap: () {
-                // Navigasi kosong 
-              },
+            Expanded(
+              child: _buildActionButton(
+                icon: Icons.add,
+                label: 'Top up',
+                onTap: () {
+                  // lorem ipsum
+                },
+                iconSize: iconSize,
+                circlePadding: circlePadding,
+                fontSize: fontSize,
+                spacing: spacing,
+              ),
             ),
-            _buildActionButton(
-              icon: Icons.arrow_downward,
-              label: 'Tarik Tunai',
-              onTap: () {
-                // Navigasi kosong 
-              },
+            Expanded(
+              child: _buildActionButton(
+                icon: Icons.arrow_downward,
+                label: 'Tarik Tunai',
+                onTap: () {
+                  // lorem ipsum
+                },
+                iconSize: iconSize,
+                circlePadding: circlePadding,
+                fontSize: fontSize,
+                spacing: spacing,
+              ),
             ),
-            _buildActionButton(
-              icon: Icons.send,
-              label: 'Transfer',
-              onTap: () {
-                // Navigasi kosong
-              },
+            Expanded(
+              child: _buildActionButton(
+                icon: Icons.send,
+                label: 'Transfer',
+                onTap: () {},
+                iconSize: iconSize,
+                circlePadding: circlePadding,
+                fontSize: fontSize,
+                spacing: spacing,
+              ),
             ),
           ],
         ),
@@ -56,21 +80,30 @@ class ActionButtons extends StatelessWidget {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    required double iconSize,
+    required double circlePadding,
+    required double fontSize,
+    required double spacing,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(circlePadding),
             decoration: BoxDecoration(
               color: Colors.lightBlue[50],
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 28, color: const Color(0xFF0D63F3)),
+            child: Icon(icon, size: iconSize, color: const Color(0xFF0D63F3)),
           ),
-          const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 12)),
+          SizedBox(height: spacing),
+          Text(
+            label,
+            style: TextStyle(fontSize: fontSize),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

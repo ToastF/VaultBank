@@ -41,15 +41,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                
-                children: const[
+
+                children: const [
                   HomeHeader(),
                   BalanceCard(),
                   ActionButtons(),
-                  HistoryList()
+                  HistoryList(),
                 ],
               ),
-            ))
+            ),
+          ),
         ],
       ),
     );
