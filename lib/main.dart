@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
             // then start listening for cloud changes and cache those changes
             context.read<UserCubit>()..loadUser(state.auth.uid)..startUserListener(state.auth.uid);
             // go to HomeScreen, destroy previous pages
-            NavigationHelper.goToAndRemoveAll(context, HomeScreen());
+            NavigationHelper.goToAndRemoveAll(context, const NavBar());
             
             // if not logged in, go to welcome screen
           } else if (state is AuthLoggedOut) {
@@ -90,3 +90,84 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Navbar
+class NavBar extends StatefulWidget{
+  const NavBar({super.key});
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  int _selectedIndex = 1; // Default ke Home
+
+  static final List<Widget> _widgetOptions = <Widget>[
+    const TransferScreen(), 
+    HomeScreen(), 
+    const ProfileScreen(), 
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack( 
+        index: _selectedIndex,
+        children: _widgetOptions,
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.swap_horiz),
+            label: 'Transfer',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profil',
+          ),
+        ],
+        currentIndex: _selectedIndex, 
+        selectedItemColor: Colors.blue, 
+        onTap: _onItemTapped, 
+      ),
+    );
+  }
+}
+
+/// Placeholder sementara untuk halaman Transfer.
+class TransferScreen extends StatelessWidget {
+  const TransferScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('Halaman Transfer'),
+      ),
+    );
+  }
+}
+
+/// Placeholder untuk halaman Profil.
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('Halaman Profil'),
+      ),
+    );
+  }
+}

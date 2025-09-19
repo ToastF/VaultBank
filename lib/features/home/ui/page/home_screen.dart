@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vaultbank/features/home/ui/home_widget/action_button.dart';
+import 'package:vaultbank/features/home/ui/home_widget/balance_card.dart';
+import 'package:vaultbank/features/home/ui/home_widget/history_list.dart';
+import 'package:vaultbank/features/home/ui/home_widget/home_header.dart';
 import 'package:vaultbank/features/home/ui/page/profile.dart';
 import '../../../auth/service/logout_user.dart';
 import '../../../auth/service/handle_AC_flow.dart';
@@ -23,32 +27,29 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      // untuk background bagian putih
+      backgroundColor: Colors.white,
+      body: Stack(
         children: [
-          const Text(
-            "Home",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          Container(
+            // background bagian biru
+            height: MediaQuery.of(context).size.height * 0.35,
+            color: const Color(0xFF0D63F3),
           ),
-          const SizedBox(height: 40),
-          OutlinedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const ProfilePage(),
-                ),
-              );
-            },
-            child: const Text("profile"),
-          ),
-          OutlinedButton(
-            onPressed: () {
-              final logout = LogoutUser(context);
-              logout();
-            },
-            child: const Text("Logout"),
-          ),
+
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                
+                children: const[
+                  HomeHeader(),
+                  BalanceCard(),
+                  ActionButtons(),
+                  HistoryList()
+                ],
+              ),
+            ))
         ],
       ),
     );
