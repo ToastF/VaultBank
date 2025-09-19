@@ -65,7 +65,7 @@ class HistoryList extends StatelessWidget {
           const SizedBox(height: 10),
           // Daftar item riwayat
           ListView.builder(
-            padding: EdgeInsets.zero, // Hapus padding default ListView
+            padding: EdgeInsets.zero, 
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _dummyHistory.length,

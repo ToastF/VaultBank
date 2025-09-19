@@ -6,7 +6,6 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      // Padding bawah lebih besar untuk memberi ruang bagi kartu saldo
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
       child: Row(
         children: [

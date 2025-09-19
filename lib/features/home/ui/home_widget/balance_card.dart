@@ -20,7 +20,7 @@ class _BalanceCardState extends State<BalanceCard> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      // Menggeser kartu ke atas agar menimpa background biru
+      // buat geser kartu ke atas
       transform: Matrix4.translationValues(0.0, -50.0, 0.0),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

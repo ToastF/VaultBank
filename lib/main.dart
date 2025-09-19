@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
 import 'package:vaultbank/features/home/ui/page/home_screen.dart';
+import 'package:vaultbank/features/home/ui/page/profile.dart';
 import './data/local_storage.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/user/data/repositories/user_repository_impl.dart';
@@ -104,7 +105,7 @@ class _NavBarState extends State<NavBar> {
   static final List<Widget> _widgetOptions = <Widget>[
     const TransferScreen(), 
     HomeScreen(), 
-    const ProfileScreen(), 
+    const ProfilePage(), 
   ];
 
   void _onItemTapped(int index) {
@@ -153,20 +154,6 @@ class TransferScreen extends StatelessWidget {
     return const Scaffold(
       body: Center(
         child: Text('Halaman Transfer'),
-      ),
-    );
-  }
-}
-
-/// Placeholder untuk halaman Profil.
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Halaman Profil'),
       ),
     );
   }

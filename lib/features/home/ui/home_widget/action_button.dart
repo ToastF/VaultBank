@@ -7,7 +7,6 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan Padding untuk memberi jarak dari kartu saldo di atasnya
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Container(
@@ -30,21 +29,21 @@ class ActionButtons extends StatelessWidget {
               icon: Icons.add,
               label: 'Top up',
               onTap: () {
-                // Navigasi kosong untuk saat ini
+                // Navigasi kosong 
               },
             ),
             _buildActionButton(
               icon: Icons.arrow_downward,
               label: 'Tarik Tunai',
               onTap: () {
-                // Navigasi kosong untuk saat ini
+                // Navigasi kosong 
               },
             ),
             _buildActionButton(
               icon: Icons.send,
               label: 'Transfer',
               onTap: () {
-                // Navigasi kosong untuk saat ini
+                // Navigasi kosong
               },
             ),
           ],
