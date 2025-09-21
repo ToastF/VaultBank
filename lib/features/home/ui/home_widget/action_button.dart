@@ -1,14 +1,14 @@
 // lib/features/home/ui/widget/action_buttons.dart
 
 import 'package:flutter/material.dart';
+import '../page/topup/top_up.dart';
 
 class ActionButtons extends StatelessWidget {
   const ActionButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-        // biar dinamis
+    // biar dinamis
     final screenWidth = MediaQuery.of(context).size.width;
 
     final double iconSize = screenWidth * 0.075;
@@ -38,7 +38,10 @@ class ActionButtons extends StatelessWidget {
                 icon: Icons.add,
                 label: 'Top up',
                 onTap: () {
-                  // lorem ipsum
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TopUpPage()),
+                  );
                 },
                 iconSize: iconSize,
                 circlePadding: circlePadding,
