@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// 1. Impor file logout_user.dart (sesuaikan path jika perlu)
+import '../../../auth/service/logout_user.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
@@ -11,7 +14,7 @@ class ProfilePage extends StatelessWidget {
           // Blue background
           SliverAppBar(
             expandedHeight: MediaQuery.of(context).size.height * 0.3, // 30% layar
-            pinned: false, 
+            pinned: false,
             backgroundColor: Colors.blue,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -28,7 +31,10 @@ class ProfilePage extends StatelessWidget {
                       const SizedBox(height: 10),
                       const Text(
                         "Filbert Ferdinand",
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                       const Text(
                         "081***1323",
@@ -57,7 +63,13 @@ class ProfilePage extends StatelessWidget {
                   _buildMenuItem(Icons.privacy_tip, "Privacy"),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {},
+                    // ===============================================
+                    // == 2. Panggil service LogoutUser di sini ==
+                    // ===============================================
+                    onPressed: () {
+                      // Membuat instance dari LogoutUser dan langsung memanggilnya
+                      LogoutUser(context)();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.blue),
@@ -65,7 +77,8 @@ class ProfilePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text("Logout", style: TextStyle(color: Colors.blue)),
+                    child: const Text("Logout",
+                        style: TextStyle(color: Colors.blue)),
                   ),
                 ],
               ),
