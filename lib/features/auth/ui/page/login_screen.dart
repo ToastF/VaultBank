@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaultbank/main.dart';
 import '../cubit/auth_cubit.dart';
 import '../../../../core/util/navi_util.dart';
-import '../../../home/ui/page/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Login success!")),
             );
-            NavigationHelper.goToAndRemoveAll(context, const HomeScreen()); 
+            NavigationHelper.goToAndRemoveAll(context, const NavBar()); 
           } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
