@@ -11,6 +11,13 @@ abstract class TransferRepository {
 
   // Riwayat transaksinya
   Future<List<TransactionModel>> getTransactionHistory();
+
+  // Melakukan transfer
+  Future<TransactionModel> performTransfer({
+    required double amount,
+    required RecipientModel recipient,
+    String? notes,
+  });
 }
 
 // Nah untuk mendukung development
@@ -44,6 +51,10 @@ class FakeTransferRepository implements TransferRepository{
       senderName: 'Filbert Ferdinand', senderAccount: '123456789',
       recipientName: 'Toko Online', recipientAccount: '88001122334455', recipientBankName: 'Anstendyk'
     ),
+    TransactionModel(id: 'tx3', amount: 200000, timestamp: DateTime.now().subtract(const Duration(days: 5)), 
+    status: TransactionStatus.failed, type: TransactionType.antarBank, 
+    senderName: 'Filbert Ferdinand', senderAccount: '123456789', 
+    recipientName: 'Orang Asing', recipientAccount: '987654321', recipientBankName: 'New Ferdinand Central')
   ];
 
   // Terapkan fungsi-fungsi yang sudah di set di dalam abstract class TransferRepository
@@ -74,7 +85,7 @@ class FakeTransferRepository implements TransferRepository{
   Future<TransactionModel> performTransfer({
     required double amount,
     required RecipientModel recipient,
-    required String notes,
+    String? notes,
   }) async {
     // Simulasi jika ada delay transfer selama 2 detik
     await Future.delayed(const Duration(seconds: 2));

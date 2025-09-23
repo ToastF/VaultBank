@@ -1,8 +1,10 @@
+import 'package:equatable/equatable.dart';
+
 // Model ini akan digunakan untuk transaksi kita
 enum TransactionStatus { success, failed, pending }
 enum TransactionType { antarBank, antarRekening, virtualAccount }
 
-class TransactionModel {
+class TransactionModel extends Equatable {
   // Berikut adalah data yang wajib data
   final String id;
   final double amount;
@@ -23,7 +25,7 @@ class TransactionModel {
   // Adapun data lain yang sifatnya opsional, sebagai berikut:
   final String? notes; //Catatan transaksi
   
-  TransactionModel({
+  const TransactionModel({
   required this.id,
   required this.amount,
   required this.timestamp,
@@ -39,4 +41,21 @@ class TransactionModel {
   this.recipientBankName,
   this.notes,
   });
+
+  // Penambahan override dan equatable agar perbandingannya langsung berdasarkan properti dan 
+  // bukan pada persamaan letak lokasi memori saja saja. Alias perbandingan hanya pada nilai :);
+  @override
+  List<Object?> get props => [
+    id, 
+    amount, 
+    timestamp, 
+    status, 
+    type, 
+    senderName, 
+    senderAccount,
+    recipientName,
+    recipientAccount,
+    recipientBankName,
+    notes
+  ];
 }
