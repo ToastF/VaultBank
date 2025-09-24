@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaultbank/features/transfer/logic/transfer_cubit.dart';
+import 'package:vaultbank/features/transfer/ui/pages/add_recipient_page.dart';
 import '../widgets/action_button_widget.dart'; 
 
 class TransferHomePage extends StatelessWidget {
@@ -39,13 +42,25 @@ class TransferHomePage extends StatelessWidget {
                          // Contoh menggunakan gambar dari aset
                         imagePath: 'assets/images/action_button/antar_bank.png', 
                         label: 'Banks',
-                        onTap: () { /* TODO: Navigasi */ },
+                        onTap: () {
+                          // _navigateToRecipientForm adalah helper function untuk membantu navigasi
+                          // Bisa di cek pada bagian akhir file kode ini
+                          _navigateToRecipientForm(
+                            context, 
+                            title: 'Daftar Rekening',
+                            label: 'No Tujuan Rekening');
+                        },
                       ),
                       ActionButtonWidget(
                         // TODO: Tambahin asset e_wallet dari Andrew
                         imagePath: 'assets/images/action_button/e_wallet.png', 
                         label: 'E-Wallet',
-                        onTap: () { /* TODO: Navigasi */ },
+                        onTap: () {
+                          _navigateToRecipientForm(
+                            context, 
+                            title: 'Daftar E-Wallet', 
+                            label: 'No. HP');
+                        },
                       ),
                       ActionButtonWidget(
                         imagePath: 'assets/images/action_button/antar_rekening.png',
@@ -103,6 +118,23 @@ class TransferHomePage extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Disini saya menambahkan fungsi helper baru untuk mempermudah navigasi langsung ke
+  // Page add_recipient_page.dart untuk menambahkan e-wallet atau transfer antar bank
+  void _navigateToRecipientForm(BuildContext context, {required String title, required String label}){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: context.read<TransferCubit>(),
+          child: AddRecipientPage(
+            title: title,
+            label: label,
           ),
         ),
       ),
