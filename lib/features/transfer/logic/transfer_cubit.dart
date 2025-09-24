@@ -2,20 +2,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/features/transfer/data/models/recipient_model.dart';
 import 'package:vaultbank/features/transfer/data/repositories/transfer_repository.dart';
 import 'package:vaultbank/features/transfer/logic/transfer_state.dart';
-import 'package:vaultbank/features/user/data/repositories/user_repository_impl.dart';
+import 'package:vaultbank/features/user/domain/repositories/user_repository.dart';
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 
 class TransferCubit extends Cubit<TransferState>{
   final TransferRepository _transferRepository;
-  final UserRepositoryImpl _userRepositoryImpl;
+  final UserRepository _userRepository;
   final UserCubit _userCubit;
 
   TransferCubit({
     required TransferRepository transferRepository,
-    required UserRepositoryImpl userRepositoryImpl,
+    required UserRepository userRepository,
     required UserCubit userCubit,
   }) : _transferRepository = transferRepository,
-       _userRepositoryImpl = userRepositoryImpl,
+       _userRepository = userRepository,
        _userCubit = userCubit,
        super(TransferInitial());
 
@@ -54,7 +54,7 @@ class TransferCubit extends Cubit<TransferState>{
       if (userState is UserLoaded){
         // b. Cek apakah pin benar atau salah
         // Di sini saya manfaatkan verifyPin yang sudah ada
-        final bool isPinCorrect = await _userRepositoryImpl.verifyPin(userState.user.uid, pin);
+        final bool isPinCorrect = await _userRepository.verifyPin(userState.user.uid, pin);
         if (!isPinCorrect){
           emit(TransferFailed('PIN Anda Salah!'));
           return;
