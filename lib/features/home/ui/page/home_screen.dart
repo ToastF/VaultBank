@@ -26,32 +26,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       // untuk background bagian putih
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Container(
-            // background bagian biru
-            height: MediaQuery.of(context).size.height * 0.35,
-            color: const Color(0xFF0D63F3),
-          ),
+      backgroundColor: const Color(0xFFF1F4F8),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            const HomeHeader(),
 
-          SafeArea(
-            child: SingleChildScrollView(
+            SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-
-                children: const [
-                  HomeHeader(),
+                  children: [
+                  SizedBox(height: screenHeight * 0.28 - screenHeight * 0.06,),
                   BalanceCard(),
                   ActionButtons(),
                   HistoryList(),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
