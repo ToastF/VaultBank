@@ -14,6 +14,7 @@ import './core/util/navi_util.dart';
 import 'features/auth/service/register_user.dart';
 import './features/user/ui/cubit/user_cubit.dart';
 
+
 void main() async {
   // Initialize Firebase and Isar
   WidgetsFlutterBinding.ensureInitialized();
