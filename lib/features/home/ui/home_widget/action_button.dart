@@ -1,7 +1,6 @@
-// lib/features/home/ui/widget/action_buttons.dart
-
 import 'package:flutter/material.dart';
 import '../page/topup/top_up.dart';
+import '../../../../core/util/animation_slide.dart';
 
 class ActionButtons extends StatelessWidget {
   const ActionButtons({super.key});
@@ -40,7 +39,7 @@ class ActionButtons extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TopUpPage()),
+                    SlidePageRoute(page: const TopUpPage()),
                   );
                 },
                 iconSize: iconSize,
@@ -54,7 +53,7 @@ class ActionButtons extends StatelessWidget {
                 icon: Icons.arrow_downward,
                 label: 'Tarik Tunai',
                 onTap: () {
-                  // lorem ipsum
+                  // Navigator.push
                 },
                 iconSize: iconSize,
                 circlePadding: circlePadding,
@@ -66,7 +65,9 @@ class ActionButtons extends StatelessWidget {
               child: _buildActionButton(
                 icon: Icons.send,
                 label: 'Transfer',
-                onTap: () {},
+                onTap: () {
+                  // Navigator.push
+                },
                 iconSize: iconSize,
                 circlePadding: circlePadding,
                 fontSize: fontSize,
