@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
 import 'package:vaultbank/features/home/ui/page/home_screen.dart';
 import 'package:vaultbank/features/home/ui/page/profile.dart';
+import 'package:vaultbank/features/home/ui/page/splash_screen.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_home_page.dart';
 import './data/local_storage.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -92,8 +93,8 @@ class MyApp extends StatelessWidget {
             if (state is AuthLoading) {
               return const Center(child: CircularProgressIndicator());
             } else {
-              // could be a splash/loading screen until listener redirects
-              return const Center(child: CircularProgressIndicator());
+              // splash screen 
+              return const Center(child: SplashScreen());
             }
           },
         ),
