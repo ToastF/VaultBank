@@ -17,6 +17,7 @@ import './features/user/ui/cubit/user_cubit.dart';
 import 'package:vaultbank/features/transfer/data/repositories/transfer_repository.dart';
 import 'package:vaultbank/features/transfer/logic/transfer_cubit.dart';
 
+
 void main() async {
   // Initialize Firebase and Isar
   WidgetsFlutterBinding.ensureInitialized();

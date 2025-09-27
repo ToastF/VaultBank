@@ -105,6 +105,7 @@ class _BalanceCardState extends State<BalanceCard> {
             style: TextStyle(
               color: Colors.grey[800],
               fontSize: fontSizeCoin, 
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
