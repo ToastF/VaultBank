@@ -10,6 +10,7 @@ class RegisterUser {
   RegisterUser(this._authRepository, this._userRepository);
 
   Future<AuthEntity> call(
+    String username,
     String email,
     String password,
     String pin,
@@ -20,6 +21,7 @@ class RegisterUser {
 
     // Store profile + PIN in Firestore
     await _userRepository.createUserProfile(
+      username,
       authEntity.uid,
       email,
       notelp,
@@ -27,8 +29,6 @@ class RegisterUser {
     );
 
     // Return domain-level AuthEntity
-    return AuthEntity(
-      uid: authEntity.uid,
-    );
+    return AuthEntity(uid: authEntity.uid);
   }
 }

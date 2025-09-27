@@ -12,6 +12,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
   final pinCtrl = TextEditingController();
@@ -24,14 +25,14 @@ class _SignupScreenState extends State<SignupScreen> {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Signup success!")),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text("Signup success!")));
             NavigationHelper.goToAndRemoveAll(context, const HomeScreen());
           } else if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -43,18 +44,41 @@ class _SignupScreenState extends State<SignupScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: "Email")),
-                TextField(controller: passwordCtrl, decoration: const InputDecoration(labelText: "Password"), obscureText: true),
-                TextField(controller: pinCtrl, decoration: const InputDecoration(labelText: "Transaction PIN"), obscureText: true),
-                TextField(controller: telpCtrl, decoration: const InputDecoration(labelText: "Telephone number"), obscureText: true),
+                TextField(
+                  controller: nameCtrl,
+                  decoration: const InputDecoration(labelText: "Username"),
+                ),
+                TextField(
+                  controller: emailCtrl,
+                  decoration: const InputDecoration(labelText: "Email"),
+                ),
+                TextField(
+                  controller: passwordCtrl,
+                  decoration: const InputDecoration(labelText: "Password"),
+                  obscureText: true,
+                ),
+                TextField(
+                  controller: pinCtrl,
+                  decoration: const InputDecoration(
+                    labelText: "Transaction PIN",
+                  ),
+                  obscureText: true,
+                ),
+                TextField(
+                  controller: telpCtrl,
+                  decoration: const InputDecoration(
+                    labelText: "Telephone number",
+                  ),
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     context.read<AuthCubit>().signUp(
+                      nameCtrl.text,
                       emailCtrl.text,
                       passwordCtrl.text,
                       pinCtrl.text,
-                      telpCtrl.text
+                      telpCtrl.text,
                     );
                   },
                   child: const Text("Sign Up"),
