@@ -45,10 +45,7 @@ class TransferHomePage extends StatelessWidget {
                         onTap: () {
                           // _navigateToRecipientForm adalah helper function untuk membantu navigasi
                           // Bisa di cek pada bagian akhir file kode ini
-                          _navigateToRecipientForm(
-                            context, 
-                            title: 'Daftar Rekening',
-                            label: 'No Tujuan Rekening');
+                          _navigateToRecipientForm(context, type: RecipientType.bank);
                         },
                       ),
                       ActionButtonWidget(
@@ -56,10 +53,7 @@ class TransferHomePage extends StatelessWidget {
                         imagePath: 'assets/images/action_button/e_wallet.png', 
                         label: 'E-Wallet',
                         onTap: () {
-                          _navigateToRecipientForm(
-                            context, 
-                            title: 'Daftar E-Wallet', 
-                            label: 'No. HP');
+                          _navigateToRecipientForm(context, type: RecipientType.ewallet);
                         },
                       ),
                       ActionButtonWidget(
@@ -126,16 +120,13 @@ class TransferHomePage extends StatelessWidget {
 
   // Disini saya menambahkan fungsi helper baru untuk mempermudah navigasi langsung ke
   // Page add_recipient_page.dart untuk menambahkan e-wallet atau transfer antar bank
-  void _navigateToRecipientForm(BuildContext context, {required String title, required String label}){
+  void _navigateToRecipientForm(BuildContext context, {required RecipientType type}){
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => BlocProvider.value(
           value: context.read<TransferCubit>(),
-          child: AddRecipientPage(
-            title: title,
-            label: label,
-          ),
+          child: AddRecipientPage(type: type),
         ),
       ),
     );
