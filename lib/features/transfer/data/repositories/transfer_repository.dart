@@ -62,11 +62,10 @@ class FakeTransferRepository implements TransferRepository{
 
   // Tambahan dummy e wallets
   final List<BankModel> _dummyEwallets = [
-    // TODO: Tambahkan semua logo yang ada
-    BankModel(name: "GoPay", code: "70001", logoUrl: "assets/logos/gopay.png"),
-    BankModel(name: "OVO", code: "90000", logoUrl: "assets/logos/ovo.png"),
-    BankModel(name: "DANA", code: "8059", logoUrl: "assets/logos/dana.png"),
-    BankModel(name: "ShopeePay", code: "122", logoUrl: "assets/logos/shopeepay.png"),
+    BankModel(name: "GoPay", code: "70001", logoUrl: "assets/images/gopay.png"),
+    BankModel(name: "OVO", code: "90000", logoUrl: "assets/images/ovo.png"),
+    BankModel(name: "DANA", code: "8059", logoUrl: "assets/images/dana.png"),
+    BankModel(name: "ShopeePay", code: "122", logoUrl: "assets/images/shopeepay.png"),
   ];
 
   // Terapkan fungsi-fungsi yang sudah di set di dalam abstract class TransferRepository
@@ -80,7 +79,7 @@ class FakeTransferRepository implements TransferRepository{
   @override
   Future<List<BankModel>> getEwalletList() async {
     await Future.delayed(const Duration(milliseconds: 800));
-    return _dummyBanks;
+    return _dummyEwallets;
   }
   // Ambil list penerima yang sudah kita simpan
   @override

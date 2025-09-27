@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/features/transfer/data/models/bank_model.dart';
 import 'package:vaultbank/features/transfer/logic/transfer_cubit.dart';
 import 'package:vaultbank/features/transfer/logic/transfer_state.dart';
+import 'package:vaultbank/features/transfer/ui/widgets/provider_list_item_widget.dart';
 
 enum RecipientType {bank, ewallet}
 
@@ -125,14 +126,9 @@ class _AddRecipientPageState extends State<AddRecipientPage> {
                       itemCount: state.banks.length,
                       itemBuilder: (context, index){
                         final provider = state.banks[index];
-                        return ListTile(
-                          // Tampilin logo setiap bank/company e-wallet
-                          leading: provider.logoUrl != null
-                            ? Image.asset(provider.logoUrl!, width: 40, height: 40)
-                            : const CircleAvatar(child: Icon(Icons.business),),
-                          title: Text(provider.name),
-                          onTap: () => Navigator.pop(context, provider),
-                        );
+                        return ProviderListItemWidget(
+                          provider: provider, 
+                          onTap: () => Navigator.pop(context, provider));
                       }
                     )
                   )

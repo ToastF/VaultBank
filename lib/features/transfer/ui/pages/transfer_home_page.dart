@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/features/transfer/logic/transfer_cubit.dart';
+import 'package:vaultbank/features/transfer/ui/pages/add_internal_account_page.dart';
 import 'package:vaultbank/features/transfer/ui/pages/add_recipient_page.dart';
 import '../widgets/action_button_widget.dart'; 
 
@@ -59,7 +60,12 @@ class TransferHomePage extends StatelessWidget {
                       ActionButtonWidget(
                         imagePath: 'assets/images/action_button/antar_rekening.png',
                         label: 'Antar\nRekening',
-                        onTap: () { /* TODO: Navigasi */ },
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddInternalAccountPage()));
+                        },
                       ),
                        ActionButtonWidget(
                         imagePath: 'assets/images/action_button/virtual_account.png',
