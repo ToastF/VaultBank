@@ -14,19 +14,20 @@ class AuthCubit extends Cubit<AuthState> {
   final UserRepositoryImpl userRepo;
   final RegisterUser _registerUser;
 
-  AuthCubit._internal(this.authRepo,this.userRepo, this._registerUser) : super(AuthInitial());
+  AuthCubit._internal(this.authRepo, this.userRepo, this._registerUser)
+    : super(AuthInitial());
 
   factory AuthCubit.create(BuildContext context) {
     final auth = RepositoryProvider.of<AuthRepositoryImpl>(context);
     final user = RepositoryProvider.of<UserRepositoryImpl>(context);
     final register = RepositoryProvider.of<RegisterUser>(context);
-    return AuthCubit._internal(auth,user,register);
+    return AuthCubit._internal(auth, user, register);
   }
 
   Future<void> checkAuthStatus() async {
-    emit(AuthLoading()); 
+    emit(AuthLoading());
     try {
-      final auth = await authRepo.getCurrentAuth(); 
+      final auth = await authRepo.getCurrentAuth();
       if (auth != null) {
         emit(AuthSuccess(auth)); // go to home
       } else {
@@ -39,10 +40,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   // Signup function
   // Calls service class RegisterUser for signup process
-  Future<void> signUp(String email, String password, String pin, String notelp) async {
+  Future<void> signUp(
+    String username,
+    String email,
+    String password,
+    String pin,
+    String notelp,
+  ) async {
     emit(AuthLoading());
     try {
-      final user = await _registerUser(email, password, pin, notelp);
+      final user = await _registerUser(username, email, password, pin, notelp);
       emit(AuthSuccess(user));
     } catch (e) {
       emit(AuthFailure(e.toString()));
@@ -52,26 +59,25 @@ class AuthCubit extends Cubit<AuthState> {
   // Login function
   // Calls repository's function for Login process
   Future<void> logIn(String email, String password) async {
-      emit(AuthLoading());
-      try {
-        final user = await authRepo.logIn(email, password);
-        emit(AuthSuccess(user));
-      } catch (e) {
-          emit(AuthFailure(e.toString()));
-      }
+    emit(AuthLoading());
+    try {
+      final user = await authRepo.logIn(email, password);
+      emit(AuthSuccess(user));
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+    }
   }
 
   // Logout function
   // Calls service class LogoutUser for Logout process
   Future<void> logOut(BuildContext context) async {
-      emit(AuthLoading());
-      try {
-        final logout = LogoutUser(context);
-        await logout();
-        emit(AuthFinalized());
-      } catch (e) {
-          emit(AuthFailure(e.toString()));
-      }
+    emit(AuthLoading());
+    try {
+      final logout = LogoutUser(context);
+      await logout();
+      emit(AuthFinalized());
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+    }
   }
-
 }
