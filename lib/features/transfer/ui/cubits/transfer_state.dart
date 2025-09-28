@@ -1,8 +1,8 @@
 // File ini akan digunakan untuk state management dari transfer ke depannya
 
 import 'package:equatable/equatable.dart';
-import 'package:vaultbank/features/transfer/data/models/bank_model.dart';
-import 'package:vaultbank/features/transfer/data/models/transaction_model.dart';
+import 'package:vaultbank/features/transfer/domain/entities/bank_model.dart';
+import 'package:vaultbank/features/transfer/domain/entities/transaction_model.dart';
 
 // Di sini saya memanfaatkan Equatable, hal ini agar mempermudah overriding == dan hashCode
 // Dokumentasi dari Equatable, yakni: https://pub.dev/packages/equatable
