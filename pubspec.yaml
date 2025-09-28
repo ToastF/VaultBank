@@ -63,8 +63,6 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
-    - assets/images/logo_alfamidi.png
-    - assets/images/logo_alfamart.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
