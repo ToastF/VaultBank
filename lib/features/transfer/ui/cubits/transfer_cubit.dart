@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/transfer/data/models/recipient_model.dart';
-import 'package:vaultbank/features/transfer/data/repositories/transfer_repository.dart';
-import 'package:vaultbank/features/transfer/logic/transfer_state.dart';
+import 'package:vaultbank/features/transfer/domain/repositories/transfer_repository.dart';
+import 'package:vaultbank/features/transfer/domain/entities/recipient_model.dart';
+import 'package:vaultbank/features/transfer/ui/cubits/transfer_state.dart';
 import 'package:vaultbank/features/user/domain/repositories/user_repository.dart';
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/transfer/logic/transfer_cubit.dart';
+import 'package:vaultbank/features/transfer/ui/cubits/transfer_cubit.dart';
 import 'package:vaultbank/features/transfer/ui/pages/add_internal_account_page.dart';
 import 'package:vaultbank/features/transfer/ui/pages/add_recipient_page.dart';
-import '../widgets/action_button_widget.dart'; 
+import 'package:vaultbank/features/transfer/ui/widgets/transfer_action_tile.dart';
 
 class TransferHomePage extends StatelessWidget {
   const TransferHomePage({super.key});
@@ -34,43 +34,43 @@ class TransferHomePage extends StatelessWidget {
                 elevation: 2,
                 shadowColor: Colors.black12,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Row(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ActionButtonWidget(
+                      TransferActionTile(
                          // Contoh menggunakan gambar dari aset
                         imagePath: 'assets/images/action_button/antar_bank.png', 
-                        label: 'Banks',
+                        title: 'Banks',
+                        subtitle: 'BCA, BRI, BNI, dan Mandiri',
                         onTap: () {
                           // _navigateToRecipientForm adalah helper function untuk membantu navigasi
                           // Bisa di cek pada bagian akhir file kode ini
                           _navigateToRecipientForm(context, type: RecipientType.bank);
                         },
                       ),
-                      ActionButtonWidget(
+                      const Divider(height: 1, indent: 60),
+                      TransferActionTile(
                         // TODO: Tambahin asset e_wallet dari Andrew
                         imagePath: 'assets/images/action_button/e_wallet.png', 
-                        label: 'E-Wallet',
+                        title: 'E-Wallet',
+                        subtitle: 'Go Pay, Shopee Pay, OVO, Dana',
                         onTap: () {
                           _navigateToRecipientForm(context, type: RecipientType.ewallet);
                         },
                       ),
-                      ActionButtonWidget(
+                      const Divider(height: 1, indent: 60),
+                      TransferActionTile(
                         imagePath: 'assets/images/action_button/antar_rekening.png',
-                        label: 'Antar\nRekening',
+                        title: 'Antar Rekening',
+                        subtitle: 'Vault Bank',
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const AddInternalAccountPage()));
                         },
-                      ),
-                       ActionButtonWidget(
-                        imagePath: 'assets/images/action_button/virtual_account.png',
-                        label: 'VA Account',
-                        onTap: () { /* TODO: Navigasi */ },
                       ),
                     ],
                   ),
@@ -83,34 +83,41 @@ class TransferHomePage extends StatelessWidget {
               const Text('Transfer', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               Card(
-                elevation: 2,
+                elevation: 1,
                 shadowColor: Colors.black12,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ActionButtonWidget(
+                      TransferActionTile(
                          // Contoh menggunakan gambar dari aset
                         imagePath: 'assets/images/action_button/antar_bank.png', 
-                        label: 'Banks',
+                        title: 'Banks',
+                        subtitle: 'BCA, BRI, BNI, dan Mandiri',
                         onTap: () { /* TODO: Navigasi */ },
                       ),
-                      ActionButtonWidget(
+                      const Divider(height: 1, indent: 60),
+                      TransferActionTile(
                         // TODO: Tambahin asset e_wallet dari Andrew
                         imagePath: 'assets/images/action_button/e_wallet.png', 
-                        label: 'E-Wallet',
+                        title: 'E-Wallet',
+                        subtitle: 'Go Pay, Shopee Pay, OVO, Dana',
                         onTap: () { /* TODO: Navigasi */ },
                       ),
-                      ActionButtonWidget(
+                      const Divider(height: 1, indent: 60),
+                      TransferActionTile(
                         imagePath: 'assets/images/action_button/antar_rekening.png',
-                        label: 'Antar\nRekening',
+                        title: 'Antar Rekening',
+                        subtitle: 'Vault Bank',
                         onTap: () { /* TODO: Navigasi */ },
                       ),
-                       ActionButtonWidget(
+                      const Divider(height: 1, indent: 60),
+                      TransferActionTile(
                         imagePath: 'assets/images/action_button/virtual_account.png',
-                        label: 'VA Account',
+                        title: 'VA Account',
+                        subtitle: 'Kode Virtual Account',
                         onTap: () { /* TODO: Navigasi */ },
                       ),
                     ],

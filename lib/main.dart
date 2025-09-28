@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
 import 'package:vaultbank/features/home/ui/page/home_screen.dart';
 import 'package:vaultbank/features/home/ui/page/profile.dart';
+import 'package:vaultbank/features/transfer/data/local/fake_transfer_repository.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_home_page.dart';
 import './data/local_storage.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -14,8 +15,7 @@ import './features/auth/ui/cubit/auth_cubit.dart';
 import './core/util/navi_util.dart';
 import 'features/auth/service/register_user.dart';
 import './features/user/ui/cubit/user_cubit.dart';
-import 'package:vaultbank/features/transfer/data/repositories/transfer_repository.dart';
-import 'package:vaultbank/features/transfer/logic/transfer_cubit.dart';
+import 'package:vaultbank/features/transfer/ui/cubits/transfer_cubit.dart';
 
 
 void main() async {

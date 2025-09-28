@@ -3,7 +3,7 @@
 // Dan akan dipakai di dalam pages yang berhubungan dengan add_(type)_recipient_page
 
 import 'package:flutter/material.dart';
-import 'package:vaultbank/features/transfer/data/models/bank_model.dart';
+import 'package:vaultbank/features/transfer/domain/entities/bank_model.dart';
 
 class ProviderListItemWidget extends StatelessWidget {
   final BankModel provider;
