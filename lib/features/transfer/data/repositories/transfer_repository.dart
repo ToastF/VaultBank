@@ -6,6 +6,9 @@ abstract class TransferRepository {
   // List daftar bank yang tersedia
   Future<List<BankModel>> getBankList();
 
+  // List daftar e-wallet yang tersedia
+  Future<List<BankModel>> getEwalletList();
+
   // List daftar penerima yang disimpan
   Future<List<RecipientModel>> getSavedRecipients();
 
@@ -57,12 +60,26 @@ class FakeTransferRepository implements TransferRepository{
     recipientName: 'Orang Asing', recipientAccount: '987654321', recipientBankName: 'New Ferdinand Central')
   ];
 
+  // Tambahan dummy e wallets
+  final List<BankModel> _dummyEwallets = [
+    BankModel(name: "GoPay", code: "70001", logoUrl: "assets/images/gopay.png"),
+    BankModel(name: "OVO", code: "90000", logoUrl: "assets/images/ovo.png"),
+    BankModel(name: "DANA", code: "8059", logoUrl: "assets/images/dana.png"),
+    BankModel(name: "ShopeePay", code: "122", logoUrl: "assets/images/shopeepay.png"),
+  ];
+
   // Terapkan fungsi-fungsi yang sudah di set di dalam abstract class TransferRepository
   // Ambil list bank
   @override
   Future<List<BankModel>> getBankList() async {
     await Future.delayed(const Duration(milliseconds: 800));
     return _dummyBanks;
+  }
+  // Ambil list e-wallet
+  @override
+  Future<List<BankModel>> getEwalletList() async {
+    await Future.delayed(const Duration(milliseconds: 800));
+    return _dummyEwallets;
   }
   // Ambil list penerima yang sudah kita simpan
   @override

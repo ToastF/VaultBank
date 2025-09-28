@@ -19,8 +19,8 @@ class TransferCubit extends Cubit<TransferState>{
        _userCubit = userCubit,
        super(TransferInitial());
 
-  // Method di bawah ini akan digunakan untuk meng-load/memuat data awal pada halaman transfer
-  Future<void> loadInitialData() async{
+  // Method di bawah ini akan digunakan untuk load data bank yang kita punya
+  Future<void> loadBankList() async{
     // Berikan sebuah try catch untuk menambah safety
     try{
       emit(TransferLoading());
@@ -28,6 +28,22 @@ class TransferCubit extends Cubit<TransferState>{
       // Panggil daftar bank kita, yang berada dalam transfer_repository.dart
       final banks = await _transferRepository.getBankList();
       emit(TransferDataLoaded(banks));
+    }
+    // Semisalnya load ini gagal, maka tampilkan pesan error
+    catch (e){
+      emit(TransferFailed("Maaf, data bank gagal dimuat. Silahkan coba lagi"));
+    }
+  }
+
+  // Method di bawah ini akan digunakan untuk load data bank yang kita punya
+  Future<void> loadEwalletList() async{
+    // Berikan sebuah try catch untuk menambah safety
+    try{
+      emit(TransferLoading());
+      
+      // Panggil daftar bank kita, yang berada dalam transfer_repository.dart
+      final ewallets = await _transferRepository.getEwalletList();
+      emit(TransferDataLoaded(ewallets));
     }
     // Semisalnya load ini gagal, maka tampilkan pesan error
     catch (e){
