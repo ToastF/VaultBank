@@ -42,9 +42,9 @@ dependencies:
   isar_flutter_libs: ^3.1.0
   path_provider: ^2.1.5
   intl: ^0.20.2
-  flutter_native_splash: ^2.4.6
   flutter_launcher_icons: ^0.14.4
   equatable: ^2.0.0
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -104,16 +104,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-
-# ini buat splash screen
-# flutter_native_splash:
-#   color: "#FFFFFF" 
-
-#   image: assets/images/logo.png
-#   # biar bisa muncul di android 12+
-#   android_12:
-#     color: "#FFFFFF"
-#     image: assets/images/logo.png
 
 # buat icon aplikasi
 flutter_launcher_icons:
