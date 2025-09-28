@@ -2,6 +2,7 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:vaultbank/features/transfer/domain/entities/bank_model.dart';
+import 'package:vaultbank/features/transfer/domain/entities/recipient_model.dart';
 import 'package:vaultbank/features/transfer/domain/entities/transaction_model.dart';
 
 // Di sini saya memanfaatkan Equatable, hal ini agar mempermudah overriding == dan hashCode
@@ -18,6 +19,23 @@ class TransferInitial extends TransferState{}
 
 // State saat terjadi loading
 class TransferLoading extends TransferState{}
+
+// State ketika berhasil menyimpan akun recipient
+class RecipientSaveSuccess extends TransferState{
+  final RecipientModel recipient;
+  const RecipientSaveSuccess(this.recipient);
+
+  @override
+  List<Object> get props => [recipient];
+}
+/// State ketika verifikasi recipient (penerima) berhasil dan data recipient ditemukan.
+class RecipientVerified extends TransferState {
+  final RecipientModel recipient;
+  const RecipientVerified(this.recipient);
+
+  @override
+  List<Object> get props => [recipient];
+}
 
 // State ketika data berhasil di load
 // Sehingga muncul daftar bank yang bisa kita pilih

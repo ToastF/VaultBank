@@ -6,19 +6,24 @@ import 'package:vaultbank/features/transfer/domain/entities/transaction_model.da
 import 'package:vaultbank/features/transfer/domain/repositories/transfer_repository.dart';
 
 class FakeTransferRepository implements TransferRepository{
-  // Bagian ini jadi list untuk nama bank palsunya  
-  // Saya gunakan nama anggota saya sendiri sebagai easter egg
+  // TODO: Tambahkan logo bank
   final List<BankModel> _dummyBanks = [
-    BankModel(name: "Erick National Bank", code: "010"),
-    BankModel(name: "Gerald's Priority", code: "030"),
-    BankModel(name: "Anstendyk", code: "130"),
-    BankModel(name: "New Ferdinand Central", code: "135"),
-    BankModel(name: "The NG", code: "153"),
+    BankModel(name: "Bank Central Asia", code: "014"),
+    BankModel(name: "Bank Rakyat Indonesia", code: "002"),
+    BankModel(name: "Bank Negara Indonesia", code: "009"),
+    BankModel(name: "Bank Mandiri", code: "008"),
   ];
 
+  // List no rekening yang telah kita daftarkan
   final List<RecipientModel> _dummyRecipients = [
-    RecipientModel(id: "1", name: 'Coach Mariano', accountNumber: '4133313331', bankName: "New Ferdinand Central", bankCode: "135"),
-    RecipientModel(id: "2", name: "Sulistyo Luis", accountNumber: '1313321020', bankName: 'The NG', bankCode: "153"),
+    RecipientModel(id: "1", name: 'Coach Mariano', accountNumber: '4133313331', bankName: "Bank Central Asia", bankCode: "014"),
+    RecipientModel(id: "2", name: "Sulistyo Luis", accountNumber: '1313321020', bankName: 'Bank Mandiri', bankCode: "008"),
+  ];
+
+  final List<RecipientModel> _registeredAccounts = [
+    RecipientModel(id: '3', name: 'Budi Hartono', accountNumber: '1122334455', bankName: 'Bank Rakyat Indonesia', bankCode: '002'),
+    RecipientModel(id: '4', name: 'Siti Aminah', accountNumber: '6677889900', bankName: 'Bank Negara Indonesia', bankCode: '009'),
+    RecipientModel(id: '5', name: 'Erick Thohir', accountNumber: '123123123', bankName: 'Bank Central Asia', bankCode: '014'),
   ];
 
   List<TransactionModel> _dummyTransactions = [
@@ -61,6 +66,18 @@ class FakeTransferRepository implements TransferRepository{
     await Future.delayed(const Duration(milliseconds: 800));
     return _dummyEwallets;
   }
+
+  // Simpan penerima baru kita
+  @override
+  Future<void> saveRecipient(RecipientModel recipient) async {
+    // Simulasi proses menyimpan ke database
+    await Future.delayed(const Duration(seconds: 1));
+    
+    // Tambahkan penerima baru ke daftar dummy kita
+    _dummyRecipients.add(recipient);
+    print('Penerima baru disimpan: ${recipient.name}');
+  }  
+
   // Ambil list penerima yang sudah kita simpan
   @override
   Future<List<RecipientModel>> getSavedRecipients() async {
@@ -75,6 +92,27 @@ class FakeTransferRepository implements TransferRepository{
     // Urutkan agar transaksi ditampilkan mulai dari yang terbaru ke yang terlama
     _dummyTransactions.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return _dummyTransactions;
+  }
+
+  // Digunakan untuk mengecek apakah nomor akun yang dimasukkan terdaftar dalam database
+  @override
+  Future<RecipientModel?> verifyRecipientAccount({
+    required String accountNumber,
+    required String bankCode,
+  }) async {
+    // Simulasi proses pengecekan ke server
+    await Future.delayed(const Duration(seconds: 1));
+    
+    try {
+      // Cari rekening di "database" kita
+      final recipient = _registeredAccounts.firstWhere(
+        (acc) => acc.accountNumber == accountNumber && acc.bankCode == bankCode
+      );
+      return recipient;
+    } catch (e) {
+      // Jika tidak ditemukan, kembalikan null
+      return null;
+    }
   }
 
   // Lakukan transfer

@@ -54,8 +54,8 @@ void main() async {
             create: (context) => TransferCubit(
               transferRepository: transferRepo, 
               userRepository: userRepo, 
-              userCubit: context.read<UserCubit>()),
-              )
+            ),
+          )
         ],
         child: const MyApp(),
       ),
