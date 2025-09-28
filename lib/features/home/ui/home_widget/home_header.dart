@@ -19,46 +19,55 @@ class HomeHeader extends StatelessWidget {
     final double welcomeFontSize = screenWidth * 0.035;
     final double nameFontSize = screenWidth * 0.045;
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        horizontalPadding,
-        topPadding,
-        horizontalPadding,
-        bottomPadding,
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: avatarRadius,
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.person,
-              size: iconSize, 
-              color: const Color(0xFF0D63F3),
-            ),
+    return Container(
+      width: double.infinity,
+      height: screenHeight * 0.28,
+      color: const Color(0xFF0D63F3),
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPadding,
+            topPadding,
+            horizontalPadding,
+            bottomPadding,
           ),
-          SizedBox(width: spacing), 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'Welcome',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: welcomeFontSize, 
+              CircleAvatar(
+                radius: avatarRadius,
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.person,
+                  size: iconSize, 
+                  color: const Color(0xFF0D63F3),
                 ),
               ),
-              Text(
-                'Filbert Ferdinand',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: nameFontSize, 
-                  fontWeight: FontWeight.bold,
-                ),
+              SizedBox(width: spacing), 
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Welcome',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: welcomeFontSize, 
+                    ),
+                  ),
+                  Text(
+                    'Filbert Ferdinand',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: nameFontSize, 
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

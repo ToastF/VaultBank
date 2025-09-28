@@ -19,9 +19,11 @@ class UserRepositoryImpl implements UserRepository {
       // background sync
       _syncUserFromFirestore(uid);
       return UserEntity(
+        username: cached.username,
         uid: cached.uid,
         email: cached.email,
         notelp: cached.notelp,
+        balance: cached.balance,
       );
     }
 
@@ -34,6 +36,8 @@ class UserRepositoryImpl implements UserRepository {
       uid: uid,
       email: data['email'],
       notelp: data['notelp'],
+      username: data['username'],
+      balance: data['balance'],
     );
 
     await saveUserToCache(uid, data);
@@ -57,12 +61,15 @@ class UserRepositoryImpl implements UserRepository {
   // saves to cache
   @override
   Future<void> saveUserToCache(String uid, Map<String, dynamic> data) async {
-    await UserStorage().saveUser(UserModel()
-      ..uid = uid
-      ..email = data['email']
-      ..notelp = data['notelp'] ?? ''
-      ..pinHash = data['pinHash'] ?? ''
-      ..pinSalt = data['pinSalt'] ?? ''
+    await UserStorage().saveUser(
+      UserModel()
+        ..uid = uid
+        ..email = data['email']
+        ..notelp = data['notelp'] ?? ''
+        ..pinHash = data['pinHash'] ?? ''
+        ..pinSalt = data['pinSalt'] ?? ''
+        ..username = data['username'] ?? 'User'
+        ..balance = data['balance'] ?? 0.toDouble(),
     );
     debugPrint("Saved user data to Cache");
   }
@@ -71,7 +78,9 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Stream<UserEntity?> listenToUser(String uid) {
     debugPrint("listening to user changes");
-    return _firestore.collection('users').doc(uid).snapshots().asyncMap((doc) async {
+    return _firestore.collection('users').doc(uid).snapshots().asyncMap((
+      doc,
+    ) async {
       if (!doc.exists) return null;
 
       final data = doc.data()!;
@@ -81,45 +90,56 @@ class UserRepositoryImpl implements UserRepository {
         uid: uid,
         email: data['email'],
         notelp: data['notelp'],
+        username: data['username'],
+        balance: data['balance'],
       );
     });
   }
 
   // create firestore user profile (complete credentials)
   @override
-  Future<void> createUserProfile(String uid, String email, String notelp, String pin) async {
+  Future<void> createUserProfile(
+    String username,
+    String uid,
+    String email,
+    String notelp,
+    String pin,
+  ) async {
     // hashes pin before saving
     final salt = HashUtil.generateSalt();
     final pinHash = HashUtil.hashWithSalt(pin, salt);
 
     // save profile data to firestore
     await _firestore.collection('users').doc(uid).set({
+      'username': username,
       'email': email,
       'pinHash': pinHash,
       'pinSalt': salt,
       'notelp': notelp,
+      'balance': 0,
     });
 
     // cache profile data
-    await UserStorage().saveUser(UserModel()
-      ..uid = uid
-      ..email = email
-      ..notelp = notelp
+    await UserStorage().saveUser(
+      UserModel()
+        ..username = username
+        ..uid = uid
+        ..email = email
+        ..pinHash = pinHash
+        ..pinSalt = salt
+        ..notelp = notelp
+        ..balance = 0,
     );
   }
 
-  // verify pin 
+  // verify pin
   @override
   Future<bool> verifyPin(String uid, String enteredPin) async {
     // check local pin first
     final localUser = await UserStorage().getUser();
     if (localUser != null && localUser.uid == uid) {
       // check with salt
-      return HashUtil.verify(
-        enteredPin,
-        localUser.pinHash,
-        localUser.pinSalt,
-      );
+      return HashUtil.verify(enteredPin, localUser.pinHash, localUser.pinSalt);
     }
 
     // fallback to Firestore (source of truth)
@@ -132,5 +152,4 @@ class UserRepositoryImpl implements UserRepository {
 
     return HashUtil.verify(enteredPin, storedHash, storedSalt);
   }
-
 }

@@ -7,11 +7,13 @@ part 'user_data_storage.g.dart';
 @collection
 class UserModel {
   Id id = 0; // always store only one user locally
+  late String username;
   late String uid;
   late String email;
   late String notelp;
   late String pinHash;
   late String pinSalt;
+  late double balance;
 }
 
 class UserStorage {
