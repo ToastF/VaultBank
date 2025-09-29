@@ -1,24 +1,14 @@
-import 'package:vaultbank/features/transfer/domain/entities/bank_model.dart';
-import 'package:vaultbank/features/transfer/domain/entities/recipient_model.dart';
-import 'package:vaultbank/features/transfer/domain/entities/transaction_model.dart';
+import 'package:vaultbank/features/transaction_history/domain/entities/transaction_entity.dart';
 
 abstract class TransferRepository {
-  // List daftar bank yang tersedia
-  Future<List<BankModel>> getBankList();
-
-  // List daftar e-wallet yang tersedia
-  Future<List<BankModel>> getEwalletList();
-
-  // List daftar penerima yang disimpan
-  Future<List<RecipientModel>> getSavedRecipients();
-
-  // Riwayat transaksinya
-  Future<List<TransactionModel>> getTransactionHistory();
-
-  // Melakukan transfer
-  Future<TransactionModel> performTransfer({
+  Future<void> makeTransfer({
+    required String uid, // uid pengirim
+    required String senderAccount,
+    required String senderName,
+    required String recipientAccount,
+    required String recipientName,
     required double amount,
-    required RecipientModel recipient,
+    required TransactionType type,
     String? notes,
   });
 }

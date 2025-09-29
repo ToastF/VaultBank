@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
 import 'package:vaultbank/features/home/ui/page/home_screen.dart';
 import 'package:vaultbank/features/home/ui/page/profile.dart';
-import 'package:vaultbank/features/transfer/data/local/fake_transfer_repository.dart';
 import 'package:vaultbank/features/home/ui/page/splash_screen.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_home_page.dart';
 import './data/local_storage.dart';
@@ -66,7 +65,6 @@ class AppProviders extends StatelessWidget {
     final authRepo = AuthRepositoryImpl(FirebaseAuth.instance);
     final userRepo = UserRepositoryImpl(FirebaseFirestore.instance);
     final registerUser = RegisterUser(authRepo, userRepo);
-    final transferRepo = FakeTransferRepository();
 
     // Multirepositoryprovider for dependency injection,
     // A single instance of a repository can be used by its children widget
@@ -75,7 +73,6 @@ class AppProviders extends StatelessWidget {
         RepositoryProvider.value(value: authRepo),
         RepositoryProvider.value(value: userRepo),
         RepositoryProvider.value(value: registerUser),
-        RepositoryProvider.value(value: transferRepo),
       ],
       // MultiBlockProvider, to nest multiple BlocProviders
       child: MultiBlocProvider(
@@ -87,14 +84,6 @@ class AppProviders extends StatelessWidget {
           ),
           // Cubit responsible for user profile data
           BlocProvider(create: (context) => UserCubit(userRepo)),
-          BlocProvider(
-            create:
-                (context) => TransferCubit(
-                  transferRepository: transferRepo,
-                  userRepository: userRepo,
-                  userCubit: context.read<UserCubit>(),
-                ),
-          ),
         ],
         child: const AuthGate(),
       ),
@@ -140,7 +129,7 @@ class _NavBarState extends State<NavBar> {
   int _selectedIndex = 1; // Default ke Home
 
   static final List<Widget> _widgetOptions = <Widget>[
-    const TransferHomePage(),
+    const Placeholder(),
     HomeScreen(),
     const ProfilePage(),
   ];
