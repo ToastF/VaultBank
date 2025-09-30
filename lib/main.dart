@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
-import 'package:vaultbank/features/home/ui/page/home_screen.dart';
+import 'package:vaultbank/features/home/ui/page/home/home_screen.dart';
 import 'package:vaultbank/features/home/ui/page/profile/profile.dart';
 import 'package:vaultbank/features/home/ui/page/transfer/ui/pages/transfer_home_page.dart';
 import './data/local_storage.dart';

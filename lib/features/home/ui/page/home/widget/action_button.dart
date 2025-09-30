@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
-import '../page/topup/top_up.dart';
-import '../../../../core/util/animation_slide.dart';
+import '../../topup/top_up.dart';
+import '../../../../../../core/util/animation_slide.dart';
 
 class ActionButtons extends StatelessWidget {
   const ActionButtons({super.key});

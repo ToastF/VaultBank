@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../auth/data/local/access_code_storage.dart';
-import '../../../home/ui/page/home_screen.dart';
+import '../../../home/ui/page/home/home_screen.dart';
 import '../../../../core/util/navi_util.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
