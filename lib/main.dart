@@ -4,6 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
+import 'package:vaultbank/features/home/ui/page/home/home_screen.dart';
+import 'package:vaultbank/features/home/ui/page/profile/profile.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/pages/transfer_home_page.dart';
 import 'package:vaultbank/features/home/ui/page/home_screen.dart';
 import 'package:vaultbank/features/home/ui/page/profile.dart';
 import 'package:vaultbank/features/home/ui/page/splash_screen.dart';
@@ -17,7 +20,8 @@ import './features/user/ui/cubit/user_cubit.dart';
 // 🆕 Import DummyTestPage untuk testing PIN
 import 'package:vaultbank/features/common/dummy_test_page.dart';
 
-void main() {
+void main() async {
+  // Initialize Firebase and Isar
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
@@ -73,7 +77,7 @@ class AppProviders extends StatelessWidget {
 
     // Multirepositoryprovider for dependency injection,
     // A single instance of a repository can be used by its children widget
-    return MultiRepositoryProvider(
+    MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authRepo),
         RepositoryProvider.value(value: userRepo),
@@ -92,48 +96,53 @@ class AppProviders extends StatelessWidget {
           ),
           // Cubit responsible for user profile data
           BlocProvider(
-            create: (context) {
-              debugPrint('👤 [Main] Creating UserCubit...');
-              return UserCubit(userRepo);
-            },
+            // Cubit responsible for user profile data
+            create: (context) => UserCubit(userRepo),
           ),
         ],
-        child: const AuthGate(),
+        child: const MyApp(),
       ),
-    );
-  }
+    ),
+  );
 }
 
-class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
+// First widget created at app start
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
-        debugPrint('🚪 [AuthGate] State changed: ${state.runtimeType}');
-        
-        // if user is authenticated, skip login/signup and go to HomeScreen
-        if (state is AuthSuccess) {
-          debugPrint('✅ [AuthGate] User authenticated: ${state.auth.uid}');
-          debugPrint('📥 [AuthGate] Loading user data...');
-          
-          // uses cache first for UI, then syncs cache with cloud,
-          // then start listening for cloud changes and cache those changes
-          context.read<UserCubit>()
-            ..loadUser(state.auth.uid)
-            ..startUserListener(state.auth.uid);
-          
-          debugPrint('🏠 [AuthGate] Navigating to NavBar...');
-          // go to HomeScreen, destroy previous pages
-          NavigationHelper.goToAndRemoveAll(context, const NavBar());
-        } else if (state is AuthLoggedOut) {
-          debugPrint('🚪 [AuthGate] User logged out, going to WelcomeScreen');
-          // if not logged in, go to welcome screen
-          NavigationHelper.goToAndRemoveAll(context, WelcomeScreen());
-        }
-      },
-      child: const Scaffold(body: Center(child: SplashScreen())),
+    return MaterialApp(
+      // BlocListener (checks for state change)
+      debugShowCheckedModeBanner: false,
+      home: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          // if user is authenticated, skip login/signup and go to HomeScreen
+          if (state is AuthSuccess) {
+            // uses cache first for UI, then syncs cache with cloud,
+            // then start listening for cloud changes and cache those changes
+            context.read<UserCubit>()
+              ..loadUser(state.auth.uid)
+              ..startUserListener(state.auth.uid);
+            // go to HomeScreen, destroy previous pages
+            NavigationHelper.goToAndRemoveAll(context, const NavBar());
+
+            // if not logged in, go to welcome screen
+          } else if (state is AuthLoggedOut) {
+            NavigationHelper.goToAndRemoveAll(context, WelcomeScreen());
+          }
+        },
+        child: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              // could be a splash/loading screen until listener redirects
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      ),
     );
   }
 }
@@ -207,5 +216,15 @@ class _NavBarState extends State<NavBar> {
         onTap: _onItemTapped,
       ),
     );
+  }
+}
+
+/// Placeholder sementara untuk halaman Transfer.
+class TransferScreen extends StatelessWidget {
+  const TransferScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Halaman Transfer')));
   }
 }

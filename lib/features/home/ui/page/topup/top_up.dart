@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaultbank/features/home/ui/page/topup/nominal_input.dart';
 
 class TopUpPage extends StatelessWidget {
   const TopUpPage({super.key});
@@ -30,7 +30,6 @@ class TopUpPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Transfer Bank Section
             Text(
               'Transfer Bank',
               style: TextStyle(
@@ -41,7 +40,6 @@ class TopUpPage extends StatelessWidget {
             ),
             SizedBox(height: 12),
 
-            // Bank List
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -58,18 +56,21 @@ class TopUpPage extends StatelessWidget {
               child: Column(
                 children: [
                   _buildBankItem(
+                    context,
                     'Bank BCA',
                     'Biaya admin Rp2.000',
                     'assets/images/logo_bca.png',
                   ),
                   _buildDivider(),
                   _buildBankItem(
+                    context,
                     'Bank BRI',
                     'Biaya admin Rp4.000',
                     'assets/images/logo_bri.png',
                   ),
                   _buildDivider(),
                   _buildBankItem(
+                    context,
                     'Mandiri',
                     'Biaya admin Rp2.000',
                     'assets/images/logo_mandiri.png',
@@ -77,6 +78,7 @@ class TopUpPage extends StatelessWidget {
                   ),
                   _buildDivider(),
                   _buildBankItem(
+                    context,
                     'Bank BNI',
                     'Biaya admin Rp6.000',
                     'assets/images/logo_bni.png',
@@ -84,10 +86,8 @@ class TopUpPage extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(height: 32),
-
-            // Tarik tunai di Mini Market Section
+  
             Text(
               'Tarik tunai di Mini Market',
               style: TextStyle(
@@ -98,7 +98,6 @@ class TopUpPage extends StatelessWidget {
             ),
             SizedBox(height: 12),
 
-            // Mini Market Options
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -109,12 +108,12 @@ class TopUpPage extends StatelessWidget {
                 ),
                 _buildMiniMarketItem(
                   name: 'Alfamidi',
-                  backgroundColor: Colors.red,
+                  backgroundColor: const Color.fromARGB(234, 255, 28, 28),
                   assetPath: 'assets/images/logo_alfamidi.png',
                 ),
                 _buildMiniMarketItem(
                   name: 'Alfamart',
-                  backgroundColor: Colors.red,
+                  backgroundColor: const Color.fromARGB(239, 255, 28, 28),
                   assetPath: 'assets/images/logo_alfamart.png',
                 ),
               ],
@@ -126,7 +125,7 @@ class TopUpPage extends StatelessWidget {
   }
 
   // Bank item
-  Widget _buildBankItem(String bankName, String adminFee, String assetPath,
+  Widget _buildBankItem(BuildContext context, String bankName, String adminFee, String assetPath,
       {Color? backgroundColor}) {
     return ListTile(
       leading: SizedBox(
@@ -135,7 +134,7 @@ class TopUpPage extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Circle background
+            
             Container(
               width: 70,
               height: 70,
@@ -144,13 +143,13 @@ class TopUpPage extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
             ),
-            // Logo image clipped inside circle
+
             ClipOval(
               child: Image.asset(
                 assetPath,
-                width: 50, // slightly smaller than circle diameter
+                width: 50, 
                 height: 50,
-                fit: BoxFit.contain, // ensures edges fill the clip
+                fit: BoxFit.contain, 
               ),
             ),
           ],
@@ -164,11 +163,16 @@ class TopUpPage extends StatelessWidget {
         adminFee,
         style: TextStyle(color: Colors.black, fontSize: 14),
       ),
-      onTap: () => print('Selected: $bankName'),
+      onTap: () => Navigator.push(context, 
+          MaterialPageRoute(builder: (context) => NominalInput(
+            bankName: bankName,
+            adminFee: adminFee,
+            assetPath: assetPath,
+            backgroundColor: backgroundColor,
+          ))),
     );
   }
 
-  // Divider between banks
   Widget _buildDivider() {
     return Divider(
       height: 1,
@@ -179,18 +183,14 @@ class TopUpPage extends StatelessWidget {
     );
   }
 
-  // Mini market item
   Widget _buildMiniMarketItem({
     required String name,
     required Color backgroundColor,
-    required String assetPath, // use PNG for logo
+    required String assetPath, 
     double width = 80,
     double height = 60,
   }) {
     return GestureDetector(
-      onTap: () {
-        print('Selected: $name');
-      },
       child: Column(
         children: [
           Container(
@@ -201,7 +201,7 @@ class TopUpPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Padding(
-              padding: EdgeInsets.all(8), // space around logo
+              padding: EdgeInsets.all(8), 
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.asset(
