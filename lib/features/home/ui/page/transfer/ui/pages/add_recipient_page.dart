@@ -4,10 +4,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/transfer/domain/entities/bank_model.dart';
-import 'package:vaultbank/features/transfer/ui/cubits/transfer_cubit.dart';
-import 'package:vaultbank/features/transfer/ui/cubits/transfer_state.dart';
-import 'package:vaultbank/features/transfer/ui/widgets/provider_list_item_widget.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/entities/bank_model.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/cubits/transfer_cubit.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/cubits/transfer_state.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/widgets/provider_list_item_widget.dart';
 
 enum RecipientType {bank, ewallet}
 

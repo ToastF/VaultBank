@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vaultbank/core/util/color_palette.dart';
 
 class HistoryList extends StatelessWidget {
   const HistoryList({super.key});
@@ -71,7 +72,7 @@ class HistoryList extends StatelessWidget {
                 child: Text(
                   'Lihat Semua >',
                   style: TextStyle(
-                    color: const Color(0xFF0D63F3),
+                    color: AppColors.blueText,
                     fontSize: subtitleFontSize, 
                   ),
                 ),
@@ -93,10 +94,10 @@ class HistoryList extends StatelessWidget {
                 child: ListTile(
                   leading: CircleAvatar(
                     radius: avatarRadius, 
-                    backgroundColor: Colors.lightBlue[50],
+                    backgroundColor: AppColors.white,
                     child: Icon(
                       item['icon'],
-                      color: const Color(0xFF0D63F3),
+                      color: AppColors.blueIcon,
                       size: iconSize, 
                     ),
                   ),

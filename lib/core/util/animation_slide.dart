@@ -6,34 +6,26 @@ class SlidePageRoute extends PageRouteBuilder {
 
   SlidePageRoute({
     required this.page,
-    this.beginOffset = const Offset(1.0, 0.0),
+    this.beginOffset = const Offset(1.0, 0.0), // Default: slide dari kanan
   }) : super(
           transitionDuration: const Duration(milliseconds: 300),
-
           pageBuilder: (
             BuildContext context,
             Animation<double> animation,
             Animation<double> secondaryAnimation,
           ) =>
               page,
-
           transitionsBuilder: (
             BuildContext context,
             Animation<double> animation,
             Animation<double> secondaryAnimation,
             Widget child,
           ) {
-            final tween = Tween(begin: beginOffset, end: Offset.zero);
-
-            final curvedAnimation = CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOut,
-            );
-
-            final offsetAnimation = tween.animate(curvedAnimation);
+            final tween = Tween(begin: beginOffset, end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeOut));
 
             return SlideTransition(
-              position: offsetAnimation,
+              position: animation.drive(tween),
               child: child,
             );
           },

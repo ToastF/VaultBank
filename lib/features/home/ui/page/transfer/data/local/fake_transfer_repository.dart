@@ -1,9 +1,9 @@
 // Nah untuk mendukung development
 // Sambil menunggu pematangan UI saya izin inisiatif membuat beberapa data dummy
-import 'package:vaultbank/features/transfer/domain/entities/bank_model.dart';
-import 'package:vaultbank/features/transfer/domain/entities/recipient_model.dart';
-import 'package:vaultbank/features/transfer/domain/entities/transaction_model.dart';
-import 'package:vaultbank/features/transfer/domain/repositories/transfer_repository.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/entities/bank_model.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/entities/recipient_model.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/entities/transaction_model.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/repositories/transfer_repository.dart';
 
 class FakeTransferRepository implements TransferRepository{
   // Bagian ini jadi list untuk nama bank palsunya  

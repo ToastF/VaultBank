@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:vaultbank/core/util/color_palette.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final String userName;
+
+  const HomeHeader({
+    super.key,
+    required this.userName,
+    });
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +29,7 @@ class HomeHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: screenHeight * 0.28,
-      color: const Color(0xFF0D63F3),
+      color: AppColors.blueHeader,
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.fromLTRB(
@@ -36,11 +43,11 @@ class HomeHeader extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: avatarRadius,
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.white,
                 child: Icon(
                   Icons.person,
                   size: iconSize, 
-                  color: const Color(0xFF0D63F3),
+                  color: AppColors.blueIcon,
                 ),
               ),
               SizedBox(width: spacing), 
@@ -51,14 +58,14 @@ class HomeHeader extends StatelessWidget {
                   Text(
                     'Welcome',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: AppColors.white,
                       fontSize: welcomeFontSize, 
                     ),
                   ),
                   Text(
-                    'Filbert Ferdinand',
+                    userName, 
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: nameFontSize, 
                       fontWeight: FontWeight.bold,
                     ),
