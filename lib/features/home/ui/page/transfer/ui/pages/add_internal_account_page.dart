@@ -3,7 +3,7 @@
 
 // Berikut ini adalah class helper
 import 'package:flutter/material.dart';
-import 'package:vaultbank/features/transfer/ui/widgets/recipient_form_field_widget.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/widgets/recipient_form_field_widget.dart';
 
 class _RecipientControllers {
   final TextEditingController accountController;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // 1. Impor file logout_user.dart (sesuaikan path jika perlu)
-import '../../../auth/service/logout_user.dart';
+import '../../../../auth/service/logout_user.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -15,24 +15,24 @@ class ProfilePage extends StatelessWidget {
           SliverAppBar(
             expandedHeight: MediaQuery.of(context).size.height * 0.3, // 30% layar
             pinned: false,
-            backgroundColor: Colors.blue,
+            backgroundColor: const Color(0xFF0D63F3),
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                color: Colors.blue,
+                color: const Color(0xFF0D63F3),
                 child: SafeArea(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const CircleAvatar(
                         radius: 40,
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.person, size: 50, color: Colors.blue),
+                        backgroundColor: const Color.fromRGBO(240,241,243,1),
+                        child: Icon(Icons.person, size: 50, color: const Color(0xFF0D63F3)),
                       ),
                       const SizedBox(height: 10),
                       const Text(
                         "Filbert Ferdinand",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: const Color.fromRGBO(240,241,243,1),
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                       ),
@@ -50,7 +50,7 @@ class ProfilePage extends StatelessWidget {
           // white background
           SliverToBoxAdapter(
             child: Container(
-              color: Colors.white,
+              color: const Color.fromRGBO(240,241,243,1),
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
@@ -71,14 +71,14 @@ class ProfilePage extends StatelessWidget {
                       LogoutUser(context)();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.blue),
+                      backgroundColor: const Color.fromRGBO(240,241,243,1),
+                      side: const BorderSide(color: Color.fromRGBO(5,102,235, 1)),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: const Text("Logout",
-                        style: TextStyle(color: Colors.blue)),
+                        style: TextStyle(color: Color.fromRGBO(5,102,235, 1))),
                   ),
                 ],
               ),

@@ -71,7 +71,7 @@ class HistoryList extends StatelessWidget {
                 child: Text(
                   'Lihat Semua >',
                   style: TextStyle(
-                    color: const Color(0xFF0D63F3),
+                    color: const Color.fromRGBO(17,142,234,1),
                     fontSize: subtitleFontSize, 
                   ),
                 ),
@@ -93,10 +93,10 @@ class HistoryList extends StatelessWidget {
                 child: ListTile(
                   leading: CircleAvatar(
                     radius: avatarRadius, 
-                    backgroundColor: Colors.lightBlue[50],
+                    backgroundColor: const Color.fromRGBO(197,219,250,1),
                     child: Icon(
                       item['icon'],
-                      color: const Color(0xFF0D63F3),
+                      color: const Color.fromRGBO(39,60,139,1),
                       size: iconSize, 
                     ),
                   ),

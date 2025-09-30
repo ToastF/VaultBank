@@ -1,6 +1,6 @@
-import 'package:vaultbank/features/transfer/domain/entities/bank_model.dart';
-import 'package:vaultbank/features/transfer/domain/entities/recipient_model.dart';
-import 'package:vaultbank/features/transfer/domain/entities/transaction_model.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/entities/bank_model.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/entities/recipient_model.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/domain/entities/transaction_model.dart';
 
 abstract class TransferRepository {
   // List daftar bank yang tersedia

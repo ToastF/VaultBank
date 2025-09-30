@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/repositories/user_repository.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../core/util/hash_util.dart';
 import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/user_repository.dart';
 import '../local/user_data_storage.dart';
-import 'package:flutter/foundation.dart';
+
 
 class UserRepositoryImpl implements UserRepository {
   final FirebaseFirestore _firestore;
@@ -23,7 +24,7 @@ class UserRepositoryImpl implements UserRepository {
         uid: cached.uid,
         email: cached.email,
         notelp: cached.notelp,
-        balance: cached.balance,
+        balance: cached.balance.toDouble(),
       );
     }
 
@@ -37,7 +38,7 @@ class UserRepositoryImpl implements UserRepository {
       email: data['email'],
       notelp: data['notelp'],
       username: data['username'],
-      balance: data['balance'],
+      balance: (data['balance'] as num? ?? 0).toDouble(),
     );
 
     await saveUserToCache(uid, data);
@@ -52,7 +53,7 @@ class UserRepositoryImpl implements UserRepository {
       if (!doc.exists) return;
 
       final data = doc.data()!;
-      saveUserToCache(uid, data);
+      await saveUserToCache(uid, data);
     } catch (e) {
       debugPrint("Background sync failed: $e");
     }
@@ -69,7 +70,7 @@ class UserRepositoryImpl implements UserRepository {
         ..pinHash = data['pinHash'] ?? ''
         ..pinSalt = data['pinSalt'] ?? ''
         ..username = data['username'] ?? 'User'
-        ..balance = data['balance'] ?? 0.toDouble(),
+        ..balance = (data['balance'] as num? ?? 0).toDouble(),
     );
     debugPrint("Saved user data to Cache");
   }
@@ -91,7 +92,7 @@ class UserRepositoryImpl implements UserRepository {
         email: data['email'],
         notelp: data['notelp'],
         username: data['username'],
-        balance: data['balance'],
+        balance: (data['balance'] as num? ?? 0).toDouble(),
       );
     });
   }
@@ -116,7 +117,7 @@ class UserRepositoryImpl implements UserRepository {
       'pinHash': pinHash,
       'pinSalt': salt,
       'notelp': notelp,
-      'balance': 0,
+      'balance': 0.0,
     });
 
     // cache profile data
@@ -128,7 +129,7 @@ class UserRepositoryImpl implements UserRepository {
         ..pinHash = pinHash
         ..pinSalt = salt
         ..notelp = notelp
-        ..balance = 0,
+        ..balance = 0.0,
     );
   }
 

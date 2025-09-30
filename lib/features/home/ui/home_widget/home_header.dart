@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final String userName;
+
+  const HomeHeader({
+    super.key,
+    required this.userName,
+    });
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,7 @@ class HomeHeader extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: avatarRadius,
-                backgroundColor: Colors.white,
+                backgroundColor: const Color.fromRGBO(240,241,243,1),
                 child: Icon(
                   Icons.person,
                   size: iconSize, 
@@ -51,14 +57,14 @@ class HomeHeader extends StatelessWidget {
                   Text(
                     'Welcome',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: const Color.fromRGBO(240,241,243,1),
                       fontSize: welcomeFontSize, 
                     ),
                   ),
                   Text(
-                    'Filbert Ferdinand',
+                    userName, 
                     style: TextStyle(
-                      color: Colors.white,
+                      color: const Color.fromRGBO(240,241,243,1),
                       fontSize: nameFontSize, 
                       fontWeight: FontWeight.bold,
                     ),

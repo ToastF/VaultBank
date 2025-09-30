@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/transfer/ui/cubits/transfer_cubit.dart';
-import 'package:vaultbank/features/transfer/ui/pages/add_internal_account_page.dart';
-import 'package:vaultbank/features/transfer/ui/pages/add_recipient_page.dart';
-import 'package:vaultbank/features/transfer/ui/widgets/transfer_action_tile.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/cubits/transfer_cubit.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/pages/add_internal_account_page.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/pages/add_recipient_page.dart';
+import 'package:vaultbank/features/home/ui/page/transfer/ui/widgets/transfer_action_tile.dart';
 
 class TransferHomePage extends StatelessWidget {
   const TransferHomePage({super.key});
