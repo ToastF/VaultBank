@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
+// TODO: DELETE PAS PRODUK FINAL
+import 'package:vaultbank/features/common/dummy_test_page.dart';
 import 'package:vaultbank/features/home/ui/page/home/home_screen.dart';
 import 'package:vaultbank/features/home/ui/page/profile/profile.dart';
 import 'package:vaultbank/features/home/ui/page/transfer/ui/pages/transfer_home_page.dart';
@@ -105,7 +107,9 @@ class _NavBarState extends State<NavBar> {
   int _selectedIndex = 1; // Default ke Home
 
   static final List<Widget> _widgetOptions = <Widget>[
+    // TODO: Ubah TransferHomePage jadi DummyTestPage(), jika ingin mencoba
     const TransferHomePage(),
+    // const DummyTestPage(),
     HomeScreen(),
     const ProfilePage(),
   ];

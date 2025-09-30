@@ -2,8 +2,9 @@
 // Mengingat fitur ini akan sangat berguna untuk melakukan top up, transfer, maupun mendaftarkan rekening
 
 import 'package:flutter/material.dart';
-import 'package:vaultbank/features/common/pin_entry_page.dart';
+
 import 'package:vaultbank/features/common/success_placeholder_page.dart';
+import 'package:vaultbank/features/common/ui/pages/pin_entry_page.dart';
 
 class DummyTestPage extends StatelessWidget {
   const DummyTestPage({super.key});
