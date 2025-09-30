@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vaultbank/core/util/color_palette.dart';
 import '../page/topup/top_up.dart';
 import '../../../../core/util/animation_slide.dart';
 
@@ -20,7 +21,7 @@ class ActionButtons extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: const Color.fromRGBO(240,241,243,1),
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
@@ -97,10 +98,10 @@ class ActionButtons extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(circlePadding),
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(197,219,250, 1),
+              color: AppColors.white,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: iconSize, color: const Color.fromRGBO(39,60,139, 1)),
+            child: Icon(icon, size: iconSize, color: AppColors.blueIcon),
           ),
           SizedBox(height: spacing),
           Text(

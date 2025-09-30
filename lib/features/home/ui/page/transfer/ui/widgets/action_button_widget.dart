@@ -1,5 +1,6 @@
 //TODO: WILL NOT BE USED DELETE SOON
 import 'package:flutter/material.dart';
+import 'package:vaultbank/core/util/color_palette.dart';
 
 class ActionButtonWidget extends StatelessWidget {
   final IconData? icon;
@@ -28,7 +29,7 @@ class ActionButtonWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: AppColors.whiteBackground,
                 shape: BoxShape.circle,
               ),
               // Logika untuk menampilkan gambar dari aset atau ikon
@@ -40,7 +41,7 @@ class ActionButtonWidget extends StatelessWidget {
                     )
                   : Icon(
                       icon!, 
-                      color: Colors.blue[700], 
+                      color: AppColors.blueIcon, 
                       size: 28
                     ),
             ),
