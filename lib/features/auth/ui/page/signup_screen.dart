@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
 import '../../../../core/util/navi_util.dart';
-import '../../../home/ui/page/home_screen.dart';
+import '../../../home/ui/page/home/home_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

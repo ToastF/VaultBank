@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/home/ui/home_widget/action_button.dart';
-import 'package:vaultbank/features/home/ui/home_widget/balance_card.dart';
-import 'package:vaultbank/features/home/ui/home_widget/history_list.dart';
-import 'package:vaultbank/features/home/ui/home_widget/home_header.dart';
-import '../../../user/ui/cubit/user_cubit.dart';
-import '../../../auth/service/handle_AC_flow.dart';
-import '../../../../../core/util/color_palette.dart';
+import 'package:vaultbank/features/home/ui/page/home/widget/action_button.dart';
+import 'package:vaultbank/features/home/ui/page/home/widget/balance_card.dart';
+import 'package:vaultbank/features/home/ui/page/home/widget/history_list.dart';
+import 'package:vaultbank/features/home/ui/page/home/widget/home_header.dart';
+import '../../../../user/ui/cubit/user_cubit.dart';
+import '../../../../auth/service/handle_AC_flow.dart';
+import '../../../../../../core/util/color_palette.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
