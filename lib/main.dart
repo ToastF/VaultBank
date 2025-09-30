@@ -7,9 +7,6 @@ import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
 import 'package:vaultbank/features/home/ui/page/home/home_screen.dart';
 import 'package:vaultbank/features/home/ui/page/profile/profile.dart';
 import 'package:vaultbank/features/home/ui/page/transfer/ui/pages/transfer_home_page.dart';
-import 'package:vaultbank/features/home/ui/page/home_screen.dart';
-import 'package:vaultbank/features/home/ui/page/profile.dart';
-import 'package:vaultbank/features/home/ui/page/splash_screen.dart';
 import './data/local_storage.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/user/data/repositories/user_repository_impl.dart';
@@ -17,64 +14,17 @@ import './features/auth/ui/cubit/auth_cubit.dart';
 import './core/util/navi_util.dart';
 import 'features/auth/service/register_user.dart';
 import './features/user/ui/cubit/user_cubit.dart';
-// 🆕 Import DummyTestPage untuk testing PIN
-import 'package:vaultbank/features/common/dummy_test_page.dart';
 
 void main() async {
   // Initialize Firebase and Isar
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // Initialize Firebase and Isar
-  Future<void> _initApp() async {
-    debugPrint('🚀 [Main] Initializing Firebase...');
-    await Firebase.initializeApp();
-    debugPrint('💾 [Main] Initializing Local Storage...');
-    await LocalStorage.init();
-    debugPrint('✅ [Main] Initialization complete!');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FutureBuilder(
-        future: _initApp(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // show indicator WHILE initializing Firebase + storage
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(child: Text('Init error: ${snapshot.error}')),
-            );
-          } else {
-            // Once init done → go into your real Bloc setup
-            return AppProviders();
-          }
-        },
-      ),
-    );
-  }
-}
-
-// Extracted your MultiRepositoryProvider + MultiBlocProvider
-class AppProviders extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    debugPrint('🏗️ [Main] Building AppProviders...');
-    
-    // Instantiate repositories or services for global provider
-    final authRepo = AuthRepositoryImpl(FirebaseAuth.instance);
-    final userRepo = UserRepositoryImpl(FirebaseFirestore.instance);
-    final registerUser = RegisterUser(authRepo, userRepo);
-
+  await Firebase.initializeApp();
+  await LocalStorage.init();
+  // Instantiate repositories or services for global provider
+  final authRepo = AuthRepositoryImpl(FirebaseAuth.instance);
+  final userRepo = UserRepositoryImpl(FirebaseFirestore.instance);
+  final registerUser = RegisterUser(authRepo, userRepo);
+  runApp(
     // Multirepositoryprovider for dependency injection,
     // A single instance of a repository can be used by its children widget
     MultiRepositoryProvider(
@@ -89,12 +39,8 @@ class AppProviders extends StatelessWidget {
           BlocProvider(
             // Cubit responsible for authentication, calls checkAuthStatus immediately
             // to check whether user is logged in or not
-            create: (context) {
-              debugPrint('🔐 [Main] Creating AuthCubit...');
-              return AuthCubit.create(context)..checkAuthStatus();
-            },
+            create: (context) => AuthCubit.create(context)..checkAuthStatus(),
           ),
-          // Cubit responsible for user profile data
           BlocProvider(
             // Cubit responsible for user profile data
             create: (context) => UserCubit(userRepo),
@@ -156,38 +102,17 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  int _selectedIndex = 1; // Default ke Home (index 1)
+  int _selectedIndex = 1; // Default ke Home
 
-  // 🆕 UPDATED: Ganti HomeScreen dengan DummyTestPage untuk testing
   static final List<Widget> _widgetOptions = <Widget>[
-    const DummyTestPage(), // 🔄 Changed from HomeScreen() to DummyTestPage()
+    const TransferHomePage(),
+    HomeScreen(),
     const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
-    debugPrint('📱 [NavBar] Tab selected: $index');
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    debugPrint('🧭 [NavBar] NavBar initialized');
-    
-    // 🔍 Debug: Cek state UserCubit saat NavBar dibuat
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userState = context.read<UserCubit>().state;
-      debugPrint('👤 [NavBar] UserCubit state saat NavBar dibuat: ${userState.runtimeType}');
-      
-      if (userState is UserLoaded) {
-        debugPrint('✅ [NavBar] User sudah loaded: ${userState.user.uid}');
-      } else if (userState is UserLoading) {
-        debugPrint('⏳ [NavBar] User masih loading...');
-      } else {
-        debugPrint('⚠️ [NavBar] User state: ${userState.runtimeType}');
-      }
     });
   }
 
@@ -202,10 +127,7 @@ class _NavBarState extends State<NavBar> {
             icon: Icon(Icons.swap_horiz),
             label: 'Transfer',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home), 
-            label: 'Home', // Label tetap "Home" meski isinya DummyTestPage
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             label: 'Profil',
