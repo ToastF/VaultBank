@@ -3,6 +3,7 @@
 
 // Berikut ini adalah class helper
 import 'package:flutter/material.dart';
+import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/features/home/ui/page/transfer/ui/widgets/recipient_form_field_widget.dart';
 
 class _RecipientControllers {
@@ -107,7 +108,7 @@ class _AddInternalAccountPageState extends State<AddInternalAccountPage> {
               child: ElevatedButton(
                 onPressed: _saveRecipient, 
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: AppColors.blueButton,
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),),
                 ),

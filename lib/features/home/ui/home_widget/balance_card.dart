@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:vaultbank/core/util/color_palette.dart';
 
 class BalanceCard extends StatefulWidget {
   final num balance;
@@ -51,7 +52,7 @@ class _BalanceCardState extends State<BalanceCard> {
       transform: Matrix4.translationValues(0.0, verticalOffset, 0.0),
       padding: EdgeInsets.all(cardPadding),
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(240, 241, 243, 1),
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
@@ -110,16 +111,6 @@ class _BalanceCardState extends State<BalanceCard> {
             ],
           ),
           SizedBox(height: mediumSpacing),
-          const Divider(),
-          SizedBox(height: smallSpacing),
-          Text(
-            'Total coin 250',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: fontSizeCoin,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
         ],
       ),
     );

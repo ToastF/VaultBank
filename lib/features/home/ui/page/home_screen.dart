@@ -6,6 +6,7 @@ import 'package:vaultbank/features/home/ui/home_widget/history_list.dart';
 import 'package:vaultbank/features/home/ui/home_widget/home_header.dart';
 import '../../../user/ui/cubit/user_cubit.dart';
 import '../../../auth/service/handle_AC_flow.dart';
+import '../../../../../core/util/color_palette.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,8 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      // untuk background bagian putih
-      backgroundColor: const Color.fromRGBO(240, 241, 243, 1),
+
+      backgroundColor: AppColors.whiteBackground,
       body: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
           // loading indicator saat data dimuat
