@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vaultbank/features/auth/service/logout_user.dart';
 import '../../../auth/data/local/access_code_storage.dart';
-import '../../../home/ui/page/home/home_screen.dart';
-import '../../../../core/util/navi_util.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
-import '../../service/logout_user.dart';
 
 Future<void> showAccessCodeDialog(BuildContext context) async {
   final ctrl = TextEditingController();
@@ -26,12 +24,6 @@ Future<void> showAccessCodeDialog(BuildContext context) async {
             keyboardType: TextInputType.number,
           ),
           actions: [
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     LogoutUser(context);
-            //   },
-            //   child: const Text("Exit"),
-            // ),
             ElevatedButton(
               onPressed: () async {
                 final code = ctrl.text;
@@ -69,6 +61,14 @@ Future<void> showInputAccessCodeDialog(BuildContext context) async {
             keyboardType: TextInputType.number,
           ),
           actions: [
+            ElevatedButton(
+              onPressed: () async {
+                debugPrint("Logout button click");
+                LogoutUser(context).call();
+                debugPrint("Logout finished");
+              },
+              child: const Text("Cancel"),
+            ),
             ElevatedButton(
               onPressed: () async {
                 final code = ctrl.text;

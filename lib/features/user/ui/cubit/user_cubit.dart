@@ -33,13 +33,17 @@ class UserCubit extends Cubit<UserState> {
   void startUserListener(String uid) {
     debugPrint("Starting User Data Listener");
     _userSub?.cancel();
-    _userSub = userRepo.listenToUser(uid).listen((user) {
-      if (user != null) {
-        emit(UserLoaded(user));
-      }
-    }, onError: (e) {
-      emit(UserError(e.toString()));
-    });
+    _userSub = userRepo
+        .listenToUser(uid)
+        .listen(
+          (user) {
+            if (user != null) {
+              emit(UserLoaded(user));
+            }
+          },
+          onError: (e) {
+            emit(UserError(e.toString()));
+          },
+        );
   }
-
 }

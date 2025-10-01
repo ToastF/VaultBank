@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaultbank/features/recipient/UI/cubit/recipient_cubit.dart';
+import 'package:vaultbank/features/transaction_history/ui/cubit/transaction_cubit.dart';
+import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 import '../cubit/auth_cubit.dart';
 import '../../../../core/util/navi_util.dart';
-import '../../../home/ui/page/home/home_screen.dart';
+import 'package:vaultbank/features/home/ui/page/navbar/NavBar.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -25,10 +28,22 @@ class _SignupScreenState extends State<SignupScreen> {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
+            context.read<UserCubit>()
+              ..loadUser(state.auth.uid)
+              ..startUserListener(state.auth.uid);
+
+            context.read<RecipientCubit>()
+              ..loadRecipients(state.auth.uid)
+              ..startRecipientListener(state.auth.uid);
+
+            context.read<TransactionCubit>()
+              ..loadTransactions(state.auth.uid)
+              ..startTransactionListener(state.auth.uid);
+
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(const SnackBar(content: Text("Signup success!")));
-            NavigationHelper.goToAndRemoveAll(context, const HomeScreen());
+            NavigationHelper.goToAndRemoveAll(context, const NavBar());
           } else if (state is AuthFailure) {
             ScaffoldMessenger.of(
               context,
