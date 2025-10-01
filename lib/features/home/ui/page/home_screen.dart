@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vaultbank/features/home/ui/page/profile.dart';
 import '../../../auth/service/logout_user.dart';
 import '../../../auth/service/handle_AC_flow.dart';
+import 'package:vaultbank/features/home/ui/page/tarik_tunai/tarik_tunai.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

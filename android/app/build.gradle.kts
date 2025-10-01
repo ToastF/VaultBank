@@ -31,7 +31,11 @@ android {
         applicationId = "com.example.vaultbank"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
+<<<<<<< Updated upstream
         minSdk = flutter.minSdkVersion
+=======
+        minSdkVersion(flutter.minSdkVersion)
+>>>>>>> Stashed changes
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
