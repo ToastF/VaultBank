@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vaultbank/features/home/ui/page/home/home_screen.dart';
 
 class TopUpSuccessPage extends StatelessWidget {
   const TopUpSuccessPage({super.key});
@@ -37,11 +36,8 @@ class TopUpSuccessPage extends StatelessWidget {
               HomeButton(
                 text: "Kembali ke Beranda",
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen()),
-                    (route) => false, // hapus semua route sebelumnya
-                  );
+                  Navigator.of(context).popUntil((route) => route.isFirst); 
+                  // Jangan pakai push, boros memori
                 },
               ),
             ],

@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:vaultbank/core/util/format_util.dart';
 import 'package:intl/intl.dart';
 import 'package:vaultbank/features/home/ui/page/topup/success.dart';
+import 'package:vaultbank/features/user/data/local/user_data_storage.dart';
 
-class NominalInput extends StatelessWidget {
+class NominalInput extends StatefulWidget {
   final String bankName;
   final String adminFee;
   final String assetPath;
@@ -19,8 +20,33 @@ class NominalInput extends StatelessWidget {
   });
 
   @override
+  State<NominalInput> createState() => _NominalInputState();
+}
+
+class _NominalInputState extends State<NominalInput> {
+  final TextEditingController amountController = TextEditingController();
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    amountController.addListener(() {
+      final rawValue = amountController.text.replaceAll('.', '').trim();
+      final amount = int.tryParse(rawValue) ?? 0;
+      setState(() {
+        isButtonEnabled = amount >= 10000;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final amountController = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -43,13 +69,13 @@ class NominalInput extends StatelessWidget {
                       width: 70,
                       height: 70,
                       decoration: BoxDecoration(
-                        color: backgroundColor ?? Colors.grey[200],
+                        color: widget.backgroundColor ?? Colors.grey[200],
                         shape: BoxShape.circle,
                       ),
                     ),
                     ClipOval(
                       child: Image.asset(
-                        assetPath,
+                        widget.assetPath,
                         width: 50,
                         height: 50,
                         fit: BoxFit.contain,
@@ -59,11 +85,11 @@ class NominalInput extends StatelessWidget {
                 ),
               ),
               title: Text(
-                bankName,
+                widget.bankName,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               subtitle: Text(
-                adminFee,
+                widget.adminFee,
                 style: TextStyle(color: Colors.black, fontSize: 14),
               ),
             ),
@@ -87,34 +113,49 @@ class NominalInput extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                minimumSize: const Size.fromHeight(50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                final amount = amountController.text.replaceAll('.', '');
-                final va = generateDynamicVA(bankName);
-                
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => TopUpConfirmationDialog(
-                    bankName: bankName,
-                    amount: amount,
-                    virtualAccount: va,
-                    assetPath: assetPath,
-                    backgroundColor: backgroundColor,
+              Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isButtonEnabled ? Colors.blue : Colors.grey,
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                );
-              },
-              child: const Text(
-                "Confirm Top Up",
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
+                  onPressed: isButtonEnabled
+                      ? () {
+                          final amount = amountController.text.replaceAll('.', '');
+                          final va = generateDynamicVA(widget.bankName);
+
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => TopUpConfirmationDialog(
+                              bankName: widget.bankName,
+                              amount: amount,
+                              virtualAccount: va,
+                              assetPath: widget.assetPath,
+                              backgroundColor: widget.backgroundColor,
+                            ),
+                          );
+                        }
+                      : null,
+                  child: const Text(
+                    "Confirm Top Up",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 8), 
+                const Text(
+                  'Minimal top up Rp10.000',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -167,53 +208,27 @@ class TopUpConfirmationDialog extends StatefulWidget {
 }
 
 class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
+  final TextEditingController amountController = TextEditingController();
   DateTime? expiryTime;
   String remainingTime = '';
+  bool isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    expiryTime = DateTime.now().add(const Duration(minutes: 30));
-    _updateTimer();
-  }
+    amountController.addListener(() {
+      final rawValue = amountController.text.replaceAll('.', '').trim();
+      final amount = int.tryParse(rawValue) ?? 0;
 
-  void _updateTimer() {
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted && expiryTime != null) {
-        final now = DateTime.now();
-        final difference = expiryTime!.difference(now);
-        
-        if (difference.isNegative) {
-          setState(() {
-            remainingTime = '00:00:00';
-          });
-        } else {
-          final hours = difference.inHours.toString().padLeft(2, '0');
-          final minutes = (difference.inMinutes % 60).toString().padLeft(2, '0');
-          final seconds = (difference.inSeconds % 60).toString().padLeft(2, '0');
-          
-          setState(() {
-            remainingTime = '$hours:$minutes:$seconds';
-          });
-          _updateTimer();
-        }
-      }
+      setState(() {
+        isButtonEnabled = amount >= 10000;
+      });
     });
   }
 
   String get formattedAmount => NumberFormat.decimalPattern('id')
     .format(int.tryParse(widget.amount.replaceAll('.', '')) ?? 0);
-
-  // void _copyToClipboard() {
-  //   Clipboard.setData(ClipboardData(text: widget.virtualAccount));
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     const SnackBar(
-  //       content: Text('Nomor VA berhasil disalin'),
-  //       duration: Duration(seconds: 2),
-  //     ),
-  //   );
-  // }
-
+    
   @override
   Widget build(BuildContext context) {
     
@@ -252,13 +267,31 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
             ),
             const SizedBox(height: 24),
             GestureDetector(
-              onTap: () {
-                // Navigate to the new page
-                Navigator.push(
+              onTap: () async {
+                // 2. Get current user
+                final currentUser = await UserStorage().getUser();
+                if (currentUser == null) return;
+
+                // 3. Parse top-up amount
+                final amountToAdd = int.tryParse(widget.amount.replaceAll('.', '')) ?? 0;
+
+                // 4. Update Firestore balance
+                final newBalance = (currentUser.balance + amountToAdd);
+
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(currentUser.uid)
+                    .update({'balance': newBalance});
+
+                // 5. Update local cache
+                await UserStorage().saveUser(
+                  currentUser..balance = newBalance.toDouble(),
+                );
+
+                // 6. Navigate to TopUpSuccessPage
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => TopUpSuccessPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const TopUpSuccessPage()),
                 );
               },
               child: Container(
@@ -378,7 +411,8 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
 
   @override
   void dispose() {
+    amountController.dispose();
     expiryTime = null;
     super.dispose();
   }
-}
+} 
