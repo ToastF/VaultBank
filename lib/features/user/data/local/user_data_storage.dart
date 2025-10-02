@@ -14,6 +14,7 @@ class UserModel {
   late String pinHash;
   late String pinSalt;
   late double balance;
+  String? profileImagePath;
 }
 
 class UserStorage {

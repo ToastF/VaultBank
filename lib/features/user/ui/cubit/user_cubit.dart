@@ -42,4 +42,22 @@ class UserCubit extends Cubit<UserState> {
     });
   }
 
+  // Update profile image path
+  Future<void> updateProfileImagePath(String uid, String imagePath) async {
+    if (state is UserLoaded) {
+      final currentUser = (state as UserLoaded).user;
+      final updatedUser = UserEntity(
+        username: currentUser.username,
+        uid: currentUser.uid,
+        email: currentUser.email,
+        notelp: currentUser.notelp,
+        balance: currentUser.balance,
+        profileImagePath: imagePath,
+      );
+      emit(UserLoaded(updatedUser));
+      // Update in repository/cache
+      await userRepo.updateProfileImagePath(uid, imagePath);
+    }
+  }
+
 }
