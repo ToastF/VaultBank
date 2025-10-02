@@ -4,6 +4,9 @@ import 'package:vaultbank/core/util/format_util.dart';
 import 'package:intl/intl.dart';
 import 'package:vaultbank/features/home/ui/page/topup/success.dart';
 import 'package:vaultbank/features/user/data/local/user_data_storage.dart';
+import 'package:vaultbank/features/transfer/ui/cubits/transfer_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaultbank/features/recipient/domain/entities/recipient_entity.dart';
 
 class NominalInput extends StatefulWidget {
   final String bankName;
@@ -268,14 +271,15 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
             const SizedBox(height: 24),
             GestureDetector(
               onTap: () async {
-                // 2. Get current user
+                // 1. Get current user
                 final currentUser = await UserStorage().getUser();
                 if (currentUser == null) return;
 
-                // 3. Parse top-up amount
+                // 2. Parse top-up amount
                 final amountToAdd = int.tryParse(widget.amount.replaceAll('.', '')) ?? 0;
 
-                // 4. Update Firestore balance
+                // 3. Update Firestore balance
+                final userRef = FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
                 final newBalance = (currentUser.balance + amountToAdd);
 
                 await FirebaseFirestore.instance
@@ -283,10 +287,36 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
                     .doc(currentUser.uid)
                     .update({'balance': newBalance});
 
-                // 5. Update local cache
+                // 4. Update local cache
                 await UserStorage().saveUser(
                   currentUser..balance = newBalance.toDouble(),
                 );
+
+                // 5. Record transaction to Firestore 
+                final txnRef = FirebaseFirestore.instance 
+                    .collection('users')
+                    .doc(currentUser.uid)
+                    .collection('transactions')
+                    .doc(); // Auto-generate ID
+
+                final txnId = txnRef.id;
+                await FirebaseFirestore.instance .collection('users') 
+                .doc(currentUser.uid) 
+                .collection('transactions') 
+                .doc(txnId) 
+                .set({ 
+                  'id': txnId, 
+                  'amount': amountToAdd.toDouble(), 
+                  'timestamp': Timestamp.now(),
+                  'status': 'success', 
+                  'type': 'virtualAccount', 
+                  'senderName': currentUser.username, 
+                  'senderAccount': currentUser.accountNumber, 
+                  'recipientName': 'Top Up VaultBank', 
+                  'recipientAccount': widget.virtualAccount, 
+                  'recipientBankName': widget.bankName,
+                  'notes': 'Top up via ${widget.bankName} VA',
+                });
 
                 // 6. Navigate to TopUpSuccessPage
                 Navigator.pushReplacement(
@@ -335,48 +365,7 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
                   fontSize: 12,
                   color: Colors.black87,
                 ),
-                children: [
-                  const TextSpan(text: 'Batas waktu pembayaran:'),
-                  TextSpan(
-                    text: remainingTime,
-                    style: const TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
               ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                const Text(
-                  'Status',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.orange[50],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Text(
-                    'Menunggu',
-                    style: TextStyle(
-                      color: Colors.orange,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -407,12 +396,5 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    amountController.dispose();
-    expiryTime = null;
-    super.dispose();
   }
 } 

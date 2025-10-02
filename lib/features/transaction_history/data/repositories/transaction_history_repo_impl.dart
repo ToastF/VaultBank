@@ -46,6 +46,19 @@ class TransactionHistoryRepositoryImpl implements TransactionHistoryRepository {
       ..notes = entity.notes;
   }
 
+  // Helper method to safely convert timestamp from Firestore
+  DateTime _parseTimestamp(dynamic timestampData) {
+    if (timestampData is Timestamp) {
+      return timestampData.toDate();
+    } else if (timestampData is DateTime) {
+      return timestampData;
+    } else if (timestampData is String) {
+      return DateTime.parse(timestampData);
+    } else {
+      return DateTime.now(); // Fallback
+    }
+  }
+
   @override
   Future<void> addTransaction(String uid, TransactionEntity tx) async {
     final docRef = _firestore
@@ -56,7 +69,7 @@ class TransactionHistoryRepositoryImpl implements TransactionHistoryRepository {
 
     await docRef.set({
       'amount': tx.amount,
-      'timestamp': tx.timestamp.toIso8601String(),
+      'timestamp': tx.timestamp, 
       'status': tx.status.name,
       'type': tx.type.name,
       'senderName': tx.senderName,
@@ -83,37 +96,35 @@ class TransactionHistoryRepositoryImpl implements TransactionHistoryRepository {
     }
 
     // fallback to firestore
-    final snapshot =
-        await _firestore
-            .collection('users')
-            .doc(uid)
-            .collection('transactions')
-            .orderBy('timestamp', descending: true)
-            .get();
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('transactions')
+        .orderBy('timestamp', descending: true)
+        .get();
 
-    final list =
-        snapshot.docs.map((doc) {
-          final data = doc.data();
-          return TransactionEntity(
-            id: doc.id,
-            amount: (data['amount'] as num).toDouble(),
-            timestamp: DateTime.parse(data['timestamp']),
-            status: TransactionStatus.values.firstWhere(
-              (e) => e.name == data['status'],
-              orElse: () => TransactionStatus.failed,
-            ),
-            type: TransactionType.values.firstWhere(
-              (e) => e.name == data['type'],
-              orElse: () => TransactionType.antarRekening,
-            ),
-            senderName: data['senderName'],
-            senderAccount: data['senderAccount'],
-            recipientName: data['recipientName'],
-            recipientAccount: data['recipientAccount'],
-            recipientBankName: data['recipientBankName'] ?? "VaultBank",
-            notes: data['notes'],
-          );
-        }).toList();
+    final list = snapshot.docs.map((doc) {
+      final data = doc.data();
+      return TransactionEntity(
+        id: doc.id,
+        amount: (data['amount'] as num).toDouble(),
+        timestamp: _parseTimestamp(data['timestamp']), // Use safe parser
+        status: TransactionStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => TransactionStatus.failed,
+        ),
+        type: TransactionType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => TransactionType.antarRekening,
+        ),
+        senderName: data['senderName'],
+        senderAccount: data['senderAccount'],
+        recipientName: data['recipientName'],
+        recipientAccount: data['recipientAccount'],
+        recipientBankName: data['recipientBankName'] ?? "VaultBank",
+        notes: data['notes'],
+      );
+    }).toList();
 
     // cache them
     for (final tx in list) {
@@ -132,37 +143,36 @@ class TransactionHistoryRepositoryImpl implements TransactionHistoryRepository {
         .orderBy('timestamp', descending: true)
         .snapshots()
         .asyncMap((snapshot) async {
-          final entities =
-              snapshot.docs.map((doc) {
-                final data = doc.data();
-                return TransactionEntity(
-                  id: doc.id,
-                  amount: (data['amount'] as num).toDouble(),
-                  timestamp: DateTime.parse(data['timestamp']),
-                  status: TransactionStatus.values.firstWhere(
-                    (e) => e.name == data['status'],
-                    orElse: () => TransactionStatus.failed,
-                  ),
-                  type: TransactionType.values.firstWhere(
-                    (e) => e.name == data['type'],
-                    orElse: () => TransactionType.antarRekening,
-                  ),
-                  senderName: data['senderName'],
-                  senderAccount: data['senderAccount'],
-                  recipientName: data['recipientName'],
-                  recipientAccount: data['recipientAccount'],
-                  recipientBankName: data['recipientBankName'] ?? "VaultBank",
-                  notes: data['notes'],
-                );
-              }).toList();
+      final entities = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return TransactionEntity(
+          id: doc.id,
+          amount: (data['amount'] as num).toDouble(),
+          timestamp: _parseTimestamp(data['timestamp']), // Use safe parser
+          status: TransactionStatus.values.firstWhere(
+            (e) => e.name == data['status'],
+            orElse: () => TransactionStatus.failed,
+          ),
+          type: TransactionType.values.firstWhere(
+            (e) => e.name == data['type'],
+            orElse: () => TransactionType.antarRekening,
+          ),
+          senderName: data['senderName'],
+          senderAccount: data['senderAccount'],
+          recipientName: data['recipientName'],
+          recipientAccount: data['recipientAccount'],
+          recipientBankName: data['recipientBankName'] ?? "VaultBank",
+          notes: data['notes'],
+        );
+      }).toList();
 
-          // keep cache synced
-          for (final tx in entities) {
-            await TransactionStorage().saveTransaction(_toModel(tx));
-          }
+      // keep cache synced
+      for (final tx in entities) {
+        await TransactionStorage().saveTransaction(_toModel(tx));
+      }
 
-          return entities;
-        });
+      return entities;
+    });
   }
 
   @override
@@ -172,20 +182,19 @@ class TransactionHistoryRepositoryImpl implements TransactionHistoryRepository {
 
   Future<void> _syncFromFirestore(String uid) async {
     try {
-      final snapshot =
-          await _firestore
-              .collection('users')
-              .doc(uid)
-              .collection('transactions')
-              .orderBy('timestamp', descending: true)
-              .get();
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('transactions')
+          .orderBy('timestamp', descending: true)
+          .get();
 
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final tx = TransactionEntity(
           id: doc.id,
           amount: (data['amount'] as num).toDouble(),
-          timestamp: DateTime.parse(data['timestamp']),
+          timestamp: _parseTimestamp(data['timestamp']), // Use safe parser
           status: TransactionStatus.values.firstWhere(
             (e) => e.name == data['status'],
             orElse: () => TransactionStatus.failed,
