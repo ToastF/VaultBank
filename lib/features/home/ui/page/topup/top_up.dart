@@ -114,7 +114,7 @@ class TopUpPage extends StatelessWidget {
                 ),
                 _buildMiniMarketItem(
                   name: 'Alfamart',
-                  backgroundColor: const Color.fromARGB(239, 255, 28, 28),
+                  backgroundColor: const Color.fromARGB(236, 226, 27, 27),
                   assetPath: 'assets/images/logo_alfamart.png',
                 ),
               ],

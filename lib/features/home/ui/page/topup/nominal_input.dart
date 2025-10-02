@@ -212,6 +212,9 @@ class TopUpConfirmationDialog extends StatefulWidget {
 
 class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
   final TextEditingController amountController = TextEditingController();
+  
+  bool isProcessing = false;
+
   DateTime? expiryTime;
   String remainingTime = '';
   bool isButtonEnabled = false;
@@ -271,6 +274,10 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
             const SizedBox(height: 24),
             GestureDetector(
               onTap: () async {
+                // Prevent multiple taps
+                if (isProcessing) return;
+                setState(() => isProcessing = true);
+
                 // 1. Get current user
                 final currentUser = await UserStorage().getUser();
                 if (currentUser == null) return;
@@ -279,7 +286,6 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
                 final amountToAdd = int.tryParse(widget.amount.replaceAll('.', '')) ?? 0;
 
                 // 3. Update Firestore balance
-                final userRef = FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
                 final newBalance = (currentUser.balance + amountToAdd);
 
                 await FirebaseFirestore.instance
