@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:vaultbank/core/util/color_palette.dart'; // Sesuaikan path
-import 'package:vaultbank/features/user/domain/entities/user_entity.dart'; // Sesuaikan path
+import 'package:vaultbank/core/util/color_palette.dart'; 
+import 'package:vaultbank/features/user/domain/entities/user_entity.dart'; 
 import './item.dart';
 import 'custom_divider.dart';
 

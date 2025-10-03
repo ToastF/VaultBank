@@ -15,7 +15,7 @@ class BalanceCard extends StatefulWidget {
 }
 
 class _BalanceCardState extends State<BalanceCard> {
-  bool _isBalanceVisible = true;
+  bool _isBalanceVisible = false;
 
   void _toggleBalanceVisibility() {
     setState(() {

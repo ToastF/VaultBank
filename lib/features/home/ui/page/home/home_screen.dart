@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         BalanceCard(balance: state.user.balance),
                         ActionButtons(),
                         HistoryList(),
+                        SizedBox(height: screenHeight * 0.02),
                       ],
                     ),
                   ),

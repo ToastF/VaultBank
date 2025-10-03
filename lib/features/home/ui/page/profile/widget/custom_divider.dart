@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vaultbank/core/util/color_palette.dart'; // Sesuaikan path
+import 'package:vaultbank/core/util/color_palette.dart'; 
 
 class CustomDivider extends StatelessWidget {
   const CustomDivider({super.key});
