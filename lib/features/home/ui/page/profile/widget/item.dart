@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vaultbank/core/util/color_palette.dart'; // Sesuaikan path
+import 'package:vaultbank/core/util/color_palette.dart'; // Sesuaikan dengan path Anda
 
 class SettingItem extends StatelessWidget {
   final String label;
@@ -15,42 +15,43 @@ class SettingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(color: AppColors.blackText, fontSize: 16),
-          ),
-          const Spacer(),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: valueWidget,
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14), 
+        child: Row(
+          children: [
+            Text(
+              label,
+              style: const TextStyle(color: AppColors.blackText, fontSize: 16),
             ),
-          ),
-          InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(8),
-            child: const Row(
+            const SizedBox(width: 16), 
+
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: valueWidget,
+              ),
+            ),
+            const SizedBox(width: 8), 
+
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   'Edit',
                   style: TextStyle(color: AppColors.blueText, fontSize: 16),
                 ),
-                SizedBox(width: 4),
-                Icon(
+                const SizedBox(width: 4),
+                const Icon(
                   Icons.arrow_forward_ios,
                   color: AppColors.blueText,
                   size: 14,
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
