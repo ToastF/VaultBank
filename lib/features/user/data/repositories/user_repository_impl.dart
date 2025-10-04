@@ -77,7 +77,7 @@ class UserRepositoryImpl implements UserRepository {
         ..pinSalt = data['pinSalt'] ?? ''
         ..username = data['username'] ?? 'User'
         ..balance = (data['balance'] as num? ?? 0).toDouble()
-        ..accountNumber = data['accountNumber'] ?? '' 
+        ..accountNumber = data['accountNumber'] ?? ''
         // Pertahankan path gambar lama jika ada, karena data dari firestore tidak memilikinya
         ..profileImagePath = existingCache?.profileImagePath,
     );
@@ -107,7 +107,6 @@ class UserRepositoryImpl implements UserRepository {
         balance: (data['balance'] as num? ?? 0).toDouble(),
         accountNumber: data['accountNumber'] ?? '',
         profileImagePath: updatedCache?.profileImagePath,
-
       );
     });
   }
@@ -178,15 +177,17 @@ class UserRepositoryImpl implements UserRepository {
     final existingCache = await UserStorage().getUser();
     if (existingCache == null) return;
 
-    final updatedUser = UserModel()
-      ..uid = existingCache.uid
-      ..email = existingCache.email
-      ..notelp = existingCache.notelp
-      ..pinHash = existingCache.pinHash
-      ..pinSalt = existingCache.pinSalt
-      ..username = existingCache.username
-      ..balance = existingCache.balance
-      ..profileImagePath = imagePath;
+    final updatedUser =
+        UserModel()
+          ..uid = existingCache.uid
+          ..email = existingCache.email
+          ..notelp = existingCache.notelp
+          ..pinHash = existingCache.pinHash
+          ..pinSalt = existingCache.pinSalt
+          ..username = existingCache.username
+          ..balance = existingCache.balance
+          ..accountNumber = existingCache.accountNumber
+          ..profileImagePath = imagePath;
 
     await UserStorage().saveUser(updatedUser);
     debugPrint("Updated profileImagePath in cache");
