@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:vaultbank/features/recipient/UI/widgets/recipient_picker_widget.dart';
 import 'package:vaultbank/features/recipient/domain/entities/recipient_entity.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_confirmation_page.dart';
@@ -86,37 +87,36 @@ class _TransferScreenState extends State<TransferScreen> {
     // Note
     final note = notesCtrl.text;
 
-    // Check if inputs are null
-    if (amount <= 0 || selectedRecipient == null) {
+    // Fungsi agar SnackBar menampilkan warna merah seandainya terjadi Error saat melakukan transfer
+    void _showErrorSnack(String message) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please select recipient and valid amount"),
+        SnackBar(
+          content: Text(message, style: const TextStyle(color: AppColors.white)),
+          backgroundColor: AppColors.red,
         ),
       );
-      return;
     }
 
+    // Check if inputs are null
+    if (amount <= 0 || selectedRecipient == null) {
+      _showErrorSnack("Pilih penerima atau jumlah yang valid!");
+      return;
+    }
     // Check maximum amount
     if (amount >= 10000000) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Max. amount is Rp 10.000.000")),
-      );
+       _showErrorSnack("Jumlah transfer maksimum adalah Rp 10.000.000");
       return;
     }
 
     // Check minimum amount
     if (amount < 1000) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Min. amount is Rp 1000")));
+      _showErrorSnack("Jumlah transfer minimum adalah Rp 1.000");
       return;
     }
 
     // Check note length
     if (note.length > 15) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Note is too long, Max. 15 Chars")),
-      );
+       _showErrorSnack("Berita terlalu panjang (Maks. 15 karakter)");
       return;
     }
 
@@ -141,156 +141,165 @@ class _TransferScreenState extends State<TransferScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final double horizontalPadding = screenWidth * 0.05;
+    final double horizontalPadding = screenWidth * 0.06;
     final double verticalSpacing = screenHeight * 0.02;
     final double titleFontSize = screenWidth * 0.07;
-    final double subtitleFontSize = screenWidth * 0.045;
-    final double labelFontSize = screenWidth * 0.04;
-    final double buttonHeight = screenHeight * 0.065;
+    final double subtitleFontSize = screenWidth * 0.04;
+    final double labelFontSize = screenWidth * 0.038;
+    final double inputFontSize = screenWidth * 0.042;
+    final double buttonHeight = screenHeight * 0.06;
 
     return Scaffold(
       backgroundColor: AppColors.whiteBackground,
       body: SafeArea(
         child: Padding(
+          // Menggunakan variabel dinamis untuk padding
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 2. Header menggunakan variabel dinamis
               SizedBox(height: verticalSpacing),
-              // Back button
               IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.arrow_back, size: 28),
+                onPressed: () => Navigator.of(context).pop(),
               ),
+              SizedBox(height: verticalSpacing),
+              Text(
+                'Transfer Antar Rekening',
+                style: TextStyle(
+                  fontSize: titleFontSize,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.blackText,
+                ),
+              ),
+              SizedBox(height: verticalSpacing / 2),
+              Text(
+                'Transfer With 0 Admin Fees',
+                style: TextStyle(
+                  fontSize: subtitleFontSize,
+                  color: AppColors.greyTextSearch,
+                ),
+              ),
+              SizedBox(height: verticalSpacing * 2),
 
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: verticalSpacing),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Title
+                      // 3. Semua elemen form menggunakan variabel dinamis
                       Text(
-                        "Transfer Antar Rekening",
+                        'Rekening Tujuan',
                         style: TextStyle(
-                          fontSize: titleFontSize,
+                          fontSize: labelFontSize,
+                          fontWeight: FontWeight.w500,
                           color: AppColors.blackText,
                         ),
                       ),
-                      SizedBox(height: verticalSpacing / 2),
-
-                      // Subtitle
-                      Text(
-                        "Transfer with 0 interest",
-                        style: TextStyle(
-                          fontSize: subtitleFontSize,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      SizedBox(height: verticalSpacing * 2),
-
-                      // Recipient picker label
-                      Text(
-                        "Rekening tujuan",
-                        style: TextStyle(fontSize: labelFontSize),
-                      ),
-                      SizedBox(height: verticalSpacing / 2),
-
-                      // Recipient picker
                       ListTile(
-                        onTap: _openRecipientPicker,
-                        leading: const Icon(Icons.account_circle),
+                        contentPadding: EdgeInsets.symmetric(vertical: verticalSpacing / 2),
                         title: Text(
-                          // Show alias/name jika terpilih
-                          selectedRecipient != null
-                              ? selectedRecipient!.alias?.isNotEmpty == true
-                                  ? selectedRecipient!.alias!
-                                  : selectedRecipient!.name
-                              : "Select Recipient",
-                          style: TextStyle(fontSize: labelFontSize),
+                          selectedRecipient?.alias ?? selectedRecipient?.name ?? 'Pilih Penerima',
+                          style: TextStyle(
+                            fontSize: inputFontSize,
+                            color: selectedRecipient == null ? AppColors.greyTextSearch : AppColors.blackText,
+                          ),
                         ),
-                        subtitle:
-                            // Show accountNumber jika terpilih
-                            selectedRecipient != null
-                                ? Text(selectedRecipient!.accountNumber)
-                                : null,
-                        trailing: const Icon(Icons.arrow_drop_down),
-                        tileColor: Colors.grey.shade100,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        subtitle: selectedRecipient != null 
+                          ? Text(selectedRecipient!.accountNumber) 
+                          : null,
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: _openRecipientPicker,
+                        shape: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.greyFormLine),
                         ),
                       ),
+                      SizedBox(height: verticalSpacing * 1.5),
 
-                      SizedBox(height: verticalSpacing * 2),
-
-                      // Textfield Jumlah Uang
+                      Text(
+                        'Jumlah Uang (min. Rp 1.000)',
+                        style: TextStyle(
+                          fontSize: labelFontSize,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.blackText,
+                        ),
+                      ),
                       TextField(
                         controller: amountCtrl,
+                        style: TextStyle(fontSize: inputFontSize),
                         decoration: InputDecoration(
-                          labelText: "Jumlah uang",
-                          contentPadding: EdgeInsets.all(screenWidth * 0.04),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          prefixIcon: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
+                          hintText: "0",
+                          prefixIcon: Padding(
+                            // Padding agar posisi 'Rp' pas (sejauh ini top: 1 yang paling pas untuk HP Redmi Note 14 Pro 5g)
+                            padding: const EdgeInsets.only(top: 1, left:0), 
                             child: Text(
-                              "Rp",
+                              'Rp',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                fontSize: inputFontSize,
+                                color: AppColors.blackText,
                               ),
                             ),
                           ),
+                          prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.blueButton),
+                          ),
                         ),
                         keyboardType: TextInputType.number,
-                        style: TextStyle(fontSize: labelFontSize),
                       ),
-
-                      SizedBox(height: verticalSpacing),
-
-                      // Textfield Notes / Berita
+                      SizedBox(height: verticalSpacing * 1.5),
+                      
+                      Text(
+                        'Berita (Opsional)',
+                        style: TextStyle(
+                          fontSize: labelFontSize,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.blackText,
+                        ),
+                      ),
                       TextField(
                         controller: notesCtrl,
-                        decoration: InputDecoration(
-                          labelText: "Berita",
-                          contentPadding: EdgeInsets.all(screenWidth * 0.04),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        style: TextStyle(fontSize: labelFontSize),
-                      ),
-
-                      SizedBox(height: verticalSpacing * 3),
-
-                      // Continue button
-                      SizedBox(
-                        width: double.infinity,
-                        height: buttonHeight,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.blueButton,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: _goToConfirmation,
-                          child: Text(
-                            "Continue",
-                            style: TextStyle(
-                              fontSize: labelFontSize,
-                              color: Colors.white,
-                            ),
+                        style: TextStyle(fontSize: inputFontSize),
+                        inputFormatters: [LengthLimitingTextInputFormatter(15)],
+                        decoration: const InputDecoration(
+                          hintText: "Contoh: Bayar tagihan",
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.blueButton),
                           ),
                         ),
                       ),
-
-                      SizedBox(height: verticalSpacing * 2),
                     ],
                   ),
                 ),
               ),
+
+              // Tombol menggunakan variabel dinamis
+              SizedBox(height: verticalSpacing),
+              SizedBox(
+                width: double.infinity,
+                height: buttonHeight,
+                child: ElevatedButton(
+                  onPressed: _goToConfirmation,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.blueButton,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    "Lanjutkan",
+                    style: TextStyle(
+                      fontSize: inputFontSize,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: verticalSpacing),
             ],
           ),
         ),
