@@ -77,7 +77,7 @@ class UserRepositoryImpl implements UserRepository {
         ..pinSalt = data['pinSalt'] ?? ''
         ..username = data['username'] ?? 'User'
         ..balance = (data['balance'] as num? ?? 0).toDouble()
-        ..accountNumber = data['accountNumber'] ?? '',
+        ..accountNumber = data['accountNumber'] ?? '' 
         // Pertahankan path gambar lama jika ada, karena data dari firestore tidak memilikinya
         ..profileImagePath = existingCache?.profileImagePath,
     );

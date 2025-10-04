@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/auth/ui/page/welcome_screen.dart';
-import 'package:vaultbank/features/recipient/ui/cubit/recipient_cubit.dart';
+import 'package:vaultbank/features/recipient/UI/cubit/recipient_cubit.dart';
 import 'package:vaultbank/features/recipient/data/repositories/recipient_repository_impl.dart';
 import 'package:vaultbank/features/transaction_history/data/repositories/transaction_history_repo_impl.dart';
 import 'package:vaultbank/features/transaction_history/ui/cubit/transaction_cubit.dart';
