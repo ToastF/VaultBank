@@ -13,12 +13,17 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int _selectedIndex = 1; // Default ke Home
+  late final List<Widget> _widgetOptions;
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    const TransferHomePage(),
-    HomeScreen(),
-    const ProfilePage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _widgetOptions = <Widget>[
+      const TransferHomePage(),
+      HomeScreen(onNavigate: _onItemTapped), 
+      const ProfilePage(), 
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {

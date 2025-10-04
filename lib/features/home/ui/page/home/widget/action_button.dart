@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
 import '../../topup/top_up.dart';
 import '../../../../../../core/util/animation_slide.dart';
-
 class ActionButtons extends StatelessWidget {
-  const ActionButtons({super.key});
+  // Tambahan fungsi ini adalah untuk membedakan navigasi antar button
+  // Karena khusus untuk transfer, ia tidak akan mempush layer UI baru diatasnya seperti top up
+  // Namun hanya akan memindahkan diri nya seperti pada NavBar
+  final Function (int) onNavigate;
+  const ActionButtons({super.key, required this.onNavigate});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +70,7 @@ class ActionButtons extends StatelessWidget {
                 icon: Icons.send,
                 label: 'Transfer',
                 onTap: () {
-                  // Navigator.push
+                  onNavigate(0);
                 },
                 iconSize: iconSize,
                 circlePadding: circlePadding,
