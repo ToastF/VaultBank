@@ -108,7 +108,7 @@ class _AddInternalAccountPageState extends State<AddInternalAccountPage> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Transfer with 0 admins',
+                    'Transfer With 0 Admin Fees',
                     style: TextStyle(
                       fontSize: 16,
                       color: AppColors.greyTextSearch,

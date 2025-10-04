@@ -149,6 +149,16 @@ class _TransferScreenState extends State<TransferScreen> {
     final double inputFontSize = screenWidth * 0.042;
     final double buttonHeight = screenHeight * 0.06;
 
+    String recipientDisplayName = 'Pilih Penerima';
+    if (selectedRecipient != null) {
+      if (selectedRecipient!.alias != null && selectedRecipient!.alias!.isNotEmpty) {
+        // Jika alias ada, gabungkan: "Alias (Nama Asli)"
+        recipientDisplayName = "${selectedRecipient!.alias} (${selectedRecipient!.name})";
+      } else {
+        // Jika tidak ada alias, tampilkan nama asli saja
+        recipientDisplayName = selectedRecipient!.name;
+      }
+    }
     return Scaffold(
       backgroundColor: AppColors.whiteBackground,
       body: SafeArea(
@@ -202,7 +212,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(vertical: verticalSpacing / 2),
                         title: Text(
-                          selectedRecipient?.alias ?? selectedRecipient?.name ?? 'Pilih Penerima',
+                          recipientDisplayName,
                           style: TextStyle(
                             fontSize: inputFontSize,
                             color: selectedRecipient == null ? AppColors.greyTextSearch : AppColors.blackText,

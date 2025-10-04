@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/features/common/ui/pages/pin_entry_page.dart';
 import 'package:vaultbank/features/recipient/domain/entities/recipient_entity.dart';
@@ -40,6 +41,15 @@ class TransferConfirmationPage extends StatelessWidget {
     );
   }
 
+  // Fungsi tambahan untuk melakukan formatting pada mata uang
+  String _formatCurrency(double value) {
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
   // Pembuatan UI
   @override
   Widget build(BuildContext context) {
@@ -86,113 +96,83 @@ class TransferConfirmationPage extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: verticalSpacing),
-
-                  // Back button
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () => Navigator.pop(context),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  SizedBox(height: verticalSpacing / 2),
+                  Text(
+                    'Konfirmasi',
+                    style: TextStyle(
+                      fontSize: titleFontSize,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  SizedBox(height: verticalSpacing / 2),
+                  Text(
+                    'Transfer With 0 Admin Fees',
+                    style: TextStyle(
+                      fontSize: labelFontSize,
+                      color: AppColors.greyTextSearch,
+                    ),
+                  ),
+                  SizedBox(height: verticalSpacing * 1.5),
 
-                  // Title
-                  Padding(
-                    padding: EdgeInsets.only(left: horizontalPadding / 2),
-                    child: Text(
-                      "Konfirmasi Transfer",
-                      style: TextStyle(
-                        fontSize: titleFontSize,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.blackText,
-                      ),
+                  // Body dipecah menjadi dua Card
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        // Card Utama (Penerima/Recipient & Rincian Biaya)
+                        _buildMainDetailsCard(
+                          recipient, 
+                          amount, 
+                          labelFontSize, 
+                          valueFontSize, 
+                          verticalSpacing
+                        ),
+
+                        SizedBox(height: verticalSpacing),
+
+                        // Card Catatan
+                        _buildNotesCard(
+                          notes, 
+                          labelFontSize, 
+                          valueFontSize
+                        ),
+                      ],
                     ),
                   ),
 
                   SizedBox(height: verticalSpacing),
-
-                  // Card detail transfer
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 3,
-                        child: Padding(
-                          padding: EdgeInsets.all(horizontalPadding),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Rekening tujuan
-                              _buildDetailRow(
-                                "Rekening Tujuan",
-                                "${recipient.name} (${recipient.accountNumber})",
-                                labelFontSize,
-                                valueFontSize,
-                              ),
-                              SizedBox(height: spacingSmall),
-                              // Jumlah uang
-                              _buildDetailRow(
-                                "Jumlah Uang",
-                                "Rp ${amount.toStringAsFixed(0)}",
-                                labelFontSize,
-                                valueFontSize,
-                              ),
-                              SizedBox(height: spacingSmall),
-                              // Notes / Berita
-                              _buildDetailRow(
-                                "Berita",
-                                notes.isNotEmpty ? notes : "-",
-                                labelFontSize,
-                                valueFontSize,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Button confirmation (show PIN page)
                   SizedBox(
                     width: double.infinity,
                     height: buttonHeight,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.blueButton,
+                        disabledBackgroundColor: AppColors.blueButton.withOpacity(0.5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed:
-                          // Disable / Enable button
-                          isLoading ? null : () => _proceedWithPin(context),
-                      child:
-                          // Show progress indicator untuk menunjukkan bahwa tombol tidak dapat diklik
-                          isLoading
-                              ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : Text(
-                                "Konfirmasi & Masukkan PIN",
-                                style: TextStyle(
-                                  fontSize: labelFontSize,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                      onPressed: isLoading ? null : () => _proceedWithPin(context),
+                      child: isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              "Konfirmasi",
+                              style: TextStyle(
+                                fontSize: labelFontSize * 1.1,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
+                            ),
                     ),
                   ),
-
                   SizedBox(height: verticalSpacing),
                 ],
               ),
@@ -203,39 +183,109 @@ class TransferConfirmationPage extends StatelessWidget {
     );
   }
 
-  // Widget yang membantu menuliskan detail-detail transaksi pada Card
-  Widget _buildDetailRow(
-    String label,
-    String value,
-    double labelFontSize,
-    double valueFontSize,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Detail name / label
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: labelFontSize,
-              color: Colors.grey[700],
+  // Helper widget untuk Card Utama
+  Widget _buildMainDetailsCard(RecipientEntity recipient, double amount, double labelSize, double valueSize, double spacing) {
+  // Logika untuk menentukan nama yang akan ditampilkan
+  String displayName = recipient.name; // Defaultnya adalah nama asli
+  if (recipient.alias != null && recipient.alias!.isNotEmpty) {
+    // Jika alias ada, gabungkan keduanya
+    displayName = "${recipient.alias} (${recipient.name})";
+  }
+    return Card(
+      elevation: 4,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Column(
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: CircleAvatar(
+                backgroundColor: AppColors.blueLightButton,
+                child: Text(
+                  // Ambil huruf pertama dari alias jika ada, jika tidak dari nama asli
+                  (recipient.alias ?? recipient.name).isNotEmpty ? (recipient.alias ?? recipient.name)[0].toUpperCase() : '?',
+                  style: const TextStyle(color: AppColors.blueIcon, fontWeight: FontWeight.bold),
+                ),
+              ),
+              title: Text(
+                displayName,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: valueSize)
+              ),
+              subtitle: Text(
+                recipient.accountNumber,
+                style: TextStyle(fontSize: labelSize)
+              ),
             ),
-          ),
-          SizedBox(height: 4),
-          // Detail value
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: valueFontSize,
-              color: Colors.black,
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                children: [
+                  _buildDetailRow("Jumlah Uang", _formatCurrency(amount), labelSize, valueSize),
+                  SizedBox(height: spacing),
+                  _buildDetailRow("Biaya Transfer", "Gratis", labelSize, valueSize),
+                  const Divider(height: 24),
+                  _buildDetailRow("Total", _formatCurrency(amount), labelSize, valueSize, isTotal: true),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+
+  // Helper widget untuk Card Catatan
+  Widget _buildNotesCard(String notes, double labelSize, double valueSize) {
+    return Card(
+      elevation: 4,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Catatan",
+              style: TextStyle(fontSize: labelSize, color: AppColors.greyTextSearch),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              notes.isNotEmpty ? notes : "-",
+              style: TextStyle(fontSize: valueSize, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper widget untuk baris detail
+  Widget _buildDetailRow(String label, String value, double labelSize, double valueSize, {bool isTotal = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: labelSize,
+            color: isTotal ? AppColors.blackText : AppColors.greyTextSearch,
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: valueSize,
+            color: AppColors.blackText,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }
