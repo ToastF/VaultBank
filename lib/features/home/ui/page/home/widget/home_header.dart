@@ -1,28 +1,20 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
-  final String? profileImagePath;
 
-  const HomeHeader({
-    super.key,
-    required this.userName,
-    this.profileImagePath,
-  });
+  const HomeHeader({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
-
     // biar dinamis
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final double horizontalPadding = screenWidth * 0.05; 
-    final double topPadding = screenHeight * 0.025; 
-    final double bottomPadding = screenHeight * 0.09; 
+    final double horizontalPadding = screenWidth * 0.05;
+    final double topPadding = screenHeight * 0.025;
+    final double bottomPadding = screenHeight * 0.09;
     final double avatarRadius = screenWidth * 0.065;
     final double iconSize = screenWidth * 0.08;
     final double spacing = screenWidth * 0.04;
@@ -44,18 +36,16 @@ class HomeHeader extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-          CircleAvatar(
-            radius: avatarRadius,
-            backgroundColor: AppColors.white,
-            // Tampilkan gambar dari state jika ada
-            backgroundImage: profileImagePath != null
-                ? FileImage(File(profileImagePath!))
-                : null,
-            child: profileImagePath == null
-                ? Icon(Icons.person, size: iconSize, color: AppColors.blueIcon)
-                : null,
-          ),
-              SizedBox(width: spacing), 
+              CircleAvatar(
+                radius: avatarRadius,
+                backgroundColor: AppColors.white,
+                child: Icon(
+                  Icons.person,
+                  size: iconSize,
+                  color: AppColors.blueIcon,
+                ),
+              ),
+              SizedBox(width: spacing),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -64,14 +54,14 @@ class HomeHeader extends StatelessWidget {
                     'Welcome',
                     style: TextStyle(
                       color: AppColors.white,
-                      fontSize: welcomeFontSize, 
+                      fontSize: welcomeFontSize,
                     ),
                   ),
                   Text(
-                    userName, 
+                    userName,
                     style: TextStyle(
                       color: AppColors.white,
-                      fontSize: nameFontSize, 
+                      fontSize: nameFontSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

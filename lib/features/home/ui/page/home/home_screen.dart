@@ -31,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-
       backgroundColor: AppColors.whiteBackground,
       body: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
@@ -47,12 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
           if (state is UserLoaded) {
             final String userName = state.user.username;
-            final String? profileImagePath = state.user.profileImagePath;
 
             return SingleChildScrollView(
               child: Stack(
                 children: [
-                  HomeHeader(userName: userName, profileImagePath: profileImagePath),
+                  HomeHeader(userName: userName),
 
                   SafeArea(
                     child: Column(
@@ -64,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         BalanceCard(balance: state.user.balance),
                         ActionButtons(onNavigate: widget.onNavigate,),
                         HistoryList(),
-                        SizedBox(height: screenHeight * 0.02),
                       ],
                     ),
                   ),

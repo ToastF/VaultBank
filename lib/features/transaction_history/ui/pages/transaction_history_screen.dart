@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/features/transaction_history/domain/entities/transaction_entity.dart';
 import 'package:vaultbank/features/transaction_history/ui/cubit/transaction_cubit.dart';
@@ -23,12 +22,6 @@ class TransactionHistoryScreen extends StatefulWidget {
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   TxFilter selectedFilter = TxFilter.all;
   DateTime selectedMonth = DateTime.now();
-
-  @override
-  void initState() {
-    super.initState();
-    initializeDateFormatting('id_ID', null);
-  }
 
   @override
   Widget build(BuildContext context) {

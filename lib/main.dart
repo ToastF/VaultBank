@@ -18,12 +18,14 @@ import './core/util/navi_util.dart';
 import 'features/auth/service/register_user.dart';
 import './features/user/ui/cubit/user_cubit.dart';
 import 'features/home/ui/page/navbar/NavBar.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   // Initialize Firebase and Isar
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await LocalStorage.init();
+  await initializeDateFormatting('id_ID', null);
   // Instantiate repositories or services for global provider
   final authRepo = AuthRepositoryImpl(FirebaseAuth.instance);
   final userRepo = UserRepositoryImpl(FirebaseFirestore.instance);
