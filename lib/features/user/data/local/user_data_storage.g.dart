@@ -47,13 +47,18 @@ const UserModelSchema = CollectionSchema(
       name: r'pinSalt',
       type: IsarType.string,
     ),
-    r'uid': PropertySchema(
+    r'profileImagePath': PropertySchema(
       id: 6,
+      name: r'profileImagePath',
+      type: IsarType.string,
+    ),
+    r'uid': PropertySchema(
+      id: 7,
       name: r'uid',
       type: IsarType.string,
     ),
     r'username': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'username',
       type: IsarType.string,
     )
@@ -83,6 +88,12 @@ int _userModelEstimateSize(
   bytesCount += 3 + object.notelp.length * 3;
   bytesCount += 3 + object.pinHash.length * 3;
   bytesCount += 3 + object.pinSalt.length * 3;
+  {
+    final value = object.profileImagePath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.uid.length * 3;
   bytesCount += 3 + object.username.length * 3;
   return bytesCount;
@@ -94,14 +105,16 @@ void _userModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
+
   writer.writeString(offsets[0], object.accountNumber);
   writer.writeDouble(offsets[1], object.balance);
   writer.writeString(offsets[2], object.email);
   writer.writeString(offsets[3], object.notelp);
   writer.writeString(offsets[4], object.pinHash);
   writer.writeString(offsets[5], object.pinSalt);
-  writer.writeString(offsets[6], object.uid);
-  writer.writeString(offsets[7], object.username);
+  writer.writeString(offsets[6], object.profileImagePath);
+  writer.writeString(offsets[7], object.uid);
+  writer.writeString(offsets[8], object.username);
 }
 
 UserModel _userModelDeserialize(
@@ -118,6 +131,8 @@ UserModel _userModelDeserialize(
   object.notelp = reader.readString(offsets[3]);
   object.pinHash = reader.readString(offsets[4]);
   object.pinSalt = reader.readString(offsets[5]);
+  object.profileImagePath = reader.readStringOrNull(offsets[6]);
+
   object.uid = reader.readString(offsets[6]);
   object.username = reader.readString(offsets[7]);
   return object;
@@ -141,7 +156,7 @@ P _userModelDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
@@ -1015,6 +1030,160 @@ extension UserModelQueryFilter
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'profileImagePath',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'profileImagePath',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profileImagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'profileImagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'profileImagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'profileImagePath',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'profileImagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'profileImagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'profileImagePath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'profileImagePath',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profileImagePath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      profileImagePathIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'profileImagePath',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition> uidEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1356,6 +1525,19 @@ extension UserModelQuerySortBy on QueryBuilder<UserModel, UserModel, QSortBy> {
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByProfileImagePath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profileImagePath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      sortByProfileImagePathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profileImagePath', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByUid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.asc);
@@ -1467,6 +1649,19 @@ extension UserModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByProfileImagePath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profileImagePath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      thenByProfileImagePathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profileImagePath', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByUid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.asc);
@@ -1536,6 +1731,14 @@ extension UserModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserModel, UserModel, QDistinct> distinctByProfileImagePath(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'profileImagePath',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QDistinct> distinctByUid(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1592,6 +1795,13 @@ extension UserModelQueryProperty
   QueryBuilder<UserModel, String, QQueryOperations> pinSaltProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinSalt');
+    });
+  }
+
+  QueryBuilder<UserModel, String?, QQueryOperations>
+      profileImagePathProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'profileImagePath');
     });
   }
 

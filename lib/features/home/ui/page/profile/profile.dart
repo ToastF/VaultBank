@@ -1,21 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:vaultbank/core/util/animation_slide.dart';
-
 import 'package:vaultbank/core/util/color_palette.dart';
-
 import 'package:vaultbank/features/home/ui/page/profile/help_center.dart';
-
 import 'package:vaultbank/features/home/ui/page/profile/privacy_policy.dart';
-
 import 'package:vaultbank/features/home/ui/page/profile/terms_condition.dart';
-
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
-
 import '../../../../auth/service/logout_user.dart';
-
 import 'profile_setting.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -48,14 +41,16 @@ class ProfilePage extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const CircleAvatar(
+                          CircleAvatar(
                             radius: 40,
-                            backgroundColor: AppColors.whiteBackground,
-                            child: Icon(
-                              Icons.person,
-                              size: 50,
-                              color: AppColors.blueIcon,
-                            ),
+                            backgroundColor: AppColors.white,
+                            // Tampilkan gambar dari state jika ada
+                            backgroundImage: user.profileImagePath != null
+                                ? FileImage(File(user.profileImagePath!))
+                                : null,
+                            child: user.profileImagePath == null
+                                ? const Icon(Icons.person, size: 50, color: AppColors.blueIcon)
+                                : null,
                           ),
                           const SizedBox(height: 10),
                           Text(
