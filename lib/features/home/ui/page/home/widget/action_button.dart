@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
+import 'package:vaultbank/features/transfer/ui/pages/transfer_home_page.dart';
 import '../../topup/top_up.dart';
 import '../../../../../../core/util/animation_slide.dart';
 
@@ -17,7 +18,7 @@ class ActionButtons extends StatelessWidget {
     final double spacing = screenWidth * 0.02;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
@@ -67,7 +68,10 @@ class ActionButtons extends StatelessWidget {
                 icon: Icons.send,
                 label: 'Transfer',
                 onTap: () {
-                  // Navigator.push
+                  Navigator.push(
+                    context, 
+                    SlidePageRoute(page: const TransferHomePage())
+                  );
                 },
                 iconSize: iconSize,
                 circlePadding: circlePadding,

@@ -19,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
     Future.microtask(() async {
       await AccessCodeFlow(context).handle();
     });
@@ -28,17 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
+    final double headerHeight = screenHeight * 0.28;
 
+    return Scaffold(
       backgroundColor: AppColors.whiteBackground,
       body: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
-          // loading indicator saat data dimuat
           if (state is UserLoading || state is UserInitial) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // error handling
           if (state is UserError) {
             return Center(child: Text('Error: ${state.message}'));
           }
@@ -49,20 +47,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
             return SingleChildScrollView(
               child: Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  HomeHeader(userName: userName, profileImagePath: profileImagePath),
+                  HomeHeader(
+                    userName: userName,
+                    profileImagePath: profileImagePath,
+                  ),
 
-                  SafeArea(
+                  Padding(
+                    padding: EdgeInsets.only(top: headerHeight - 40),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(
-                          height: screenHeight * 0.28 - screenHeight * 0.06,
+
+                        BalanceCard(
+                          balance: state.user.balance,
+                          accountNumber: state.user.accountNumber,
                         ),
-                        BalanceCard(balance: state.user.balance),
-                        ActionButtons(),
-                        HistoryList(),
-                        SizedBox(height: screenHeight * 0.02),
+                        const SizedBox(height: 20),
+                        const ActionButtons(),
+                        const SizedBox(height: 20),
+                        const HistoryList(),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -70,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           }
+
           return const Center(child: Text('Unknown state'));
         },
       ),

@@ -17,14 +17,14 @@ class UserRepositoryImpl implements UserRepository {
     final cached = await UserStorage().getUser();
     if (cached != null && cached.uid == uid) {
       _syncUserFromFirestore(uid);
-      // PERBAIKAN 1: Sertakan profileImagePath dari cache saat membuat UserEntity
+
       return UserEntity(
         username: cached.username,
         uid: cached.uid,
         email: cached.email,
         notelp: cached.notelp,
         accountNumber: cached.accountNumber,
-        balance: cached.balance, // Tipe sudah double dari UserModel
+        balance: cached.balance, 
         profileImagePath: cached.profileImagePath,
       );
     }
@@ -33,10 +33,8 @@ class UserRepositoryImpl implements UserRepository {
     if (!doc.exists) return null;
 
     final data = doc.data()!;
-    // Simpan dulu ke cache agar path gambar (jika ada) ikut tergabung
     await saveUserToCache(uid, data);
 
-    // Baca lagi dari cache yang sudah ter-update
     final updatedCachedUser = await UserStorage().getUser();
 
     return UserEntity(
@@ -46,7 +44,6 @@ class UserRepositoryImpl implements UserRepository {
       username: data['username'],
       balance: (data['balance'] as num? ?? 0).toDouble(),
       accountNumber: data['accountNumber'] ?? '',
-      // PERBAIKAN 2: Ambil profileImagePath dari cache yang baru disimpan
       profileImagePath: updatedCachedUser?.profileImagePath,
     );
   }
@@ -64,8 +61,6 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> saveUserToCache(String uid, Map<String, dynamic> data) async {
-    // PERBAIKAN 3: Buat saveUserToCache menjadi lebih "pintar"
-    // Baca dulu data cache yang ada untuk mempertahankan profileImagePath
     final existingCache = await UserStorage().getUser();
 
     await UserStorage().saveUser(
@@ -78,7 +73,6 @@ class UserRepositoryImpl implements UserRepository {
         ..username = data['username'] ?? 'User'
         ..balance = (data['balance'] as num? ?? 0).toDouble()
         ..accountNumber = data['accountNumber'] ?? ''
-        // Pertahankan path gambar lama jika ada, karena data dari firestore tidak memilikinya
         ..profileImagePath = existingCache?.profileImagePath,
     );
     debugPrint("Saved user data to Cache");
@@ -95,10 +89,8 @@ class UserRepositoryImpl implements UserRepository {
       final data = doc.data()!;
       await saveUserToCache(uid, data);
 
-      // Baca lagi dari cache setelah update
       final updatedCache = await UserStorage().getUser();
 
-      // PERBAIKAN 4: Sertakan profileImagePath dari cache
       return UserEntity(
         uid: uid,
         email: data['email'],
