@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_screen.dart';
 import '../../topup/top_up.dart';
+import '../../tarik_tunai/tarik tunai.dart';
 import '../../../../../../core/util/animation_slide.dart';
 
 class ActionButtons extends StatelessWidget {
@@ -59,7 +60,10 @@ class ActionButtons extends StatelessWidget {
                 icon: Icons.arrow_downward,
                 label: 'Tarik Tunai',
                 onTap: () {
-                  // Navigator.push
+                  Navigator.push(
+                    context,
+                    SlidePageRoute(page: const TarikTunaiPage()),
+                  );
                 },
                 iconSize: iconSize,
                 circlePadding: circlePadding,
