@@ -14,47 +14,46 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<UserEntity?> getCurrentUser(String uid) async {
     debugPrint("Getting Current user Data");
+    // UI reads from cache first then sync with firebase in the background
     final cached = await UserStorage().getUser();
     if (cached != null && cached.uid == uid) {
+      // background sync
       _syncUserFromFirestore(uid);
-      // PERBAIKAN 1: Sertakan profileImagePath dari cache saat membuat UserEntity
       return UserEntity(
         username: cached.username,
         uid: cached.uid,
         email: cached.email,
         notelp: cached.notelp,
+        balance: cached.balance.toDouble(),
         accountNumber: cached.accountNumber,
-        balance: cached.balance, // Tipe sudah double dari UserModel
-        profileImagePath: cached.profileImagePath,
       );
     }
 
+    // If no cache, fetch directly from Firestore (first-time login)
     final doc = await _firestore.collection('users').doc(uid).get();
     if (!doc.exists) return null;
 
     final data = doc.data()!;
-    // Simpan dulu ke cache agar path gambar (jika ada) ikut tergabung
-    await saveUserToCache(uid, data);
-
-    // Baca lagi dari cache yang sudah ter-update
-    final updatedCachedUser = await UserStorage().getUser();
-
-    return UserEntity(
+    final user = UserEntity(
       uid: uid,
       email: data['email'],
       notelp: data['notelp'],
       username: data['username'],
       balance: (data['balance'] as num? ?? 0).toDouble(),
       accountNumber: data['accountNumber'] ?? '',
-      // PERBAIKAN 2: Ambil profileImagePath dari cache yang baru disimpan
-      profileImagePath: updatedCachedUser?.profileImagePath,
     );
+
+    await saveUserToCache(uid, data);
+
+    return user;
   }
 
+  // Background sync
   Future<void> _syncUserFromFirestore(String uid) async {
     try {
       final doc = await _firestore.collection('users').doc(uid).get();
       if (!doc.exists) return;
+
       final data = doc.data()!;
       await saveUserToCache(uid, data);
     } catch (e) {
@@ -62,12 +61,9 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
+  // saves to cache
   @override
   Future<void> saveUserToCache(String uid, Map<String, dynamic> data) async {
-    // PERBAIKAN 3: Buat saveUserToCache menjadi lebih "pintar"
-    // Baca dulu data cache yang ada untuk mempertahankan profileImagePath
-    final existingCache = await UserStorage().getUser();
-
     await UserStorage().saveUser(
       UserModel()
         ..uid = uid
@@ -77,13 +73,12 @@ class UserRepositoryImpl implements UserRepository {
         ..pinSalt = data['pinSalt'] ?? ''
         ..username = data['username'] ?? 'User'
         ..balance = (data['balance'] as num? ?? 0).toDouble()
-        ..accountNumber = data['accountNumber'] ?? ''
-        // Pertahankan path gambar lama jika ada, karena data dari firestore tidak memilikinya
-        ..profileImagePath = existingCache?.profileImagePath,
+        ..accountNumber = data['accountNumber'] ?? '',
     );
     debugPrint("Saved user data to Cache");
   }
 
+  // Listen to Firestore changes and keep cache in sync
   @override
   Stream<UserEntity?> listenToUser(String uid) {
     debugPrint("listening to user changes");
@@ -93,12 +88,8 @@ class UserRepositoryImpl implements UserRepository {
       if (!doc.exists) return null;
 
       final data = doc.data()!;
-      await saveUserToCache(uid, data);
+      await saveUserToCache(uid, data); // update cache every change
 
-      // Baca lagi dari cache setelah update
-      final updatedCache = await UserStorage().getUser();
-
-      // PERBAIKAN 4: Sertakan profileImagePath dari cache
       return UserEntity(
         uid: uid,
         email: data['email'],
@@ -106,7 +97,6 @@ class UserRepositoryImpl implements UserRepository {
         username: data['username'],
         balance: (data['balance'] as num? ?? 0).toDouble(),
         accountNumber: data['accountNumber'] ?? '',
-        profileImagePath: updatedCache?.profileImagePath,
       );
     });
   }
@@ -170,26 +160,5 @@ class UserRepositoryImpl implements UserRepository {
     final storedSalt = data['pinSalt'] as String;
 
     return HashUtil.verify(enteredPin, storedHash, storedSalt);
-  }
-
-  // New method to update profileImagePath in cache
-  Future<void> updateProfileImagePath(String uid, String imagePath) async {
-    final existingCache = await UserStorage().getUser();
-    if (existingCache == null) return;
-
-    final updatedUser =
-        UserModel()
-          ..uid = existingCache.uid
-          ..email = existingCache.email
-          ..notelp = existingCache.notelp
-          ..pinHash = existingCache.pinHash
-          ..pinSalt = existingCache.pinSalt
-          ..username = existingCache.username
-          ..balance = existingCache.balance
-          ..accountNumber = existingCache.accountNumber
-          ..profileImagePath = imagePath;
-
-    await UserStorage().saveUser(updatedUser);
-    debugPrint("Updated profileImagePath in cache");
   }
 }

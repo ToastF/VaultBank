@@ -16,7 +16,6 @@ class UserModel {
   late String pinHash;
   late String pinSalt;
   late String accountNumber;
-  String? profileImagePath;
 }
 
 class UserStorage {
