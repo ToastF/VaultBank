@@ -3,11 +3,12 @@ import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_screen.dart';
 import '../../topup/top_up.dart';
 import '../../../../../../core/util/animation_slide.dart';
+
 class ActionButtons extends StatelessWidget {
   // Tambahan fungsi ini adalah untuk membedakan navigasi antar button
   // Karena khusus untuk transfer, ia tidak akan mempush layer UI baru diatasnya seperti top up
   // Namun hanya akan memindahkan diri nya seperti pada NavBar
-  final Function (int) onNavigate;
+  final Function(int) onNavigate;
   const ActionButtons({super.key, required this.onNavigate});
 
   @override
@@ -71,7 +72,10 @@ class ActionButtons extends StatelessWidget {
                 icon: Icons.send,
                 label: 'Transfer',
                 onTap: () {
-                  onNavigate(0);
+                  Navigator.push(
+                    context,
+                    SlidePageRoute(page: const TransferScreen()),
+                  );
                 },
                 iconSize: iconSize,
                 circlePadding: circlePadding,

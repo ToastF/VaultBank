@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaultbank/features/home/ui/page/profile/service/profile_image_service.dart';
 import 'dart:async';
 import 'package:vaultbank/features/user/data/repositories/user_repository_impl.dart';
 import '../../domain/entities/user_entity.dart';
@@ -45,5 +46,17 @@ class UserCubit extends Cubit<UserState> {
             emit(UserError(e.toString()));
           },
         );
+  }
+    // untuk update profile picture
+  Future<void> updateProfilePicture() async {
+    if (state is! UserLoaded) return;
+    final currentUser = (state as UserLoaded).user;
+
+    final newPath = await ProfileImageService.pickProfileImage();
+    if (newPath == null) return;
+
+    await ProfileImageService.saveProfileImagePath(newPath);
+
+    emit(UserLoaded(currentUser.copyWith(profileImagePath: newPath)));
   }
 }

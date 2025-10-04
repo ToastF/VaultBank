@@ -1,21 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:vaultbank/core/util/animation_slide.dart';
-
 import 'package:vaultbank/core/util/color_palette.dart';
-
 import 'package:vaultbank/features/home/ui/page/profile/help_center.dart';
-
 import 'package:vaultbank/features/home/ui/page/profile/privacy_policy.dart';
-
 import 'package:vaultbank/features/home/ui/page/profile/terms_condition.dart';
-
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
-
 import '../../../../auth/service/logout_user.dart';
-
 import 'profile_setting.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -32,6 +24,7 @@ class ProfilePage extends StatelessWidget {
         }
 
         final user = state.user;
+        final imagePath = user.profileImagePath;
 
         return Scaffold(
           backgroundColor: AppColors.whiteBackground,
@@ -48,14 +41,23 @@ class ProfilePage extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const CircleAvatar(
-                            radius: 40,
+                          CircleAvatar(
+                            radius: 45,
                             backgroundColor: AppColors.whiteBackground,
-                            child: Icon(
-                              Icons.person,
-                              size: 50,
-                              color: AppColors.blueIcon,
-                            ),
+                            backgroundImage:
+                                (imagePath != null &&
+                                        File(imagePath).existsSync())
+                                    ? FileImage(File(imagePath))
+                                    : null,
+                            child:
+                                (imagePath == null ||
+                                        !File(imagePath).existsSync())
+                                    ? const Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: AppColors.blueIcon,
+                                    )
+                                    : null,
                           ),
                           const SizedBox(height: 10),
                           Text(
@@ -79,8 +81,8 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
+
               SliverToBoxAdapter(
-                // 2. Hapus warna dari Container ini
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -134,8 +136,7 @@ class ProfilePage extends StatelessWidget {
                           LogoutUser(context)();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              AppColors.white, // Tombol tetap putih
+                          backgroundColor: AppColors.white,
                           elevation: 2,
                           shadowColor: Colors.black.withOpacity(0.1),
                           side: const BorderSide(color: AppColors.blueButton),
@@ -155,7 +156,6 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // 3. (Opsional tapi direkomendasikan) Beri sedikit padding bawah
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -181,7 +181,7 @@ class ProfilePage extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: Icon(icon, color: AppColors.blueIcon),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         trailing: const Icon(
           Icons.arrow_forward_ios,
           size: 16,

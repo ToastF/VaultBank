@@ -7,6 +7,7 @@ class UserEntity {
   final String? notelp;
   final double balance;
   final String accountNumber;
+  final String? profileImagePath;
 
   UserEntity({
     required this.username,
@@ -15,5 +16,25 @@ class UserEntity {
     this.notelp,
     required this.balance,
     required this.accountNumber,
+    this.profileImagePath,
   });
+  UserEntity copyWith({
+    String? uid,
+    String? username,
+    String? email,
+    String? notelp,
+    double? balance,
+    String? accountNumber,
+    String? profileImagePath,
+  }) {
+    return UserEntity(
+      uid: uid ?? this.uid,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      notelp: notelp ?? this.notelp,
+      balance: balance ?? this.balance,
+      accountNumber: accountNumber ?? this.accountNumber,
+      profileImagePath: profileImagePath ?? this.profileImagePath,
+    );
+  }
 }

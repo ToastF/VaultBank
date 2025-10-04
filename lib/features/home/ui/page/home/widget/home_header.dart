@@ -1,10 +1,16 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
+  final String? profileImagePath; 
 
-  const HomeHeader({super.key, required this.userName});
+  const HomeHeader({
+    super.key,
+    required this.userName,
+    this.profileImagePath, 
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +45,22 @@ class HomeHeader extends StatelessWidget {
               CircleAvatar(
                 radius: avatarRadius,
                 backgroundColor: AppColors.white,
-                child: Icon(
-                  Icons.person,
-                  size: iconSize,
-                  color: AppColors.blueIcon,
-                ),
+                backgroundImage: (profileImagePath != null &&
+                        File(profileImagePath!).existsSync())
+                    ? FileImage(File(profileImagePath!))
+                    : null,
+                child: (profileImagePath == null ||
+                        !File(profileImagePath!).existsSync())
+                    ? Icon(
+                        Icons.person,
+                        size: iconSize,
+                        color: AppColors.blueIcon,
+                      )
+                    : null,
               ),
+
               SizedBox(width: spacing),
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,

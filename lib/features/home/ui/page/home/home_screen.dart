@@ -50,18 +50,23 @@ class _HomeScreenState extends State<HomeScreen> {
             return SingleChildScrollView(
               child: Stack(
                 children: [
-                  HomeHeader(userName: userName),
+                  HomeHeader(
+                    userName: userName,
+                    profileImagePath: state.user.profileImagePath),
 
                   SafeArea(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(
-                          height: screenHeight * 0.28 - screenHeight * 0.06,
+                          height: screenHeight * 0.28 - screenHeight * 0.08,
                         ),
-                        BalanceCard(balance: state.user.balance),
+                        BalanceCard(
+                          balance: state.user.balance, 
+                          accountNumber: state.user.accountNumber),
                         ActionButtons(onNavigate: widget.onNavigate,),
                         HistoryList(),
+                        SizedBox(height: screenHeight * 0.02),
                       ],
                     ),
                   ),
