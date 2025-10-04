@@ -9,7 +9,9 @@ import '../../../../auth/service/handle_AC_flow.dart';
 import '../../../../../../core/util/color_palette.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  // Variabel ini akan menerima fungsi dari NavBar (specific case untuk Transfer nantinya)
+  final Function(int) onNavigate;
+  const HomeScreen({super.key, required this.onNavigate});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -60,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: screenHeight * 0.28 - screenHeight * 0.06,
                         ),
                         BalanceCard(balance: state.user.balance),
-                        ActionButtons(),
+                        ActionButtons(onNavigate: widget.onNavigate,),
                         HistoryList(),
                         SizedBox(height: screenHeight * 0.02),
                       ],
