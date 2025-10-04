@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 // Model ini akan digunakan untuk transaksi kita
 enum TransactionStatus { success, failed, pending }
 
-enum TransactionType { antarBank, antarRekening, virtualAccount }
+enum TransactionType { antarBank, antarRekening, virtualAccount, tarikTunai }
 
 class TransactionEntity extends Equatable {
   // Berikut adalah data yang wajib data
