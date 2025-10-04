@@ -94,6 +94,7 @@ class UserRepositoryImpl implements UserRepository {
 
       final data = doc.data()!;
       await saveUserToCache(uid, data); // update cache every change
+      final localProfileImage = await ProfilePictureStorage.getProfileImagePath();
 
       return UserEntity(
         uid: uid,
@@ -102,6 +103,7 @@ class UserRepositoryImpl implements UserRepository {
         username: data['username'],
         balance: (data['balance'] as num? ?? 0).toDouble(),
         accountNumber: data['accountNumber'] ?? '',
+        profileImagePath: localProfileImage,
       );
     });
   }
