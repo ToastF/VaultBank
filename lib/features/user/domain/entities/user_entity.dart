@@ -6,6 +6,7 @@ class UserEntity {
   final String email;
   final String? notelp;
   final double balance;
+  final String accountNumber;
   final String? profileImagePath;
 
   UserEntity({
@@ -14,6 +15,7 @@ class UserEntity {
     required this.email,
     this.notelp,
     required this.balance,
+    required this.accountNumber,
     this.profileImagePath,
   });
 }

@@ -6,13 +6,16 @@ part 'user_data_storage.g.dart';
 
 @collection
 class UserModel {
-  Id id = 0; // always store only one user locally
-  late String username;
+  Id id = Isar.autoIncrement;
+
   late String uid;
+  late String username;
   late String email;
   late String notelp;
+  late double balance;
   late String pinHash;
   late String pinSalt;
+  late String accountNumber;
   late double balance;
   String? profileImagePath;
 }

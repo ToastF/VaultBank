@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vaultbank/features/user/service/AccountNumberGenerator.dart';
 import '../../../../core/util/hash_util.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/user_repository.dart';
@@ -22,6 +23,7 @@ class UserRepositoryImpl implements UserRepository {
         uid: cached.uid,
         email: cached.email,
         notelp: cached.notelp,
+        accountNumber: cached.accountNumber,
         balance: cached.balance, // Tipe sudah double dari UserModel
         profileImagePath: cached.profileImagePath,
       );
@@ -43,6 +45,7 @@ class UserRepositoryImpl implements UserRepository {
       notelp: data['notelp'],
       username: data['username'],
       balance: (data['balance'] as num? ?? 0).toDouble(),
+      accountNumber: data['accountNumber'] ?? '',
       // PERBAIKAN 2: Ambil profileImagePath dari cache yang baru disimpan
       profileImagePath: updatedCachedUser?.profileImagePath,
     );
@@ -74,6 +77,7 @@ class UserRepositoryImpl implements UserRepository {
         ..pinSalt = data['pinSalt'] ?? ''
         ..username = data['username'] ?? 'User'
         ..balance = (data['balance'] as num? ?? 0).toDouble()
+        ..accountNumber = data['accountNumber'] ?? '',
         // Pertahankan path gambar lama jika ada, karena data dari firestore tidak memilikinya
         ..profileImagePath = existingCache?.profileImagePath,
     );
@@ -101,7 +105,9 @@ class UserRepositoryImpl implements UserRepository {
         notelp: data['notelp'],
         username: data['username'],
         balance: (data['balance'] as num? ?? 0).toDouble(),
+        accountNumber: data['accountNumber'] ?? '',
         profileImagePath: updatedCache?.profileImagePath,
+
       );
     });
   }
@@ -118,6 +124,8 @@ class UserRepositoryImpl implements UserRepository {
     // hashes pin before saving
     final salt = HashUtil.generateSalt();
     final pinHash = HashUtil.hashWithSalt(pin, salt);
+    final accountNumber =
+        await AccountNumberGenerator.generateUniqueAccountNumber();
 
     // save profile data to firestore
     await _firestore.collection('users').doc(uid).set({
@@ -127,6 +135,7 @@ class UserRepositoryImpl implements UserRepository {
       'pinSalt': salt,
       'notelp': notelp,
       'balance': 0.0,
+      'accountNumber': accountNumber,
     });
 
     // cache profile data
@@ -138,7 +147,8 @@ class UserRepositoryImpl implements UserRepository {
         ..pinHash = pinHash
         ..pinSalt = salt
         ..notelp = notelp
-        ..balance = 0.0,
+        ..balance = 0.0
+        ..accountNumber = accountNumber,
     );
   }
 

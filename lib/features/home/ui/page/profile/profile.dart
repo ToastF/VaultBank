@@ -9,7 +9,7 @@ import 'package:vaultbank/features/home/ui/page/profile/privacy_policy.dart';
 import 'package:vaultbank/features/home/ui/page/profile/terms_condition.dart';
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 import '../../../../auth/service/logout_user.dart';
-import 'profile_setting.dart'; 
+import 'profile_setting.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -56,14 +56,17 @@ class ProfilePage extends StatelessWidget {
                           Text(
                             user.username,
                             style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Text(
-                            user.notelp.toString(),
+                            user.accountNumber.toString(),
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 14),
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
@@ -105,7 +108,8 @@ class ProfilePage extends StatelessWidget {
                           Navigator.push(
                             context,
                             SlidePageRoute(
-                                page: const TermsAndConditionsScreen()),
+                              page: const TermsAndConditionsScreen(),
+                            ),
                           );
                         },
                       ),
@@ -125,22 +129,26 @@ class ProfilePage extends StatelessWidget {
                           LogoutUser(context)();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.white, // Tombol tetap putih
+                          backgroundColor:
+                              AppColors.white, // Tombol tetap putih
                           elevation: 2,
                           shadowColor: Colors.black.withOpacity(0.1),
-                          side: const BorderSide(
-                            color: AppColors.blueButton,
-                          ),
+                          side: const BorderSide(color: AppColors.blueButton),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32)
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 32,
+                          ),
                         ),
-                        child: const Text("Logout",
-                            style: TextStyle(
-                                color: AppColors.blueButton,
-                                fontWeight: FontWeight.bold
-                                )),
+                        child: const Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: AppColors.blueButton,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                       // 3. (Opsional tapi direkomendasikan) Beri sedikit padding bawah
                       const SizedBox(height: 20),
@@ -169,7 +177,11 @@ class ProfilePage extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon, color: AppColors.blueIcon),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: Colors.grey,
+        ),
         onTap: onTap,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
