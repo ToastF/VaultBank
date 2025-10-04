@@ -96,8 +96,9 @@ class ProfilePage extends StatelessWidget {
                             SlidePageRoute(page: const ProfileSettingScreen()),
                           );
                         },
+                        margin: const EdgeInsets.only(bottom: 12),
                       ),
-                      const SizedBox(height: 20),
+
                       _buildMenuItem(
                         icon: Icons.help_outline,
                         title: "Pusat Bantuan",
@@ -172,10 +173,11 @@ class ProfilePage extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    EdgeInsets? margin,
   }) {
     return Card(
       color: AppColors.white,
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: margin ?? const EdgeInsets.only(bottom: 12),
       elevation: 2,
       shadowColor: Colors.black.withOpacity(0.05),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
