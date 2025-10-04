@@ -82,13 +82,43 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // BlocListener (checks for state change)
       debugShowCheckedModeBanner: false,
+      // Default app font
+      theme: ThemeData(
+        textTheme: TextTheme(
+          bodyLarge: const TextStyle(
+            fontFamily: 'NunitoSans',
+            fontWeight: FontWeight.w700,
+          ),
+          bodyMedium: const TextStyle(
+            fontFamily: 'NunitoSans',
+            fontWeight: FontWeight.w700,
+          ),
+          bodySmall: const TextStyle(
+            fontFamily: 'NunitoSans',
+            fontWeight: FontWeight.w700,
+          ),
+          titleLarge: TextStyle(
+            fontFamily: 'NunitoSans',
+            fontWeight: FontWeight.w700,
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'NunitoSans',
+            fontWeight: FontWeight.w700,
+          ),
+          titleSmall: TextStyle(
+            fontFamily: 'NunitoSans',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+
+      // BlocListener (checks for state change)
       home: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           // if user is authenticated, skip login/signup and go to HomeScreen
           if (state is AuthSuccess) {
-            // uses cache first for UI, then syncs cache with cloud,
+            // data cache first for UI, then syncs cache with cloud,
             // then start listening for cloud changes and cache those changes
             context.read<UserCubit>()
               ..loadUser(state.auth.uid)

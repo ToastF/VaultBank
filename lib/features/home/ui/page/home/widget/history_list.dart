@@ -4,7 +4,8 @@ import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/features/transaction_history/domain/entities/transaction_entity.dart';
 import 'package:vaultbank/features/transaction_history/ui/cubit/transaction_cubit.dart';
 import 'package:vaultbank/features/transaction_history/ui/pages/transaction_history_screen.dart';
-import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart'; // import your UserCubit
+import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
+import 'package:intl/intl.dart';
 
 class HistoryList extends StatelessWidget {
   const HistoryList({super.key});
@@ -51,7 +52,8 @@ class HistoryList extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const TransactionHistoryScreen(),
+                          builder:
+                              (context) => const TransactionHistoryScreen(),
                         ),
                       );
                     },
@@ -127,6 +129,11 @@ class HistoryList extends StatelessWidget {
     final isSender = tx.senderAccount == currentUserAccountNumber;
     final displayName = isSender ? tx.recipientName : tx.senderName;
     final notes = (tx.notes != null && tx.notes!.isNotEmpty) ? tx.notes : null;
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
 
     return ListTile(
       leading: CircleAvatar(
@@ -140,10 +147,7 @@ class HistoryList extends StatelessWidget {
           size: iconSize,
         ),
       ),
-      title: Text(
-        displayName,
-        style: TextStyle(fontWeight: FontWeight.w500, fontSize: titleFontSize),
-      ),
+      title: Text(displayName, style: TextStyle(fontSize: titleFontSize)),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -162,7 +166,7 @@ class HistoryList extends StatelessWidget {
         ],
       ),
       trailing: Text(
-        "Rp${tx.amount.toStringAsFixed(0)}",
+        formatter.format(tx.amount),
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: amountFontSize,

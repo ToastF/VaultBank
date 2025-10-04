@@ -138,7 +138,7 @@ class RecipientRepositoryImpl implements RecipientRepository {
 
     // Use actual name from target user
     final userData = query.docs.first.data();
-    final verifiedName = userData['name'] as String? ?? recipient.name;
+    final verifiedName = userData['username'] as String? ?? recipient.name;
 
     // Prevent duplicates
     final existing =
@@ -178,6 +178,7 @@ class RecipientRepositoryImpl implements RecipientRepository {
       recipientId: docRef.id,
     );
     await RecipientStorage().addModel(model);
+    await _syncRecipientsFromFirestore(userUid);
 
     debugPrint('Added recipient $verifiedName (${recipient.accountNumber})');
   }

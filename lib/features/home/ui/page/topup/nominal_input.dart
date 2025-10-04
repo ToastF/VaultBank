@@ -4,9 +4,6 @@ import 'package:vaultbank/core/util/format_util.dart';
 import 'package:intl/intl.dart';
 import 'package:vaultbank/features/home/ui/page/topup/success.dart';
 import 'package:vaultbank/features/user/data/local/user_data_storage.dart';
-import 'package:vaultbank/features/transfer/ui/cubits/transfer_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/recipient/domain/entities/recipient_entity.dart';
 
 class NominalInput extends StatefulWidget {
   final String bankName;
@@ -37,7 +34,7 @@ class _NominalInputState extends State<NominalInput> {
       final rawValue = amountController.text.replaceAll('.', '').trim();
       final amount = int.tryParse(rawValue) ?? 0;
       setState(() {
-        isButtonEnabled = amount >= 10000;
+        isButtonEnabled = amount >= 10000 && amount <= 10000000;
       });
     });
   }
@@ -100,9 +97,7 @@ class _NominalInputState extends State<NominalInput> {
             TextField(
               controller: amountController,
               keyboardType: TextInputType.number,
-              inputFormatters: [
-                ThousandsSeparatorInputFormatter(),
-              ],
+              inputFormatters: [ThousandsSeparatorInputFormatter()],
               decoration: InputDecoration(
                 prefixText: "Rp ",
                 enabledBorder: OutlineInputBorder(
@@ -116,47 +111,54 @@ class _NominalInputState extends State<NominalInput> {
               ),
             ),
             const SizedBox(height: 16),
-              Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isButtonEnabled ? Colors.blue : Colors.grey,
+                    backgroundColor:
+                        isButtonEnabled ? Colors.blue : Colors.grey,
                     minimumSize: const Size.fromHeight(50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: isButtonEnabled
-                      ? () {
-                          final amount = amountController.text.replaceAll('.', '');
-                          final va = generateDynamicVA(widget.bankName);
+                  onPressed:
+                      isButtonEnabled
+                          ? () {
+                            final amount = amountController.text.replaceAll(
+                              '.',
+                              '',
+                            );
+                            final va = generateDynamicVA(widget.bankName);
 
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) => TopUpConfirmationDialog(
-                              bankName: widget.bankName,
-                              amount: amount,
-                              virtualAccount: va,
-                              assetPath: widget.assetPath,
-                              backgroundColor: widget.backgroundColor,
-                            ),
-                          );
-                        }
-                      : null,
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder:
+                                  (context) => TopUpConfirmationDialog(
+                                    bankName: widget.bankName,
+                                    amount: amount,
+                                    virtualAccount: va,
+                                    assetPath: widget.assetPath,
+                                    backgroundColor: widget.backgroundColor,
+                                  ),
+                            );
+                          }
+                          : null,
                   child: const Text(
                     "Confirm Top Up",
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
-                const SizedBox(height: 8), 
+                const SizedBox(height: 8),
                 const Text(
-                  'Minimal top up Rp10.000',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black54,
-                  ),
+                  'Minimal top up Rp10.000,00',
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+                const Text(
+                  'Maksimal top up Rp10.000.000,00',
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
                 ),
               ],
             ),
@@ -183,7 +185,9 @@ class _NominalInputState extends State<NominalInput> {
 
   String generateDynamicVA(String bankName) {
     final prefix = getBankPrefix(bankName);
-    final random = DateTime.now().millisecondsSinceEpoch.toString().substring(7);
+    final random = DateTime.now().millisecondsSinceEpoch.toString().substring(
+      7,
+    );
     final va = '$prefix$random';
     return va.padRight(16, '0');
   }
@@ -207,12 +211,13 @@ class TopUpConfirmationDialog extends StatefulWidget {
   });
 
   @override
-  State<TopUpConfirmationDialog> createState() => _TopUpConfirmationDialogState();
+  State<TopUpConfirmationDialog> createState() =>
+      _TopUpConfirmationDialogState();
 }
 
 class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
   final TextEditingController amountController = TextEditingController();
-  
+
   bool isProcessing = false;
 
   DateTime? expiryTime;
@@ -232,16 +237,14 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
     });
   }
 
-  String get formattedAmount => NumberFormat.decimalPattern('id')
-    .format(int.tryParse(widget.amount.replaceAll('.', '')) ?? 0);
-    
+  String get formattedAmount => NumberFormat.decimalPattern(
+    'id',
+  ).format(int.tryParse(widget.amount.replaceAll('.', '')) ?? 0);
+
   @override
   Widget build(BuildContext context) {
-    
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -249,10 +252,7 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
           children: [
             const Text(
               'Top Up',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
@@ -266,10 +266,7 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
             const SizedBox(height: 4),
             Text(
               'Via ${widget.bankName}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black54,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.black54),
             ),
             const SizedBox(height: 24),
             GestureDetector(
@@ -283,7 +280,8 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
                 if (currentUser == null) return;
 
                 // 2. Parse top-up amount
-                final amountToAdd = int.tryParse(widget.amount.replaceAll('.', '')) ?? 0;
+                final amountToAdd =
+                    int.tryParse(widget.amount.replaceAll('.', '')) ?? 0;
 
                 // 3. Update Firestore balance
                 final newBalance = (currentUser.balance + amountToAdd);
@@ -298,36 +296,40 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
                   currentUser..balance = newBalance.toDouble(),
                 );
 
-                // 5. Record transaction to Firestore 
-                final txnRef = FirebaseFirestore.instance 
+                // 5. Record transaction to Firestore
+                final txnRef =
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(currentUser.uid)
+                        .collection('transactions')
+                        .doc(); // Auto-generate ID
+
+                final txnId = txnRef.id;
+                await FirebaseFirestore.instance
                     .collection('users')
                     .doc(currentUser.uid)
                     .collection('transactions')
-                    .doc(); // Auto-generate ID
-
-                final txnId = txnRef.id;
-                await FirebaseFirestore.instance .collection('users') 
-                .doc(currentUser.uid) 
-                .collection('transactions') 
-                .doc(txnId) 
-                .set({ 
-                  'id': txnId, 
-                  'amount': amountToAdd.toDouble(), 
-                  'timestamp': Timestamp.now(),
-                  'status': 'success', 
-                  'type': 'virtualAccount', 
-                  'senderName': currentUser.username, 
-                  'senderAccount': currentUser.accountNumber, 
-                  'recipientName': 'Top Up VaultBank', 
-                  'recipientAccount': widget.virtualAccount, 
-                  'recipientBankName': widget.bankName,
-                  'notes': 'Top up via ${widget.bankName} VA',
-                });
+                    .doc(txnId)
+                    .set({
+                      'id': txnId,
+                      'amount': amountToAdd.toDouble(),
+                      'timestamp': Timestamp.now(),
+                      'status': 'success',
+                      'type': 'virtualAccount',
+                      'senderName': widget.bankName,
+                      'senderAccount': widget.virtualAccount,
+                      'recipientName': currentUser.username,
+                      'recipientAccount': widget.virtualAccount,
+                      'recipientBankName': widget.bankName,
+                      'notes': 'Top up via ${widget.bankName} VA',
+                    });
 
                 // 6. Navigate to TopUpSuccessPage
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const TopUpSuccessPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const TopUpSuccessPage(),
+                  ),
                 );
               },
               child: Container(
@@ -335,10 +337,7 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
                 decoration: BoxDecoration(
                   color: const Color(0xFF003087),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 3,
-                  ),
+                  border: Border.all(color: Colors.black, width: 3),
                 ),
                 child: Column(
                   children: [
@@ -354,10 +353,7 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
                     const SizedBox(height: 8),
                     const Text(
                       'Tekan untuk salin nomor VA',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ],
                 ),
@@ -367,10 +363,7 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
             RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black87,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.black87),
               ),
             ),
             const SizedBox(height: 16),
@@ -403,4 +396,4 @@ class _TopUpConfirmationDialogState extends State<TopUpConfirmationDialog> {
       ),
     );
   }
-} 
+}

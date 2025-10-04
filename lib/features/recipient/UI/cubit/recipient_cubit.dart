@@ -5,12 +5,14 @@ import 'package:vaultbank/features/recipient/data/repositories/recipient_reposit
 
 part 'recipient_state.dart';
 
+// Cubit responsible for adding, saving, getting, and deleting recipients
 class RecipientCubit extends Cubit<RecipientState> {
   final RecipientRepositoryImpl repo;
   StreamSubscription? _recipientSub;
 
   RecipientCubit(this.repo) : super(RecipientInitial());
 
+  // Load once on app start
   Future<void> loadRecipients(String uid) async {
     emit(RecipientLoading());
     try {
@@ -21,6 +23,7 @@ class RecipientCubit extends Cubit<RecipientState> {
     }
   }
 
+  // Start Real-time sync during runtime
   void startRecipientListener(String uid) {
     _recipientSub?.cancel();
     _recipientSub = repo
@@ -31,6 +34,7 @@ class RecipientCubit extends Cubit<RecipientState> {
         );
   }
 
+  // Add recipient
   Future<void> addRecipient(String uid, RecipientEntity recipient) async {
     emit(RecipientLoading());
     try {
@@ -48,6 +52,7 @@ class RecipientCubit extends Cubit<RecipientState> {
     }
   }
 
+  // Delete recipient
   Future<void> deleteRecipient(String uid, String accountNumber) async {
     emit(RecipientLoading());
     try {

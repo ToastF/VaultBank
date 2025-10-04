@@ -1,3 +1,4 @@
+// TODO: masih basic design, change!
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/features/recipient/ui/cubit/recipient_cubit.dart';
@@ -43,7 +44,11 @@ class _AddInternalAccountPageState extends State<AddInternalAccountPage> {
     }
 
     final uid = userState.user.uid;
-    final recipient = RecipientEntity(accountNumber: account, name: name);
+    final recipient = RecipientEntity(
+      accountNumber: account,
+      name: "",
+      alias: name.isEmpty ? null : name,
+    );
     context.read<RecipientCubit>().addRecipient(uid, recipient);
   }
 

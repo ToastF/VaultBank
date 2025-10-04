@@ -1,6 +1,7 @@
+// TODO: masih basic design, change! note: biru
 import 'package:flutter/material.dart';
+import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/core/util/navi_util.dart';
-import 'package:vaultbank/features/recipient/UI/pages/recipient_list_screen.dart';
 import 'package:vaultbank/features/transfer/ui/pages/add_internal_account_page.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_screen.dart';
 import 'package:vaultbank/features/transfer/ui/widgets/transfer_action_tile.dart';
@@ -11,14 +12,14 @@ class TransferHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: AppColors.whiteBackground,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
           'Transfer',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.grey[100],
+        backgroundColor: AppColors.whiteBackground,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -69,7 +70,7 @@ class TransferHomePage extends StatelessWidget {
                   subtitle: 'Transfer ke Sesama VaultBank',
                   onTap: () {
                     debugPrint("go to recipient list");
-                    NavigationHelper.goTo(context, RecipientListScreen());
+                    NavigationHelper.goTo(context, TransferScreen());
                   },
                 ),
               ),

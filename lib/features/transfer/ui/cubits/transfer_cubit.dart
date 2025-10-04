@@ -8,7 +8,7 @@ import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 
 part 'transfer_state.dart';
 
-/// Cubit for managing the process of making a transfer
+// Cubit for managing the process of making a transfer
 class TransferCubit extends Cubit<TransferState> {
   final TransferRepository _transferRepo;
   final UserCubit _userCubit;
@@ -21,7 +21,7 @@ class TransferCubit extends Cubit<TransferState> {
        _userCubit = userCubit,
        super(const TransferInitial());
 
-  /// transfer flow
+  // transfer flow
   Future<void> makeTransfer({
     required double amount,
     required RecipientEntity recipient,

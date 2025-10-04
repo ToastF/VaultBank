@@ -4,6 +4,7 @@ import '../../../auth/data/local/access_code_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
 
+// Functions to show dialog box to create or input Access Code
 Future<void> showAccessCodeDialog(BuildContext context) async {
   final ctrl = TextEditingController();
 
@@ -34,7 +35,7 @@ Future<void> showAccessCodeDialog(BuildContext context) async {
                   context.read<AuthCubit>().emit(AuthFinalized());
                 }
               },
-              child: const Text("Save"),
+              child: const Text("Enter"),
             ),
           ],
         ),

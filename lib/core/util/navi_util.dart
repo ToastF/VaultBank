@@ -5,35 +5,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class NavigationHelper {
   // go to, but previous screen is still present
   static void goTo(BuildContext context, Widget page) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => page),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (_) => page));
   }
 
   // go to, while retaining Cubit
   static void goToWithCubit<T extends BlocBase<dynamic>>(
-      BuildContext context,
-      Widget page,
-      T cubit,
+    BuildContext context,
+    Widget page,
+    T cubit,
   ) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => BlocProvider.value(
-          value: cubit,
-          child: page,
-        ),
+        builder: (_) => BlocProvider.value(value: cubit, child: page),
       ),
     );
   }
 
   // replace current screen with another screen
   static void replaceWith(BuildContext context, Widget page) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => page),
-    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => page));
   }
 
   // go to previous screen in stack
@@ -41,7 +32,7 @@ class NavigationHelper {
     Navigator.pop(context);
   }
 
-  /// clear all screen and replace with new one
+  // clear all screen and replace with new one
   static void goToAndRemoveAll(BuildContext context, Widget page) {
     Navigator.pushAndRemoveUntil(
       context,

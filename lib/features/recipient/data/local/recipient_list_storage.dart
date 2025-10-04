@@ -8,7 +8,7 @@ part 'recipient_list_storage.g.dart';
 class RecipientModel {
   Id id = Isar.autoIncrement;
 
-  /// Firestore recipient id
+  // Firestore recipient id
   late String recipientId;
 
   late String name;
@@ -41,7 +41,7 @@ class RecipientStorage {
     return await LocalStorage.instance.recipientModels.where().findAll();
   }
 
-  Future<List<RecipientEntity>> getRecipients() async {
+  Future<List<RecipientEntity>> pients() async {
     final models = await getModels();
     return models.map((m) => m.toEntity()).toList();
   }
@@ -86,7 +86,7 @@ class RecipientStorage {
     });
   }
 
-  /// Clear all recipients
+  // Clear all recipients
   Future<void> clearRecipients() async {
     await LocalStorage.instance.writeTxn(() async {
       await LocalStorage.instance.recipientModels.clear();

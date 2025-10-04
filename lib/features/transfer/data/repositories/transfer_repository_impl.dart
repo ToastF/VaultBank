@@ -3,11 +3,13 @@ import 'package:vaultbank/features/transaction_history/domain/entities/transacti
 import '../../domain/repositories/transfer_repository.dart';
 import 'package:flutter/foundation.dart';
 
+// Repository implementation for making Transfers
 class TransferRepositoryImpl implements TransferRepository {
   final FirebaseFirestore _firestore;
 
   TransferRepositoryImpl(this._firestore);
 
+  // Fungsi untuk membuat Transaction, update users' balance, dan insert to Firebase
   @override
   Future<TransactionEntity> makeTransfer({
     required String uid,
@@ -55,12 +57,12 @@ class TransferRepositoryImpl implements TransferRepository {
         final senderBalance = (senderSnap['balance'] as num).toDouble();
         final recipientBalance = (recipientSnap['balance'] as num).toDouble();
 
-        // 💰 Balance check
+        // Balance check
         if (senderBalance < amount) {
           throw Exception("Insufficient balance");
         }
 
-        // Update balances
+        // Update balances of sender and recipient
         transaction.update(senderRef, {'balance': senderBalance - amount});
         transaction.update(recipientRef, {
           'balance': recipientBalance + amount,
@@ -70,7 +72,7 @@ class TransferRepositoryImpl implements TransferRepository {
         final txMap = {
           'id': txId,
           'amount': amount,
-          'timestamp': DateTime.now().toIso8601String(),
+          'timestamp': Timestamp.now(),
           'status': TransactionStatus.success.name,
           'type': type.name,
           'senderName': senderName,
@@ -89,7 +91,7 @@ class TransferRepositoryImpl implements TransferRepository {
           txMap,
         );
 
-        // Construct entity to return
+        // Construct transaction to return
         createdTx = TransactionEntity(
           id: txId,
           amount: amount,

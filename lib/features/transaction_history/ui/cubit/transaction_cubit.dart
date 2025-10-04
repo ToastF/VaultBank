@@ -12,7 +12,7 @@ class TransactionCubit extends Cubit<TransactionState> {
 
   TransactionCubit(this.repo) : super(TransactionInitial());
 
-  /// Load once on app start
+  // Load once on app start
   Future<void> loadTransactions(String uid) async {
     emit(TransactionLoading());
     try {
@@ -23,7 +23,7 @@ class TransactionCubit extends Cubit<TransactionState> {
     }
   }
 
-  /// Real-time sync during runtime
+  // Start Real-time sync during runtime
   void startTransactionListener(String uid) {
     debugPrint("Starting Transaction Listener for $uid");
     _txSub?.cancel();
