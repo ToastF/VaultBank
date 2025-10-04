@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vaultbank/core/util/color_palette.dart'; // Sesuaikan dengan path Anda
+import 'package:vaultbank/core/util/color_palette.dart'; 
 
 class SettingItem extends StatelessWidget {
   final String label;

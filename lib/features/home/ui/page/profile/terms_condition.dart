@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vaultbank/core/util/color_palette.dart'; // Sesuaikan path jika perlu
+import 'package:vaultbank/core/util/color_palette.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {
   const TermsAndConditionsScreen({super.key});

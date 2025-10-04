@@ -23,7 +23,6 @@ class _BalanceCardState extends State<BalanceCard> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // 🔹 Variabel ukuran dinamis
     final double horizontalPadding = screenWidth * 0.05;
     final double borderRadius = 16.0;
     final double iconSize = screenWidth * 0.06;
@@ -33,7 +32,6 @@ class _BalanceCardState extends State<BalanceCard> {
     final double spacingSmall = screenWidth * 0.02;
     final double cardWidth = screenWidth * 0.9;
 
-    // 🔹 Format saldo ke Rupiah
     final formattedBalance = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp',
@@ -58,7 +56,6 @@ class _BalanceCardState extends State<BalanceCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🔹 Baris atas: ikon + teks "Total saldo"
             Row(
               children: [
                 Icon(
@@ -80,7 +77,6 @@ class _BalanceCardState extends State<BalanceCard> {
 
             SizedBox(height: spacingSmall * 1.5),
 
-            // 🔹 Baris saldo
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -107,7 +103,6 @@ class _BalanceCardState extends State<BalanceCard> {
 
             Divider(color: AppColors.greyFormLine),
 
-            // 🔹 Nomor akun
             Text(
               "Account Number: ${widget.accountNumber}",
               style: TextStyle(

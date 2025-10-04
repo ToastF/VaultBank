@@ -44,7 +44,6 @@ class ProfilePage extends StatelessWidget {
                           CircleAvatar(
                             radius: 40,
                             backgroundColor: AppColors.white,
-                            // Tampilkan gambar dari state jika ada
                             backgroundImage: user.profileImagePath != null
                                 ? FileImage(File(user.profileImagePath!))
                                 : null,
@@ -75,7 +74,6 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               SliverToBoxAdapter(
-                // 2. Hapus warna dari Container ini
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -130,7 +128,7 @@ class ProfilePage extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              AppColors.white, // Tombol tetap putih
+                              AppColors.white, 
                           elevation: 2,
                           shadowColor: Colors.black.withOpacity(0.1),
                           side: const BorderSide(color: AppColors.blueButton),
@@ -150,7 +148,6 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // 3. (Opsional tapi direkomendasikan) Beri sedikit padding bawah
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -176,7 +173,7 @@ class ProfilePage extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: Icon(icon, color: AppColors.blueIcon),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         trailing: const Icon(
           Icons.arrow_forward_ios,
           size: 16,
