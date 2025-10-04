@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/recipient/ui/cubit/recipient_cubit.dart';
+import 'package:vaultbank/features/recipient/UI/cubit/recipient_cubit.dart';
 import 'package:vaultbank/features/transaction_history/ui/cubit/transaction_cubit.dart';
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 import '../cubit/auth_cubit.dart';

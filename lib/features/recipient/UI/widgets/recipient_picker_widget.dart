@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/features/recipient/domain/entities/recipient_entity.dart';
-import 'package:vaultbank/features/recipient/ui/cubit/recipient_cubit.dart';
+import 'package:vaultbank/features/recipient/UI/cubit/recipient_cubit.dart';
 
 // Widget untuk menunjukkan seleksi recipient dari recipient list
 class RecipientPicker extends StatelessWidget {

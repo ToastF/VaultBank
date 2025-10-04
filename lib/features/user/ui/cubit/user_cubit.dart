@@ -57,7 +57,8 @@ class UserCubit extends Cubit<UserState> {
         email: currentUser.email,
         notelp: currentUser.notelp,
         balance: currentUser.balance,
-        profileImagePath: imagePath,
+        profileImagePath: imagePath, 
+        accountNumber: currentUser.accountNumber,
       );
       emit(UserLoaded(updatedUser));
       // Update in repository/cache

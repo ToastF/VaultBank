@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vaultbank/features/recipient/ui/widgets/recipient_picker_widget.dart';
+import 'package:vaultbank/features/recipient/UI/widgets/recipient_picker_widget.dart';
 import 'package:vaultbank/features/recipient/domain/entities/recipient_entity.dart';
 import 'package:vaultbank/features/transfer/ui/pages/transfer_confirmation_page.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
