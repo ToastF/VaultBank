@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vaultbank/features/home/ui/page/topup/cash_topup.dart';
 import 'package:vaultbank/features/home/ui/page/topup/nominal_input.dart';
 
 class TopUpPage extends StatelessWidget {
@@ -57,14 +58,14 @@ class TopUpPage extends StatelessWidget {
                 children: [
                   _buildBankItem(
                     context,
-                    'Bank BCA',
+                    'BCA',
                     'Biaya admin Rp2.000',
                     'assets/images/logo_bca.png',
                   ),
                   _buildDivider(),
                   _buildBankItem(
                     context,
-                    'Bank BRI',
+                    'BRI',
                     'Biaya admin Rp4.000',
                     'assets/images/logo_bri.png',
                   ),
@@ -79,7 +80,7 @@ class TopUpPage extends StatelessWidget {
                   _buildDivider(),
                   _buildBankItem(
                     context,
-                    'Bank BNI',
+                    'BNI',
                     'Biaya admin Rp6.000',
                     'assets/images/logo_bni.png',
                   ),
@@ -89,7 +90,7 @@ class TopUpPage extends StatelessWidget {
             SizedBox(height: 32),
   
             Text(
-              'Tarik tunai di Mini Market',
+              'Top-Up tunai di Mini Market',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -113,7 +114,7 @@ class TopUpPage extends StatelessWidget {
                 ),
                 _buildMiniMarketItem(
                   name: 'Alfamart',
-                  backgroundColor: const Color.fromARGB(239, 255, 28, 28),
+                  backgroundColor: const Color.fromARGB(236, 226, 27, 27),
                   assetPath: 'assets/images/logo_alfamart.png',
                 ),
               ],
@@ -184,43 +185,50 @@ class TopUpPage extends StatelessWidget {
   }
 
   Widget _buildMiniMarketItem({
-    required String name,
-    required Color backgroundColor,
-    required String assetPath, 
-    double width = 80,
-    double height = 60,
-  }) {
-    return GestureDetector(
-      child: Column(
-        children: [
-          Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(8), 
-              child: ClipRRect(
+  required String name,
+  required Color backgroundColor,
+  required String assetPath, 
+  double width = 80,
+  double height = 60,
+}) {
+    return Builder(
+      builder: (context) => GestureDetector(
+        child: Column(
+          children: [
+            Container(
+              width: width,
+              height: height,
+              decoration: BoxDecoration(
+                color: backgroundColor,
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  assetPath,
-                  fit: BoxFit.contain,
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    assetPath,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+            SizedBox(height: 8),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CashTopUp()),
+        ),
       ),
     );
-  }
+  } 
 }
+

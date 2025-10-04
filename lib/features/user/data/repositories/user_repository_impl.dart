@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vaultbank/features/user/service/AccountNumberGenerator.dart';
 import '../../../../core/util/hash_util.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../local/user_data_storage.dart';
-
+import '../../../home/ui/page/profile/data/profile_picture_storage.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final FirebaseFirestore _firestore;
@@ -16,6 +17,8 @@ class UserRepositoryImpl implements UserRepository {
     debugPrint("Getting Current user Data");
     // UI reads from cache first then sync with firebase in the background
     final cached = await UserStorage().getUser();
+    final localProfileImage = await ProfilePictureStorage.getProfileImagePath();
+
     if (cached != null && cached.uid == uid) {
       // background sync
       _syncUserFromFirestore(uid);
@@ -25,6 +28,8 @@ class UserRepositoryImpl implements UserRepository {
         email: cached.email,
         notelp: cached.notelp,
         balance: cached.balance.toDouble(),
+        accountNumber: cached.accountNumber,
+        profileImagePath: localProfileImage,
       );
     }
 
@@ -39,6 +44,8 @@ class UserRepositoryImpl implements UserRepository {
       notelp: data['notelp'],
       username: data['username'],
       balance: (data['balance'] as num? ?? 0).toDouble(),
+      accountNumber: data['accountNumber'] ?? '',
+      profileImagePath: localProfileImage,
     );
 
     await saveUserToCache(uid, data);
@@ -70,7 +77,8 @@ class UserRepositoryImpl implements UserRepository {
         ..pinHash = data['pinHash'] ?? ''
         ..pinSalt = data['pinSalt'] ?? ''
         ..username = data['username'] ?? 'User'
-        ..balance = (data['balance'] as num? ?? 0).toDouble(),
+        ..balance = (data['balance'] as num? ?? 0).toDouble()
+        ..accountNumber = data['accountNumber'] ?? '',
     );
     debugPrint("Saved user data to Cache");
   }
@@ -93,6 +101,7 @@ class UserRepositoryImpl implements UserRepository {
         notelp: data['notelp'],
         username: data['username'],
         balance: (data['balance'] as num? ?? 0).toDouble(),
+        accountNumber: data['accountNumber'] ?? '',
       );
     });
   }
@@ -109,6 +118,8 @@ class UserRepositoryImpl implements UserRepository {
     // hashes pin before saving
     final salt = HashUtil.generateSalt();
     final pinHash = HashUtil.hashWithSalt(pin, salt);
+    final accountNumber =
+        await AccountNumberGenerator.generateUniqueAccountNumber();
 
     // save profile data to firestore
     await _firestore.collection('users').doc(uid).set({
@@ -118,6 +129,7 @@ class UserRepositoryImpl implements UserRepository {
       'pinSalt': salt,
       'notelp': notelp,
       'balance': 0.0,
+      'accountNumber': accountNumber,
     });
 
     // cache profile data
@@ -129,7 +141,8 @@ class UserRepositoryImpl implements UserRepository {
         ..pinHash = pinHash
         ..pinSalt = salt
         ..notelp = notelp
-        ..balance = 0.0,
+        ..balance = 0.0
+        ..accountNumber = accountNumber,
     );
   }
 

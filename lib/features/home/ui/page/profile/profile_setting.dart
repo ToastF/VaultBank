@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart'; // <-- 1. Impor UserCubit
-import '../../../../../..../../core/util/color_palette.dart';
+import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
+import 'package:vaultbank/core/util/color_palette.dart'; // pastikan path ini benar sesuai proyekmu
 
 class ProfileSettingScreen extends StatelessWidget {
   const ProfileSettingScreen({super.key});
@@ -24,7 +25,6 @@ class ProfileSettingScreen extends StatelessWidget {
       ),
       body: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
-
           // loading indicator jika data sedang dimuat
           if (state is UserLoading || state is UserInitial) {
             return const Center(child: CircularProgressIndicator());
@@ -57,14 +57,20 @@ class ProfileSettingScreen extends StatelessWidget {
                   children: [
                     _SettingItem(
                       label: 'Edit profile picture',
-                      valueWidget: const Icon(
-                        Icons.person,
-                        color: AppColors.blackText,
-                        size: 28,
+                      valueWidget: CircleAvatar(
+                        radius: 24,
+                        backgroundImage: (user.profileImagePath != null &&
+                                File(user.profileImagePath!).existsSync())
+                            ? FileImage(File(user.profileImagePath!))
+                            : null,
+                        child: (user.profileImagePath == null ||
+                                !File(user.profileImagePath!).existsSync())
+                            ? const Icon(Icons.person, size: 24)
+                            : null,
                       ),
                       onTap: () {
-                        // logika edit profile picture
-                        print('Edit profile picture tapped');
+                        // memanggil cubit untuk update foto (akan pick dan simpan path lokal)
+                        context.read<UserCubit>().updateProfilePicture();
                       },
                     ),
                     const _CustomDivider(),
@@ -73,24 +79,30 @@ class ProfileSettingScreen extends StatelessWidget {
                       valueWidget: Text(
                         user.username,
                         style: const TextStyle(
-                            color: AppColors.blackText, fontSize: 16),
+                          color: AppColors.blackText,
+                          fontSize: 16,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onTap: () {
-                        // logika edit username
-                        print('Edit username tapped');
+                        // logic edit username
                       },
                     ),
                     const _CustomDivider(),
                     _SettingItem(
                       label: 'Edit No Hp',
                       valueWidget: Text(
-                        user.notelp.toString(),
+                        user.notelp ?? '',
                         style: const TextStyle(
-                            color: AppColors.blackText, fontSize: 16),
+                          color: AppColors.blackText,
+                          fontSize: 16,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       onTap: () {
-                        // logika edit no hp
-                        print('Edit No Hp tapped');
+                        // logic edit no hp
                       },
                     ),
                     const _CustomDivider(),
@@ -99,12 +111,14 @@ class ProfileSettingScreen extends StatelessWidget {
                       valueWidget: Text(
                         user.email,
                         style: const TextStyle(
-                            color: AppColors.blackText, fontSize: 16),
+                          color: AppColors.blackText,
+                          fontSize: 16,
+                        ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       onTap: () {
-                        // Tambahkan logika untuk edit email
-                        print('Edit Email tapped');
+                        // logic edit email
                       },
                     ),
                   ],
@@ -113,14 +127,16 @@ class ProfileSettingScreen extends StatelessWidget {
             );
           }
           // Tampilan fallback jika state tidak dikenali
-          return const Center(child: Text('Terjadi kesalahan tidak diketahui.'));
+          return const Center(
+            child: Text('Terjadi kesalahan tidak diketahui.'),
+          );
         },
       ),
     );
   }
 }
 
-// widget untuk item pengaturan
+// widget untuk item setting
 class _SettingItem extends StatelessWidget {
   final String label;
   final Widget valueWidget;
@@ -130,6 +146,7 @@ class _SettingItem extends StatelessWidget {
     required this.label,
     required this.valueWidget,
     required this.onTap,
+    super.key,
   });
 
   @override
@@ -137,22 +154,23 @@ class _SettingItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.blackText,
-              fontSize: 16,
+          Expanded(
+            flex: 4,
+            child: Text(
+              label,
+              style: const TextStyle(color: AppColors.blackText, fontSize: 16),
             ),
           ),
-          const Spacer(), // Memberi ruang fleksibel
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 5,
+            child: Align(
+              alignment: Alignment.centerRight,
               child: valueWidget,
             ),
           ),
+          const SizedBox(width: 8),
           InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(8),
@@ -161,10 +179,7 @@ class _SettingItem extends StatelessWidget {
               children: [
                 Text(
                   'Edit',
-                  style: TextStyle(
-                    color: AppColors.blueText,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: AppColors.blueText, fontSize: 16),
                 ),
                 SizedBox(width: 4),
                 Icon(
@@ -181,9 +196,9 @@ class _SettingItem extends StatelessWidget {
   }
 }
 
-// Widget privat untuk garis pemisah
+// Widget untuk garis pemisah
 class _CustomDivider extends StatelessWidget {
-  const _CustomDivider();
+  const _CustomDivider({super.key});
 
   @override
   Widget build(BuildContext context) {

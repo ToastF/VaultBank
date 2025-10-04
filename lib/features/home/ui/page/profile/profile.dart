@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/core/util/animation_slide.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
+import 'package:vaultbank/features/home/ui/page/profile/help_center.dart';
+import 'package:vaultbank/features/home/ui/page/profile/privacy_policy.dart';
+import 'package:vaultbank/features/home/ui/page/profile/terms_condition.dart';
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 import '../../../../auth/service/logout_user.dart';
-import 'profile_setting.dart'; 
+import 'profile_setting.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -20,8 +24,10 @@ class ProfilePage extends StatelessWidget {
         }
 
         final user = state.user;
+        final imagePath = user.profileImagePath;
 
         return Scaffold(
+          backgroundColor: AppColors.whiteBackground,
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -35,24 +41,39 @@ class ProfilePage extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const CircleAvatar(
-                            radius: 40,
-                            backgroundColor: AppColors.white,
-                            child: Icon(Icons.person,
-                                size: 50, color: AppColors.blueIcon),
+                          CircleAvatar(
+                            radius: 45,
+                            backgroundColor: AppColors.whiteBackground,
+                            backgroundImage:
+                                (imagePath != null &&
+                                        File(imagePath).existsSync())
+                                    ? FileImage(File(imagePath))
+                                    : null,
+                            child:
+                                (imagePath == null ||
+                                        !File(imagePath).existsSync())
+                                    ? const Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: AppColors.blueIcon,
+                                    )
+                                    : null,
                           ),
                           const SizedBox(height: 10),
                           Text(
                             user.username,
                             style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Text(
-                            user.notelp.toString(),
+                            user.accountNumber.toString(),
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 14),
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
@@ -60,57 +81,55 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
+
               SliverToBoxAdapter(
                 child: Container(
-                  color: AppColors.whiteBackground,
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       _buildMenuItem(
-                        icon: Icons.person,
+                        icon: Icons.person_outline,
                         title: "Pengaturan Profil",
                         onTap: () {
                           Navigator.push(
                             context,
-                            SlidePageRoute(page: ProfileSettingScreen()),
+                            SlidePageRoute(page: const ProfileSettingScreen()),
+                          );
+                        },
+                        margin: const EdgeInsets.only(bottom: 12),
+                      ),
+
+                      _buildMenuItem(
+                        icon: Icons.help_outline,
+                        title: "Pusat Bantuan",
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            SlidePageRoute(page: const HelpCenterScreen()),
                           );
                         },
                       ),
                       _buildMenuItem(
-                        icon: Icons.security,
-                        title: "Pengaturan Keamanan",
-                        onTap: () {
-                          // Navigasi ke halaman pengaturan keamanan
-                        },
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.lock,
-                        title: "Rubah Password",
-                        onTap: () {
-                          // Navigasi ke halaman rubah password
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      _buildMenuItem(
-                        icon: Icons.help,
-                        title: "Pusat Bantuan",
-                        onTap: () { 
-                            // 
-                          },
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.description,
+                        icon: Icons.description_outlined,
                         title: "Syarat dan Ketentuan",
                         onTap: () {
-
-                           },
+                          Navigator.push(
+                            context,
+                            SlidePageRoute(
+                              page: const TermsAndConditionsScreen(),
+                            ),
+                          );
+                        },
                       ),
                       _buildMenuItem(
-                        icon: Icons.privacy_tip,
+                        icon: Icons.privacy_tip_outlined,
                         title: "Privacy",
                         onTap: () {
-  
-                           },
+                          Navigator.push(
+                            context,
+                            SlidePageRoute(page: const PrivacyPolicyScreen()),
+                          );
+                        },
                       ),
                       const SizedBox(height: 30),
                       ElevatedButton(
@@ -118,18 +137,27 @@ class ProfilePage extends StatelessWidget {
                           LogoutUser(context)();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.whiteBackground,
-                          side: const BorderSide(
-                            color: AppColors.blueText,
-                          ),
+                          backgroundColor: AppColors.white,
+                          elevation: 2,
+                          shadowColor: Colors.black.withOpacity(0.1),
+                          side: const BorderSide(color: AppColors.blueButton),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 32,
                           ),
                         ),
-                        child: const Text("Logout",
-                            style: TextStyle(
-                                color: AppColors.blueText)),
+                        child: const Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: AppColors.blueButton,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -145,20 +173,25 @@ class ProfilePage extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    EdgeInsets? margin,
   }) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 10),
+      color: AppColors.white,
+      margin: margin ?? const EdgeInsets.only(bottom: 12),
       elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.1),
+      shadowColor: Colors.black.withOpacity(0.05),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: Icon(icon, color: AppColors.blueIcon),
-        title: Text(title),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap, 
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: Colors.grey,
+        ),
+        onTap: onTap,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
 }
-
