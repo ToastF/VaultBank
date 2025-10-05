@@ -71,16 +71,22 @@ class _SignupScreenState extends State<SignupScreen> {
                         ..startTransactionListener(state.auth.uid);
 
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Signup success!")),
+                        const SnackBar(
+                          content: Text("Signup success!"),
+                          backgroundColor: AppColors.blueButton,
+                        ),
                       );
                       NavigationHelper.goToAndRemoveAll(
                         context,
                         const NavBar(),
                       );
                     } else if (state is AuthFailure) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -231,6 +237,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       content: Text(
                                         "All fields must be filled",
                                       ),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                   return;
@@ -243,6 +250,23 @@ class _SignupScreenState extends State<SignupScreen> {
                                       content: Text(
                                         "Username cannot exceed 30 characters",
                                       ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                // Check if username looks like an email (hint hint fael)
+                                final emailPattern = RegExp(
+                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                );
+                                if (emailPattern.hasMatch(username)) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Username tidak boleh berupa email.',
+                                      ),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                   return;
@@ -255,6 +279,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text("Invalid email format"),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                   return;
@@ -271,6 +296,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       content: Text(
                                         "Spaces are not allowed in fields except Username",
                                       ),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                   return;
@@ -281,6 +307,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text("Passwords do not match"),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                   return;
@@ -293,6 +320,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       content: Text(
                                         "Telephone number must be 11 digits",
                                       ),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                   return;
@@ -304,6 +332,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       content: Text(
                                         "Telephone number must contain only digits",
                                       ),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                   return;

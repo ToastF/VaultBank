@@ -50,6 +50,7 @@ class TransferConfirmationPage extends StatelessWidget {
     );
     return formatter.format(value);
   }
+
   // Pembuatan UI
   @override
   Widget build(BuildContext context) {
@@ -81,9 +82,9 @@ class TransferConfirmationPage extends StatelessWidget {
           );
           // Jika error, show snackbar
         } else if (state is TransferFailed) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          );
         }
       },
       builder: (context, state) {
@@ -129,21 +130,17 @@ class TransferConfirmationPage extends StatelessWidget {
                       children: [
                         // Card Utama (Penerima/Recipient & Rincian Biaya)
                         _buildMainDetailsCard(
-                          recipient, 
-                          amount, 
-                          labelFontSize, 
-                          valueFontSize, 
-                          verticalSpacing
+                          recipient,
+                          amount,
+                          labelFontSize,
+                          valueFontSize,
+                          verticalSpacing,
                         ),
 
                         SizedBox(height: verticalSpacing),
 
                         // Card Catatan
-                        _buildNotesCard(
-                          notes, 
-                          labelFontSize, 
-                          valueFontSize
-                        ),
+                        _buildNotesCard(notes, labelFontSize, valueFontSize),
                       ],
                     ),
                   ),
@@ -155,22 +152,27 @@ class TransferConfirmationPage extends StatelessWidget {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.blueButton,
-                        disabledBackgroundColor: AppColors.blueButton.withOpacity(0.5),
+                        disabledBackgroundColor: AppColors.blueButton
+                            .withOpacity(0.5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: isLoading ? null : () => _proceedWithPin(context),
-                      child: isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : Text(
-                              "Konfirmasi",
-                              style: TextStyle(
-                                fontSize: labelFontSize * 1.1,
+                      onPressed:
+                          isLoading ? null : () => _proceedWithPin(context),
+                      child:
+                          isLoading
+                              ? const CircularProgressIndicator(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                              )
+                              : Text(
+                                "Konfirmasi",
+                                style: TextStyle(
+                                  fontSize: labelFontSize * 1.1,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
                     ),
                   ),
                   SizedBox(height: verticalSpacing),
@@ -184,13 +186,19 @@ class TransferConfirmationPage extends StatelessWidget {
   }
 
   // Helper widget untuk Card Utama
-  Widget _buildMainDetailsCard(RecipientEntity recipient, double amount, double labelSize, double valueSize, double spacing) {
-  // Logika untuk menentukan nama yang akan ditampilkan
-  String displayName = recipient.name; // Defaultnya adalah nama asli
-  if (recipient.alias != null && recipient.alias!.isNotEmpty) {
-    // Jika alias ada, gabungkan keduanya
-    displayName = "${recipient.alias} (${recipient.name})";
-  }
+  Widget _buildMainDetailsCard(
+    RecipientEntity recipient,
+    double amount,
+    double labelSize,
+    double valueSize,
+    double spacing,
+  ) {
+    // Logika untuk menentukan nama yang akan ditampilkan
+    String displayName = recipient.name; // Defaultnya adalah nama asli
+    if (recipient.alias != null && recipient.alias!.isNotEmpty) {
+      // Jika alias ada, gabungkan keduanya
+      displayName = "${recipient.alias} (${recipient.name})";
+    }
     return Card(
       elevation: 4,
       shadowColor: Colors.black12,
@@ -205,17 +213,25 @@ class TransferConfirmationPage extends StatelessWidget {
                 backgroundColor: AppColors.blueLightButton,
                 child: Text(
                   // Ambil huruf pertama dari alias jika ada, jika tidak dari nama asli
-                  (recipient.alias ?? recipient.name).isNotEmpty ? (recipient.alias ?? recipient.name)[0].toUpperCase() : '?',
-                  style: const TextStyle(color: AppColors.blueIcon, fontWeight: FontWeight.bold),
+                  (recipient.alias ?? recipient.name).isNotEmpty
+                      ? (recipient.alias ?? recipient.name)[0].toUpperCase()
+                      : '?',
+                  style: const TextStyle(
+                    color: AppColors.blueIcon,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               title: Text(
                 displayName,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: valueSize)
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: valueSize,
+                ),
               ),
               subtitle: Text(
                 recipient.accountNumber,
-                style: TextStyle(fontSize: labelSize)
+                style: TextStyle(fontSize: labelSize),
               ),
             ),
             const Divider(),
@@ -223,11 +239,27 @@ class TransferConfirmationPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Column(
                 children: [
-                  _buildDetailRow("Jumlah Uang", _formatCurrency(amount), labelSize, valueSize),
+                  _buildDetailRow(
+                    "Jumlah Uang",
+                    _formatCurrency(amount),
+                    labelSize,
+                    valueSize,
+                  ),
                   SizedBox(height: spacing),
-                  _buildDetailRow("Biaya Transfer", "Gratis", labelSize, valueSize),
+                  _buildDetailRow(
+                    "Biaya Transfer",
+                    "Gratis",
+                    labelSize,
+                    valueSize,
+                  ),
                   const Divider(height: 24),
-                  _buildDetailRow("Total", _formatCurrency(amount), labelSize, valueSize, isTotal: true),
+                  _buildDetailRow(
+                    "Total",
+                    _formatCurrency(amount),
+                    labelSize,
+                    valueSize,
+                    isTotal: true,
+                  ),
                 ],
               ),
             ),
@@ -251,12 +283,18 @@ class TransferConfirmationPage extends StatelessWidget {
           children: [
             Text(
               "Catatan",
-              style: TextStyle(fontSize: labelSize, color: AppColors.greyTextSearch),
+              style: TextStyle(
+                fontSize: labelSize,
+                color: AppColors.greyTextSearch,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               notes.isNotEmpty ? notes : "-",
-              style: TextStyle(fontSize: valueSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: valueSize,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -265,7 +303,13 @@ class TransferConfirmationPage extends StatelessWidget {
   }
 
   // Helper widget untuk baris detail
-  Widget _buildDetailRow(String label, String value, double labelSize, double valueSize, {bool isTotal = false}) {
+  Widget _buildDetailRow(
+    String label,
+    String value,
+    double labelSize,
+    double valueSize, {
+    bool isTotal = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

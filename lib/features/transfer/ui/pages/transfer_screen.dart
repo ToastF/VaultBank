@@ -91,7 +91,10 @@ class _TransferScreenState extends State<TransferScreen> {
     void _showErrorSnack(String message) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(message, style: const TextStyle(color: AppColors.white)),
+          content: Text(
+            message,
+            style: const TextStyle(color: AppColors.white),
+          ),
           backgroundColor: AppColors.red,
         ),
       );
@@ -104,7 +107,7 @@ class _TransferScreenState extends State<TransferScreen> {
     }
     // Check maximum amount
     if (amount >= 10000000) {
-       _showErrorSnack("Jumlah transfer maksimum adalah Rp 10.000.000");
+      _showErrorSnack("Jumlah transfer maksimum adalah Rp 10.000.000");
       return;
     }
 
@@ -116,7 +119,7 @@ class _TransferScreenState extends State<TransferScreen> {
 
     // Check note length
     if (note.length > 15) {
-       _showErrorSnack("Berita terlalu panjang (Maks. 15 karakter)");
+      _showErrorSnack("Berita terlalu panjang (Maks. 15 karakter)");
       return;
     }
 
@@ -151,9 +154,11 @@ class _TransferScreenState extends State<TransferScreen> {
 
     String recipientDisplayName = 'Pilih Penerima';
     if (selectedRecipient != null) {
-      if (selectedRecipient!.alias != null && selectedRecipient!.alias!.isNotEmpty) {
+      if (selectedRecipient!.alias != null &&
+          selectedRecipient!.alias!.isNotEmpty) {
         // Jika alias ada, gabungkan: "Alias (Nama Asli)"
-        recipientDisplayName = "${selectedRecipient!.alias} (${selectedRecipient!.name})";
+        recipientDisplayName =
+            "${selectedRecipient!.alias} (${selectedRecipient!.name})";
       } else {
         // Jika tidak ada alias, tampilkan nama asli saja
         recipientDisplayName = selectedRecipient!.name;
@@ -210,17 +215,23 @@ class _TransferScreenState extends State<TransferScreen> {
                         ),
                       ),
                       ListTile(
-                        contentPadding: EdgeInsets.symmetric(vertical: verticalSpacing / 2),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: verticalSpacing / 2,
+                        ),
                         title: Text(
                           recipientDisplayName,
                           style: TextStyle(
                             fontSize: inputFontSize,
-                            color: selectedRecipient == null ? AppColors.greyTextSearch : AppColors.blackText,
+                            color:
+                                selectedRecipient == null
+                                    ? AppColors.greyTextSearch
+                                    : AppColors.blackText,
                           ),
                         ),
-                        subtitle: selectedRecipient != null 
-                          ? Text(selectedRecipient!.accountNumber) 
-                          : null,
+                        subtitle:
+                            selectedRecipient != null
+                                ? Text(selectedRecipient!.accountNumber)
+                                : null,
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                         onTap: _openRecipientPicker,
                         shape: const UnderlineInputBorder(
@@ -244,7 +255,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           hintText: "0",
                           prefixIcon: Padding(
                             // Padding agar posisi 'Rp' pas (sejauh ini top: 1 yang paling pas untuk HP Redmi Note 14 Pro 5g)
-                            padding: const EdgeInsets.only(top: 1, left:0), 
+                            padding: const EdgeInsets.only(top: 1, left: 0),
                             child: Text(
                               'Rp',
                               style: TextStyle(
@@ -253,7 +264,10 @@ class _TransferScreenState extends State<TransferScreen> {
                               ),
                             ),
                           ),
-                          prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                          prefixIconConstraints: const BoxConstraints(
+                            minWidth: 0,
+                            minHeight: 0,
+                          ),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: AppColors.blueButton),
                           ),
@@ -261,7 +275,7 @@ class _TransferScreenState extends State<TransferScreen> {
                         keyboardType: TextInputType.number,
                       ),
                       SizedBox(height: verticalSpacing * 1.5),
-                      
+
                       Text(
                         'Berita (Opsional)',
                         style: TextStyle(
@@ -304,7 +318,7 @@ class _TransferScreenState extends State<TransferScreen> {
                     style: TextStyle(
                       fontSize: inputFontSize,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

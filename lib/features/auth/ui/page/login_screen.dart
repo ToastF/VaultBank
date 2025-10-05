@@ -68,16 +68,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         ..startTransactionListener(state.auth.uid);
 
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Login success!")),
+                        const SnackBar(
+                          content: Text("Login success!"),
+                          backgroundColor: AppColors.blueButton,
+                        ),
                       );
                       NavigationHelper.goToAndRemoveAll(
                         context,
                         const NavBar(),
                       );
                     } else if (state is AuthFailure) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   },
                   builder: (context, state) {
