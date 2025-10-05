@@ -102,66 +102,68 @@ class _PinEntryView extends StatelessWidget {
               ),
             ),
           ),
-          body: Column(
-            children: [
-              const SizedBox(height: 60),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE3F2FD),
-                  shape: BoxShape.circle,
+          body: SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 60),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFE3F2FD),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.swap_horiz,
+                    color: Color(0xFF5B9EE1),
+                    size: 40,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.swap_horiz,
-                  color: Color(0xFF5B9EE1),
-                  size: 40,
+                const SizedBox(height: 24),
+                const Text(
+                  'Masukan Pin',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF5B9EE1),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Masukan Pin',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF5B9EE1),
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(6, (index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: index < state.currentPin.length
+                            ? const Color(0xFF5B9EE1)
+                            : const Color(0xFFD6E9F8),
+                      ),
+                    );
+                  }),
                 ),
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(6, (index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: index < state.currentPin.length
-                          ? const Color(0xFF5B9EE1)
-                          : const Color(0xFFD6E9F8),
-                    ),
-                  );
-                }),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 40,
-                child: Center(
-                  child: state is PinFailure
-                      ? Text(
-                          state.message,
-                          style: const TextStyle(color: Colors.red, fontSize: 14),
-                          textAlign: TextAlign.center,
-                        )
-                      : state is PinLoading
-                          ? const CircularProgressIndicator(color: Color(0xFF5B9EE1))
-                          : null,
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: 40,
+                  child: Center(
+                    child: state is PinFailure
+                        ? Text(
+                            state.message,
+                            style: const TextStyle(color: Colors.red, fontSize: 14),
+                            textAlign: TextAlign.center,
+                          )
+                        : state is PinLoading
+                            ? const CircularProgressIndicator(color: Color(0xFF5B9EE1))
+                            : null,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              if (state is! PinLoading) _buildNumpad(context),
-              const SizedBox(height: 32),
-            ],
+                const Spacer(),
+                if (state is! PinLoading) _buildNumpad(context),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         );
       },
