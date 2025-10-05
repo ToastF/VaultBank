@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/features/user/data/local/user_data_storage.dart';
-import 'tarik_tunai_minmarket.dart';
 import 'nominal_input.dart';
+import 'tutorial_tarik_tunai.dart';
 
 class TarikTunaiPage extends StatefulWidget {
   const TarikTunaiPage({super.key});
@@ -54,7 +54,7 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
           children: [
             // Transfer Bank Section
             Text(
-              'Transfer Bank',
+              'Tarik Tunai',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -63,7 +63,7 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
             ),
             SizedBox(height: 12),
 
-            // Bank List
+            // Bank List with Mini Market Logos (3 items, no BNI, no circle background, no admin fee text)
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -81,31 +81,27 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
                 children: [
                   _buildBankItem(
                     context,
-                    'Bank BCA',
-                    'Biaya admin Rp2.000',
-                    'assets/images/logo_bca.png',
+                    'Indomaret',
+                    '',
+                    'assets/images/logo_indomaret.png',
+                    showCircleBackground: false,
                   ),
                   _buildDivider(),
                   _buildBankItem(
                     context,
-                    'Bank BRI',
-                    'Biaya admin Rp4.000',
-                    'assets/images/logo_bri.png',
+                    'Alfamidi',
+                    '',
+                    'assets/images/logo_alfamidi.png',
+                    showCircleBackground: false,
                   ),
                   _buildDivider(),
                   _buildBankItem(
                     context,
-                    'Mandiri',
-                    'Biaya admin Rp2.000',
-                    'assets/images/logo_mandiri.png',
+                    'Alfamart',
+                    '',
+                    'assets/images/logo_alfamart.png',
                     backgroundColor: Color(0xFF0D3B70),
-                  ),
-                  _buildDivider(),
-                  _buildBankItem(
-                    context,
-                    'Bank BNI',
-                    'Biaya admin Rp6.000',
-                    'assets/images/logo_bni.png',
+                    showCircleBackground: false,
                   ),
                 ],
               ),
@@ -115,7 +111,7 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
 
             // Tarik tunai di Mini Market Section
             Text(
-              'Tarik tunai di Mini Market',
+              'Tutorial Tarik Tunai',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -124,28 +120,52 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
             ),
             SizedBox(height: 12),
 
-            // Mini Market Options
+            // Mini Market Options (click navigates to tutorial page)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-            _buildMiniMarketItem(
-              context: context,
-              name: 'Indomaret',
-              backgroundColor: Color(0xFF116BB2),
-              assetPath: 'assets/images/logo_indomaret.png',
-            ),
-            _buildMiniMarketItem(
-              context: context,
-              name: 'Alfamidi',
-              backgroundColor: Colors.red,
-              assetPath: 'assets/images/logo_alfamidi.png',
-            ),
-            _buildMiniMarketItem(
-              context: context,
-              name: 'Alfamart',
-              backgroundColor: Colors.red,
-              assetPath: 'assets/images/logo_alfamart.png',
-            ),
+                _buildMiniMarketItem(
+                  context: context,
+                  name: 'Indomaret',
+                  backgroundColor: Color(0xFF116BB2),
+                  assetPath: 'assets/images/logo_indomaret.png',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TutorialTarikTunaiPage(),
+                      ),
+                    );
+                  },
+                ),
+                _buildMiniMarketItem(
+                  context: context,
+                  name: 'Alfamidi',
+                  backgroundColor: Colors.red,
+                  assetPath: 'assets/images/logo_alfamidi.png',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TutorialTarikTunaiPage(),
+                      ),
+                    );
+                  },
+                ),
+                _buildMiniMarketItem(
+                  context: context,
+                  name: 'Alfamart',
+                  backgroundColor: Colors.red,
+                  assetPath: 'assets/images/logo_alfamart.png',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TutorialTarikTunaiPage(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ],
@@ -154,13 +174,14 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
     );
   }
 
-  // Bank item
+  // Bank item with mini market logos
   Widget _buildBankItem(
     BuildContext context,
     String bankName,
     String adminFee,
     String assetPath, {
     Color? backgroundColor,
+    bool showCircleBackground = true,
   }) {
     return ListTile(
       leading: SizedBox(
@@ -169,15 +190,16 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Circle background
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                color: backgroundColor ?? Colors.grey[200],
-                shape: BoxShape.circle,
+            // Circle background (optional)
+            if (showCircleBackground)
+              Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  color: backgroundColor ?? Colors.grey[200],
+                  shape: BoxShape.circle,
+                ),
               ),
-            ),
             // Logo image clipped inside circle
             ClipOval(
               child: Image.asset(
@@ -194,21 +216,22 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
         bankName,
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
-      subtitle: Text(
-        adminFee,
-        style: TextStyle(color: Colors.black, fontSize: 14),
-      ),
+      subtitle: adminFee.isNotEmpty
+          ? Text(
+              adminFee,
+              style: TextStyle(color: Colors.black, fontSize: 14),
+            )
+          : null,
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder:
-                (context) => NominalInputTarikTunai(
-                  bankName: bankName,
-                  accountNumber: user?.uid ?? 'N/A',
-                  assetPath: assetPath,
-                  backgroundColor: backgroundColor,
-                ),
+            builder: (context) => NominalInputTarikTunai(
+              bankName: bankName,
+              accountNumber: user?.uid ?? 'N/A',
+              assetPath: assetPath,
+              backgroundColor: backgroundColor,
+            ),
           ),
         );
       },
@@ -234,16 +257,23 @@ class _TarikTunaiPageState extends State<TarikTunaiPage> {
     required String assetPath, // use PNG for logo
     double width = 80,
     double height = 60,
+    VoidCallback? onTap,
   }) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const TarikTunaiMiniMarketPage(),
-          ),
-        );
-      },
+      onTap: onTap ??
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NominalInputTarikTunai(
+                  bankName: name,
+                  accountNumber: user?.uid ?? 'N/A',
+                  assetPath: assetPath,
+                  backgroundColor: backgroundColor,
+                ),
+              ),
+            );
+          },
       child: Column(
         children: [
           Container(
