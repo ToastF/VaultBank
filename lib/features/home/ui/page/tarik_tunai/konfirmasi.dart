@@ -28,12 +28,7 @@ class KonfirmasiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int adminFee = 2000;
-    if (bankName.toLowerCase() == 'bank bri') {
-      adminFee = 4000;
-    } else if (bankName.toLowerCase() == 'bank bni') {
-      adminFee = 6000;
-    }
+    int adminFee = 0;
     final int total = nominal + adminFee;
 
     return Scaffold(
@@ -97,14 +92,6 @@ class KonfirmasiPage extends StatelessWidget {
                     children: [
                       const Text('Jumlah Nominal'),
                       Text(formatCurrency(nominal)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Biaya Admin'),
-                      Text(formatCurrency(adminFee)),
                     ],
                   ),
                   const SizedBox(height: 8),

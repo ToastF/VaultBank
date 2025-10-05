@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:vaultbank/core/util/color_palette.dart';
 
 class SuccessPage extends StatelessWidget {
   final int nominal;
@@ -17,17 +16,8 @@ class SuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final NumberFormat currencyFormat = NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp ',
-      decimalDigits: 2,
-    );
-    int transferFee = 2000;
-    if (bankName.toLowerCase() == 'bank bri') {
-      transferFee = 4000;
-    } else if (bankName.toLowerCase() == 'bank bni') {
-      transferFee = 6000;
-    }
+    final NumberFormat currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 2);
+    int transferFee = 0;
     final int total = nominal + transferFee;
     final String transferDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
@@ -62,9 +52,7 @@ class SuccessPage extends StatelessWidget {
             SizedBox(height: 16),
             Card(
               color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -79,10 +67,7 @@ class SuccessPage extends StatelessWidget {
                         SizedBox(width: 12),
                         Text(
                           'Tarik Tunai',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],
                     ),
@@ -91,15 +76,13 @@ class SuccessPage extends StatelessWidget {
                     SizedBox(height: 8),
                     Text(
                       referralCode,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     SizedBox(height: 12),
-                    Text('1. pergi ke teller bank'),
-                    Text('2. berikan code referral kamu untuk penarikan dana'),
-                    Text('3. terima uangmu'),
+                    Text('1. pergi ke kasir minimarket'),
+                    Text('2. bilang ke kasir saya ingin menarik tunai'),
+                    Text('3. berikan code referal'),
+                    Text('4. terima uangmu'),
                   ],
                 ),
               ),
@@ -107,22 +90,12 @@ class SuccessPage extends StatelessWidget {
             SizedBox(height: 16),
             Card(
               color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 child: Column(
                   children: [
                     _buildRow('Jumlah Uang', currencyFormat.format(nominal)),
-                    SizedBox(height: 8),
-                    _buildRow(
-                      'Biaya Transfer',
-                      currencyFormat.format(transferFee),
-                    ),
                     SizedBox(height: 8),
                     _buildRow('Tanggal Transfer', transferDate),
                   ],
@@ -157,16 +130,10 @@ class SuccessPage extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.share, color: Colors.blue),
                   onPressed: () async {
-                    final String shareText =
-                        'Tarik Tunai Berhasil\nReferral Code: $referralCode\nJumlah Uang: ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(nominal)}\nBiaya Transfer: ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(transferFee)}\nTotal: ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(total)}\nTanggal Tarik Tunai: $transferDate';
+                    final String shareText = 'Tarik Tunai Berhasil\nReferral Code: $referralCode\nJumlah Uang: ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(nominal)}\nTotal: ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(total)}\nTanggal Tarik Tunai: $transferDate';
                     await Clipboard.setData(ClipboardData(text: shareText));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Bukti transfer berhasil disalin ke clipboard',
-                        ),
-                        backgroundColor: AppColors.blueButton,
-                      ),
+                      const SnackBar(content: Text('Bukti transfer berhasil disalin ke clipboard')),
                     );
                   },
                 ),
@@ -187,11 +154,7 @@ class SuccessPage extends StatelessWidget {
                 ),
                 child: const Text(
                   'Selesai',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ),
@@ -206,10 +169,7 @@ class SuccessPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: TextStyle(fontSize: 14)),
-        Text(
-          value,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
+        Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
       ],
     );
   }

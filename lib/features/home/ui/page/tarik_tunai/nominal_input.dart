@@ -37,7 +37,7 @@ class _NominalInputTarikTunaiState extends State<NominalInputTarikTunai> {
       final amount = int.tryParse(rawValue) ?? 0;
       final minAmount = 25000;
       final maxAmount = 10000000;
-      final availableBalance = balance - 2000; // Assuming admin fee
+      final availableBalance = balance;
       setState(() {
         isButtonEnabled = amount >= minAmount && amount <= maxAmount && amount <= availableBalance;
       });
@@ -102,10 +102,6 @@ class _NominalInputTarikTunaiState extends State<NominalInputTarikTunai> {
               title: Text(
                 widget.bankName,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              subtitle: Text(
-                'Biaya admin Rp2.000',
-                style: TextStyle(color: Colors.black, fontSize: 14),
               ),
             ),
             const SizedBox(height: 32),

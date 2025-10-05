@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vaultbank/features/user/data/local/user_data_storage.dart';
 import 'package:vaultbank/features/user/ui/cubit/user_cubit.dart';
 import 'dart:convert';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vaultbank/features/transaction_history/domain/entities/transaction_entity.dart';
 import 'succes.dart';
@@ -53,60 +54,31 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
   }
 
   String _generateReferralCode(String bankName) {
-    String companyCode;
-    switch (bankName.toLowerCase()) {
-      case 'bank bca':
-        companyCode = '39107';
-        break;
-      case 'mandiri':
-        companyCode = '88888';
-        break;
-      case 'bank bni':
-        companyCode = '8241';
-        break;
-      case 'bank bri':
-        companyCode = '12345';
-        break;
-      default:
-        companyCode = '00000'; // Default
+    // Generate a random 12-digit number as referral code
+    final random = Random();
+    String code = '';
+    for (int i = 0; i < 12; i++) {
+      code += random.nextInt(10).toString();
     }
-    String phone = user?.notelp ?? '08123456789';
-    return companyCode + phone;
+    return code;
   }
 
   Future<void> _onSubmit() async {
     if (_pinController.text.length == pinLength) {
       if (user != null) {
         // Hash the input PIN with the stored salt
-        final inputHash =
-            sha256
-                .convert(utf8.encode(_pinController.text + user!.pinSalt))
-                .toString();
+        final inputHash = sha256.convert(utf8.encode(_pinController.text + user!.pinSalt)).toString();
         if (inputHash == user!.pinHash) {
-          // Update balance: deduct nominal + admin fee
-          double adminFee = 2000.0;
-          if (widget.bankName.toLowerCase() == 'bank bri') {
-            adminFee = 4000.0;
-          } else if (widget.bankName.toLowerCase() == 'bank bni') {
-            adminFee = 6000.0;
-          }
+          // Update balance: deduct nominal
+          double adminFee = 0.0;
           double deduction = widget.nominal + adminFee;
           double newBalance = user!.balance - deduction;
 
           // Update balance in Firestore
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user!.uid)
-              .update({'balance': newBalance});
+          await FirebaseFirestore.instance.collection('users').doc(user!.uid).update({'balance': newBalance});
 
           // Add transaction to history
-          final txId =
-              FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(user!.uid)
-                  .collection('transactions')
-                  .doc()
-                  .id;
+          final txId = FirebaseFirestore.instance.collection('users').doc(user!.uid).collection('transactions').doc().id;
           final txMap = {
             'id': txId,
             'amount': widget.nominal.toDouble(),
@@ -120,58 +92,39 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
             'recipientBankName': widget.bankName,
             'notes': 'Tarik Tunai',
           };
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user!.uid)
-              .collection('transactions')
-              .doc(txId)
-              .set(txMap);
+          await FirebaseFirestore.instance.collection('users').doc(user!.uid).collection('transactions').doc(txId).set(txMap);
 
           // Navigate to success page using MaterialPageRoute
           String referralCode = _generateReferralCode(widget.bankName);
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder:
-                  (context) => SuccessPage(
-                    nominal: widget.nominal,
-                    referralCode: referralCode,
-                    bankName: widget.bankName,
-                  ),
-            ),
+            MaterialPageRoute(builder: (context) => SuccessPage(nominal: widget.nominal, referralCode: referralCode, bankName: widget.bankName)),
           );
         } else {
           // Show alert for wrong PIN
           showDialog(
             context: context,
-            builder:
-                (context) => AlertDialog(
-                  title: Text('Error'),
-                  content: Text('Access code salah'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('OK'),
-                    ),
-                  ],
+            builder: (context) => AlertDialog(
+              title: Text('Error'),
+              content: Text('Access code salah'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
                 ),
+              ],
+            ),
           );
         }
       } else {
         // User not loaded
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('User data not available'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('User data not available')),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please enter complete PIN'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Please enter complete PIN')),
       );
     }
   }
@@ -192,7 +145,10 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
         ),
       );
     }
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: circles);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: circles,
+    );
   }
 
   Widget _buildNumpad() {
@@ -262,10 +218,7 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
     return InkWell(
       onTap: () {
         if (_pinController.text.isNotEmpty) {
-          _pinController.text = _pinController.text.substring(
-            0,
-            _pinController.text.length - 1,
-          );
+          _pinController.text = _pinController.text.substring(0, _pinController.text.length - 1);
           setState(() {});
         }
       },
