@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vaultbank/features/home/ui/page/profile/data/profile_picture_storage.dart';
 import 'package:vaultbank/features/recipient/data/local/recipient_list_storage.dart';
 import 'package:vaultbank/features/transaction_history/data/local/transaction_data_storage.dart';
 import '../../../core/util/navi_util.dart';
@@ -23,6 +24,7 @@ class LogoutUser {
     await UserStorage().clearUser();
     await RecipientStorage().clearRecipients();
     await TransactionStorage().clearTransactions();
+    await ProfilePictureStorage.clearProfileImagePath();
 
     // Navigate to welcome/login screen
     NavigationHelper.goToAndRemoveAll(context, const WelcomeScreen());
