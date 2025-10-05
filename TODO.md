@@ -1,3 +1,0 @@
-- Update admin fee logic in lib/features/home/ui/page/tarik_tunai/succes.dart to include explicit cases for BCA (2000), Mandiri (2000), BRI (4000), BNI (6000)
-- Update admin fee logic in lib/features/home/ui/page/tarik_tunai/konfirmasi.dart similarly
-- Update admin fee logic in lib/features/home/ui/page/tarik_tunai/masukan_pin.dart similarly
