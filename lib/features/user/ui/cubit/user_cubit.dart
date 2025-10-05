@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vaultbank/features/home/ui/page/profile/service/profile_image_service.dart';
 import 'dart:async';
 import 'package:vaultbank/features/user/data/repositories/user_repository_impl.dart';
 import '../../domain/entities/user_entity.dart';
 import 'package:flutter/foundation.dart';
-
+import '../../../home/ui/page/profile/data/profile_picture_storage.dart';
+import 'package:image_picker/image_picker.dart';
 part 'user_state.dart';
 
 // Cubit for managing User Data state
@@ -47,16 +47,26 @@ class UserCubit extends Cubit<UserState> {
           },
         );
   }
-    // untuk update profile picture
+
+  // untuk update profile picture
   Future<void> updateProfilePicture() async {
-    if (state is! UserLoaded) return;
-    final currentUser = (state as UserLoaded).user;
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile == null) return;
 
-    final newPath = await ProfileImageService.pickProfileImage();
-    if (newPath == null) return;
+      final path = pickedFile.path;
 
-    await ProfileImageService.saveProfileImagePath(newPath);
+      // Simpan ke SharedPreferences
+      await ProfilePictureStorage.saveProfileImagePath(path);
 
-    emit(UserLoaded(currentUser.copyWith(profileImagePath: newPath)));
+      if (state is UserLoaded) {
+        final currentUser = (state as UserLoaded).user;
+        final updatedUser = currentUser.copyWith(profileImagePath: path);
+        emit(UserLoaded(updatedUser));
+      }
+    } catch (e) {
+      debugPrint("Failed to update profile picture: $e");
+    }
   }
 }

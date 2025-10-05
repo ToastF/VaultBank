@@ -5,6 +5,7 @@ import '../../../../core/util/hash_util.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../local/user_data_storage.dart';
+import '../../../home/ui/page/profile/data/profile_picture_storage.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final FirebaseFirestore _firestore;
@@ -16,6 +17,8 @@ class UserRepositoryImpl implements UserRepository {
     debugPrint("Getting Current user Data");
     // UI reads from cache first then sync with firebase in the background
     final cached = await UserStorage().getUser();
+    final localProfileImage = await ProfilePictureStorage.getProfileImagePath();
+
     if (cached != null && cached.uid == uid) {
       // background sync
       _syncUserFromFirestore(uid);
@@ -26,6 +29,7 @@ class UserRepositoryImpl implements UserRepository {
         notelp: cached.notelp,
         balance: cached.balance.toDouble(),
         accountNumber: cached.accountNumber,
+        profileImagePath: localProfileImage,
       );
     }
 
@@ -41,6 +45,7 @@ class UserRepositoryImpl implements UserRepository {
       username: data['username'],
       balance: (data['balance'] as num? ?? 0).toDouble(),
       accountNumber: data['accountNumber'] ?? '',
+      profileImagePath: localProfileImage,
     );
 
     await saveUserToCache(uid, data);
@@ -89,6 +94,7 @@ class UserRepositoryImpl implements UserRepository {
 
       final data = doc.data()!;
       await saveUserToCache(uid, data); // update cache every change
+      final localProfileImage = await ProfilePictureStorage.getProfileImagePath();
 
       return UserEntity(
         uid: uid,
@@ -97,6 +103,7 @@ class UserRepositoryImpl implements UserRepository {
         username: data['username'],
         balance: (data['balance'] as num? ?? 0).toDouble(),
         accountNumber: data['accountNumber'] ?? '',
+        profileImagePath: localProfileImage,
       );
     });
   }

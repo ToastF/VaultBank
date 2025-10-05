@@ -279,6 +279,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                   SizedBox(height: verticalSpacing),
 
                   // Transaction list with clickable cards
+                  // Transaction list with clickable cards
                   ListView.builder(
                     itemCount: filtered.length,
                     shrinkWrap: true,
@@ -291,6 +292,37 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       final isIncoming =
                           tx.recipientAccount == currentUserAccountNumber ||
                           tx.type == TransactionType.virtualAccount;
+                      final isSender =
+                          tx.senderAccount == currentUserAccountNumber;
+                      final displayName =
+                          isSender ? tx.recipientName : tx.senderName;
+
+                      // --- ICON LOGIC ---
+                      IconData iconData;
+                      Color iconColor;
+                      switch (tx.type) {
+                        case TransactionType.antarRekening:
+                        case TransactionType.antarBank:
+                          if (isOutgoing) {
+                            iconData = Icons.arrow_circle_right_rounded;
+                            iconColor = Colors.red;
+                          } else {
+                            iconData = Icons.arrow_circle_left_rounded;
+                            iconColor = Colors.green;
+                          }
+                          break;
+                        case TransactionType.virtualAccount:
+                          iconData = Icons.arrow_circle_up_rounded;
+                          iconColor = Colors.blue;
+                          break;
+                        case TransactionType.tarikTunai:
+                          iconData = Icons.account_balance_wallet_rounded;
+                          iconColor = Colors.orange;
+                          break;
+                        default:
+                          iconData = Icons.swap_horiz_rounded;
+                          iconColor = AppColors.blueIcon;
+                      }
 
                       return InkWell(
                         onTap: () {
@@ -309,58 +341,82 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           margin: const EdgeInsets.only(bottom: 12),
                           child: Padding(
                             padding: const EdgeInsets.all(12),
-                            child: Column(
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Sender
-                                Text(
-                                  tx.senderName,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: subtitleFontSize,
+                                CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor: Colors.grey[100],
+                                  child: Icon(
+                                    iconData,
+                                    color: iconColor,
+                                    size: titleFontSize,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                // Date
-                                Text(
-                                  DateFormat(
-                                    "dd MMM yyyy",
-                                    'id_ID',
-                                  ).format(tx.timestamp),
-                                  style: TextStyle(
-                                    color: Colors.grey[700],
-                                    fontSize: labelFontSize * 0.9,
+                                const SizedBox(width: 12),
+
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Sender/Recipient name
+                                      Text(
+                                        displayName,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: subtitleFontSize,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+
+                                      // Date
+                                      Text(
+                                        DateFormat(
+                                          "dd MMM yyyy",
+                                          'id_ID',
+                                        ).format(tx.timestamp),
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: labelFontSize * 0.9,
+                                        ),
+                                      ),
+
+                                      // Notes (if any)
+                                      if (tx.notes?.isNotEmpty == true)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 4,
+                                          ),
+                                          child: Text(
+                                            tx.notes!,
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontStyle: FontStyle.italic,
+                                              fontSize: labelFontSize * 0.9,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                 ),
-                                // Notes (if any)
-                                if (tx.notes?.isNotEmpty == true)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      tx.notes!,
+
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      (isOutgoing ? "- " : "+ ") +
+                                          currency.format(tx.amount),
                                       style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: labelFontSize * 0.9,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: subtitleFontSize,
+                                        color:
+                                            isOutgoing
+                                                ? Colors.red
+                                                : Colors.green,
                                       ),
                                     ),
-                                  ),
-                                const SizedBox(height: 6),
-                                // Amount
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    (isOutgoing ? "- " : "+ ") +
-                                        currency.format(tx.amount),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: subtitleFontSize,
-                                      color:
-                                          isOutgoing
-                                              ? Colors.red
-                                              : Colors.green,
-                                    ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),

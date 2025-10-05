@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vaultbank/core/util/animation_slide.dart';
 import 'package:vaultbank/core/util/color_palette.dart';
 import 'package:vaultbank/features/transaction_history/domain/entities/transaction_entity.dart';
 import 'package:vaultbank/features/transaction_history/ui/cubit/transaction_cubit.dart';
@@ -51,12 +52,13 @@ class HistoryList extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => const TransactionHistoryScreen(),
-                        ),
+                        SlidePageRoute(page: const TransactionHistoryScreen()),
                       );
                     },
+                    style: TextButton.styleFrom(
+                      overlayColor: Colors.transparent,
+                      foregroundColor: AppColors.blueText,
+                    ),
                     child: Text(
                       'Lihat Semua >',
                       style: TextStyle(
@@ -135,17 +137,38 @@ class HistoryList extends StatelessWidget {
       decimalDigits: 0,
     );
 
+    // icon
+    IconData iconData;
+    Color iconColor;
+    switch (tx.type) {
+      case TransactionType.antarRekening:
+      case TransactionType.antarBank:
+        if (isSender) {
+          iconData = Icons.arrow_circle_right_rounded;
+          iconColor = Colors.red;
+        } else {
+          iconData = Icons.arrow_circle_left_rounded;
+          iconColor = Colors.green;
+        }
+        break;
+      case TransactionType.virtualAccount:
+        iconData = Icons.arrow_circle_up_rounded;
+        iconColor = Colors.blue;
+        break;
+      case TransactionType.tarikTunai:
+        iconData = Icons.account_balance_wallet_rounded;
+        iconColor = Colors.orange;
+        break;
+      default:
+        iconData = Icons.swap_horiz_rounded;
+        iconColor = AppColors.blueIcon;
+    }
+
     return ListTile(
       leading: CircleAvatar(
         radius: avatarRadius,
         backgroundColor: AppColors.whiteBackground,
-        child: Icon(
-          tx.type == TransactionType.antarRekening
-              ? Icons.swap_horiz
-              : Icons.account_balance_wallet,
-          color: AppColors.blueIcon,
-          size: iconSize,
-        ),
+        child: Icon(iconData, color: iconColor, size: iconSize),
       ),
       title: Text(displayName, style: TextStyle(fontSize: titleFontSize)),
       subtitle: Column(

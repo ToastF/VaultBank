@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(
-                          height: screenHeight * 0.28 - screenHeight * 0.08,
+                          height: screenHeight * 0.28 - screenHeight * 0.12,
                         ),
                         BalanceCard(
                           balance: state.user.balance, 
