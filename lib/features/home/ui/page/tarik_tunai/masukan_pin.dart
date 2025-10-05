@@ -78,7 +78,10 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
     if (_pinController.text.length == pinLength) {
       if (user != null) {
         // Hash the input PIN with the stored salt
-        final inputHash = sha256.convert(utf8.encode(_pinController.text + user!.pinSalt)).toString();
+        final inputHash =
+            sha256
+                .convert(utf8.encode(_pinController.text + user!.pinSalt))
+                .toString();
         if (inputHash == user!.pinHash) {
           // Update balance: deduct nominal + admin fee
           double adminFee = 2000.0;
@@ -91,10 +94,19 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
           double newBalance = user!.balance - deduction;
 
           // Update balance in Firestore
-          await FirebaseFirestore.instance.collection('users').doc(user!.uid).update({'balance': newBalance});
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .update({'balance': newBalance});
 
           // Add transaction to history
-          final txId = FirebaseFirestore.instance.collection('users').doc(user!.uid).collection('transactions').doc().id;
+          final txId =
+              FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user!.uid)
+                  .collection('transactions')
+                  .doc()
+                  .id;
           final txMap = {
             'id': txId,
             'amount': widget.nominal.toDouble(),
@@ -108,39 +120,58 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
             'recipientBankName': widget.bankName,
             'notes': 'Tarik Tunai',
           };
-          await FirebaseFirestore.instance.collection('users').doc(user!.uid).collection('transactions').doc(txId).set(txMap);
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .collection('transactions')
+              .doc(txId)
+              .set(txMap);
 
           // Navigate to success page using MaterialPageRoute
           String referralCode = _generateReferralCode(widget.bankName);
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => SuccessPage(nominal: widget.nominal, referralCode: referralCode, bankName: widget.bankName)),
+            MaterialPageRoute(
+              builder:
+                  (context) => SuccessPage(
+                    nominal: widget.nominal,
+                    referralCode: referralCode,
+                    bankName: widget.bankName,
+                  ),
+            ),
           );
         } else {
           // Show alert for wrong PIN
           showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Error'),
-              content: Text('Access code salah'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
+            builder:
+                (context) => AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Access code salah'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('OK'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
           );
         }
       } else {
         // User not loaded
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User data not available')),
+          SnackBar(
+            content: Text('User data not available'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter complete PIN')),
+        SnackBar(
+          content: Text('Please enter complete PIN'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -161,10 +192,7 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
         ),
       );
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: circles,
-    );
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: circles);
   }
 
   Widget _buildNumpad() {
@@ -234,7 +262,10 @@ class _MasukanPinPageState extends State<MasukanPinPage> {
     return InkWell(
       onTap: () {
         if (_pinController.text.isNotEmpty) {
-          _pinController.text = _pinController.text.substring(0, _pinController.text.length - 1);
+          _pinController.text = _pinController.text.substring(
+            0,
+            _pinController.text.length - 1,
+          );
           setState(() {});
         }
       },

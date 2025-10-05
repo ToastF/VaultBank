@@ -82,6 +82,7 @@ Future<void> showInputAccessCodeDialog(BuildContext context) async {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Wrong Access Code! Try again"),
+                        backgroundColor: Colors.red,
                       ),
                     );
                   }
