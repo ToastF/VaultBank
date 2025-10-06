@@ -13,7 +13,7 @@
 
 ## Project Links 🔗
 * **Video Demo (YouTube):** [Video UTS VaultBank](https://youtu.be/2ueWqa8bbrc?si=OZ2j-CJreCweDkxN)
-* **GitHub Repository:** [Github Project: VaultBank]([https://github.com/your-repo-link](https://github.com/ToastF/VaultBank/))
+* **GitHub Repository:** [Github Project: VaultBank](https://github.com/ToastF/VaultBank/)
 
 ---
 
